@@ -1,8 +1,10 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:senior_project/palette.dart';
 import 'package:senior_project/screens/forgot_password.dart';
@@ -56,13 +58,12 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 child: SingleChildScrollView(
                   child: Form(
                     child: Column(children: [
-                      Text(
-                        'Welcome New User',
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                            color: Colors.white),
+                      TextLiquidFill(
+                        text: 'Welcome New User',
+                        waveColor: Colors.white,
+                        boxBackgroundColor: Colors.grey,
+                        textStyle:GoogleFonts.robotoCondensed(fontSize: 30,color: Colors.white,fontWeight: FontWeight.bold),
+                        boxHeight: 100.0,
                       ),
                       SizedBox(
                         height: 20,
