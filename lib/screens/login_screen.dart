@@ -51,19 +51,23 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   Flexible(
-                      child: Center(
-                    child: AnimatedTextKit(
+                    child: Center(
+                      child:AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            'Money Serial Number Extraction',
+                            textStyle: GoogleFonts.robotoCondensed(fontSize: 55,color: Colors.white,fontWeight: FontWeight.bold),
+                            speed: const Duration(milliseconds: 500),
+                          ),
+                        ],
 
-                      repeatForever: true,
-                      animatedTexts: [
-                        TyperAnimatedText('Money Serial Number Extraction',
-                        speed: Duration(milliseconds: 300),
-                        textStyle: GoogleFonts.robotoCondensed(fontSize: 55,color: Colors.white70,fontWeight: FontWeight.bold)),
-                      ],
-
-                     totalRepeatCount: 1,
+                        totalRepeatCount: 5,
+                        pause: const Duration(milliseconds: 500),
+                        displayFullTextOnTap: true,
+                        stopPauseOnTap: true,
+                      )
                     ),
-                  )),
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Form(
