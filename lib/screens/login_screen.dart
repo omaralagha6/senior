@@ -32,21 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  static List<Color> colorizeColors = [
-    // Colors.green[900],
-    // Colors.green[800],
-    // Colors.green[700],
-    // Colors.green[600],
-    // Colors.green[500],
-    // Colors.green[400],
-    // Colors.green[300],
-    // Colors.green[200],
-    // Colors.green[100],
-    Colors.grey,
-    Colors.white
-  ];
-
-
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
@@ -66,35 +51,23 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   Flexible(
-                      child: Center(
-                    // child:AnimatedTextKit(
-                    //   animatedTexts: [
-                    //     TypewriterAnimatedText(
-                    //       'Money Serial Number Extraction',
-                    //       textStyle: GoogleFonts.robotoCondensed(fontSize: 55,color: Colors.white,fontWeight: FontWeight.bold),
-                    //       speed: const Duration(milliseconds: 500),
-                    //     ),
-                    //   ],
-                    //
-                    //   totalRepeatCount: 5,
-                    //   pause: const Duration(milliseconds: 500),
-                    //   displayFullTextOnTap: true,
-                    //   stopPauseOnTap: true,
-                    // )
-                    child: AnimatedTextKit(
-                      animatedTexts: [
-                        ColorizeAnimatedText(
-                          'Money Serial Number Extraction',
-                          textStyle:GoogleFonts.robotoCondensed(fontSize: 60,color: Colors.white,fontWeight: FontWeight.bold),
-                          colors: colorizeColors,
-                        ),
-                      ],
-                      isRepeatingAnimation: true,
-                      onTap: () {
-                        print("Tap Event");
-                      },
+                    child: Center(
+                      child:AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            'Money Serial Number Extraction',
+                            textStyle: GoogleFonts.robotoCondensed(fontSize: 55,color: Colors.white,fontWeight: FontWeight.bold),
+                            speed: const Duration(milliseconds: 500),
+                          ),
+                        ],
+
+                        totalRepeatCount: 5,
+                        pause: const Duration(milliseconds: 500),
+                        displayFullTextOnTap: true,
+                        stopPauseOnTap: true,
+                      )
                     ),
-                  )),
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Form(

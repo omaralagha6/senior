@@ -1,4 +1,3 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -43,14 +42,13 @@ class ForgotPasswordScreen extends StatelessWidget {
                   child: SingleChildScrollView(
                     child: Form(
                       child: Column(children: [
-                        AnimatedTextKit(
-                          animatedTexts: [
-                            WavyAnimatedText('Enter your phone number to reset your password',textStyle:GoogleFonts.robotoCondensed(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold) ),
-                          ],
-                          isRepeatingAnimation: true,
-                          onTap: () {
-                            print("Tap Event");
-                          },
+                        Text(
+                          'Enter your phone number to reset your password',
+                          style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                              color: Colors.white),
                         ),
                         SizedBox(
                           height: 20,

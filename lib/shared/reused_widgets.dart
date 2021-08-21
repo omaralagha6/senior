@@ -10,7 +10,8 @@ Widget getDefaultTextFormField(
         required TextInputAction txtInputAction,
         IconButton? iconData2,
         required TextEditingController textEditingController,
-        TextInputType? type}) =>
+        TextInputType? type,
+        void Function()? submitted}) =>
     Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
@@ -46,6 +47,7 @@ Widget getDefaultTextFormField(
               ),
             ),
             style: kBoodyText,
+            onTap: submitted,
             textInputAction: txtInputAction,
             keyboardType:type ,
         ),

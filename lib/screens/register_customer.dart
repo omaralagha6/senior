@@ -1,20 +1,21 @@
-import 'package:flutter/cupertino.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:senior_project/palette.dart';
-import 'package:senior_project/screens/forgot_password.dart';
 import 'package:senior_project/screens/login_screen.dart';
 import 'package:senior_project/shared/reused_widgets.dart';
 
-class CreateNewAccountScreen extends StatefulWidget {
+class RegisterCustomerScreen extends StatefulWidget {
+  const RegisterCustomerScreen({Key? key}) : super(key: key);
+
   @override
-  _CreateNewAccountScreenState createState() => _CreateNewAccountScreenState();
+  _RegisterCustomerScreenState createState() => _RegisterCustomerScreenState();
 }
 
-class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
+class _RegisterCustomerScreenState extends State<RegisterCustomerScreen> {
   bool isObscure = true;
   var usrname = TextEditingController();
   var pass = TextEditingController();
@@ -56,13 +57,18 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 child: SingleChildScrollView(
                   child: Form(
                     child: Column(children: [
-                      Text(
-                        'Welcome New User',
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                            color: Colors.white),
+                      AnimatedTextKit(
+                        animatedTexts: [
+                          ColorizeAnimatedText(
+                            'Add New Customer',
+                            textStyle: GoogleFonts.robotoCondensed(
+                                fontSize: 45,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                            colors: [Colors.white, Colors.grey],
+                          ),
+                        ],
+                        isRepeatingAnimation: true,
                       ),
                       SizedBox(
                         height: 20,
@@ -83,27 +89,39 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                         type: TextInputType.text,
                       ),
                       getDefaultTextFormField(
+                          obscure: false,
+                          iconData: FontAwesomeIcons.flag,
+                          lblText: 'Nationality',
+                          txtInputAction: TextInputAction.next,
+                          textEditingController: nationality,
+                          submitted: () {
+                            showCountryPicker(
+                              context: context,
+                              showPhoneCode: true,
+                              // optional. Shows phone code before the country name.
+                              onSelect: (Country country) {
+                                nationality.text = country.name;
+                                phonenumber.text = "+"+country.phoneCode+" ";
+                                print('Select country: ${country.displayName}');
+                              },
+                            );
+                          }),
+                      getDefaultTextFormField(
                         obscure: false,
                         iconData: FontAwesomeIcons.phoneAlt,
                         lblText: 'Phone Number',
                         txtInputAction: TextInputAction.next,
                         textEditingController: phonenumber,
                         type: TextInputType.phone,
-                      ),
-                      getDefaultTextFormField(
-                        obscure: false,
-                        iconData: FontAwesomeIcons.flag,
-                        lblText: 'Nationality',
-                        type: TextInputType.text,
-                        txtInputAction: TextInputAction.next,
-                        textEditingController: nationality,
+                        submitted:(){
+                          print(phonenumber.text);
+                        }
                       ),
                       getDefaultTextFormField(
                         obscure: false,
                         iconData: FontAwesomeIcons.addressCard,
                         lblText: 'Address',
                         txtInputAction: TextInputAction.next,
-                        type: TextInputType.text,
                         textEditingController: address,
                       ),
                       getDefaultTextFormField(
@@ -159,11 +177,15 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Register', style: kBoodyText),
+                              Text('Add Customer', style: kBoodyText),
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(FontAwesomeIcons.registered),
+                              Icon(
+                                Icons.person_add_alt_1_outlined,
+                                color: Colors.white,
+                                size: 30,
+                              ),
                             ],
                           ),
                         ),
