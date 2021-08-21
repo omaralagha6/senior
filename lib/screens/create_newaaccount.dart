@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-
 import 'package:senior_project/palette.dart';
-import 'package:senior_project/screens/forgot_password.dart';
 import 'package:senior_project/screens/login_screen.dart';
 import 'package:senior_project/shared/reused_widgets.dart';
 
@@ -19,13 +17,13 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
   bool isObscure = true;
   var usrname = TextEditingController();
   var pass = TextEditingController();
+  var confPass = TextEditingController();
   var firstname = TextEditingController();
   var lastname = TextEditingController();
   var phonenumber = TextEditingController();
   var nationality = TextEditingController();
   var address = TextEditingController();
   var gender = TextEditingController();
-
   IconData icon = FontAwesomeIcons.solidEye;
 
   @override
@@ -41,7 +39,16 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            elevation: 0,
+            //toolbarHeight: 80,
+            //elevation: 10,
+            title: Text(
+              'Register New User',
+              style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 40,
+                  color: Color(0xffbfbfbf)),
+            ),
             leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -57,17 +64,9 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 child: SingleChildScrollView(
                   child: Form(
                     child: Column(children: [
-                      Text(
-                        'Welcome New User',
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 40,
-                            color: Colors.white),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
                       getDefaultTextFormField(
                           obscure: false,
                           lblText: 'First Name',
@@ -96,8 +95,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                               // optional. Shows phone code before the country name.
                               onSelect: (Country country) {
                                 nationality.text = country.name;
-                                phonenumber.text =
-                                    "+" + country.phoneCode + " ";
+                                phonenumber.text = "+ ${country.phoneCode} ";
                                 print('Select country: ${country.displayName}');
                               },
                             );
@@ -139,8 +137,32 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                       getDefaultTextFormField(
                         textEditingController: pass,
                         obscure: isObscure,
-                        iconData: FontAwesomeIcons.unlock,
+                        iconData: FontAwesomeIcons.lock,
                         lblText: 'Password',
+                        txtInputAction: TextInputAction.done,
+                        iconData2: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isObscure = !isObscure;
+                              if (isObscure == true) {
+                                icon = FontAwesomeIcons.solidEye;
+                              } else {
+                                icon = FontAwesomeIcons.solidEyeSlash;
+                              }
+                            });
+                          },
+                          icon: Icon(
+                            icon,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      getDefaultTextFormField(
+                        textEditingController: confPass,
+                        obscure: isObscure,
+                        iconData: FontAwesomeIcons.unlock,
+                        lblText: 'Confirm Password',
                         txtInputAction: TextInputAction.done,
                         iconData2: IconButton(
                           onPressed: () {
@@ -168,12 +190,24 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            if (_checkRegisterFields()) {
+                              if (pass.toString() != confPass.toString()) {
+                                Get.defaultDialog(
+                                    middleText:
+                                        "Password and confirmation should be equals.");
+                              } else {}
+                            } else {
+                              Get.defaultDialog(
+                                  middleText:
+                                      "All fields are required to continue.");
+                            }
+                          },
                           color: Colors.blue,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Register', style: kBoodyText),
+                              Text('Register', style: kBodyText),
                               SizedBox(
                                 width: 10,
                               ),
@@ -191,5 +225,17 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
         )
       ],
     );
+  }
+
+  bool _checkRegisterFields() {
+    if (usrname.text.isEmpty ||
+        pass.text.isEmpty ||
+        firstname.text.isEmpty ||
+        lastname.text.isEmpty ||
+        phonenumber.text.isEmpty ||
+        nationality.text.isEmpty ||
+        address.text.isEmpty ||
+        gender.text.isEmpty) return false;
+    return true;
   }
 }
