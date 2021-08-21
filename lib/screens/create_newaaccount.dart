@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -83,21 +84,34 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                         type: TextInputType.text,
                       ),
                       getDefaultTextFormField(
-                        obscure: false,
-                        iconData: FontAwesomeIcons.phoneAlt,
-                        lblText: 'Phone Number',
-                        txtInputAction: TextInputAction.next,
-                        textEditingController: phonenumber,
-                        type: TextInputType.phone,
-                      ),
+                          obscure: false,
+                          iconData: FontAwesomeIcons.flag,
+                          lblText: 'Nationality',
+                          txtInputAction: TextInputAction.next,
+                          textEditingController: nationality,
+                          submitted: () {
+                            showCountryPicker(
+                              context: context,
+                              showPhoneCode: true,
+                              // optional. Shows phone code before the country name.
+                              onSelect: (Country country) {
+                                nationality.text = country.name;
+                                phonenumber.text =
+                                    "+" + country.phoneCode + " ";
+                                print('Select country: ${country.displayName}');
+                              },
+                            );
+                          }),
                       getDefaultTextFormField(
-                        obscure: false,
-                        iconData: FontAwesomeIcons.flag,
-                        lblText: 'Nationality',
-                        type: TextInputType.text,
-                        txtInputAction: TextInputAction.next,
-                        textEditingController: nationality,
-                      ),
+                          obscure: false,
+                          iconData: FontAwesomeIcons.phoneAlt,
+                          lblText: 'Phone Number',
+                          txtInputAction: TextInputAction.next,
+                          textEditingController: phonenumber,
+                          type: TextInputType.phone,
+                          submitted: () {
+                            print(phonenumber.text);
+                          }),
                       getDefaultTextFormField(
                         obscure: false,
                         iconData: FontAwesomeIcons.addressCard,
