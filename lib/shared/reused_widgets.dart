@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/palette.dart';
 
 Widget getDefaultTextFormField(
-        {required bool obscure,
+        { required bool obscure,
         IconData? iconData,
         required String lblText,
         required TextInputAction txtInputAction,
@@ -40,13 +40,13 @@ Widget getDefaultTextFormField(
                 child: iconData2,
               ),
               labelText: lblText,
-              hintStyle: kBoodyText,
+              hintStyle: kBodyText,
 
               labelStyle: TextStyle(
                 color: Colors.white,
               ),
             ),
-            style: kBoodyText,
+            style: kBodyText,
             onTap: submitted,
             textInputAction: txtInputAction,
             keyboardType:type ,

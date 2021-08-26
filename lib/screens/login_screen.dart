@@ -1,13 +1,14 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:senior_project/palette.dart';
 import 'package:senior_project/screens/create_newaaccount.dart';
 import 'package:senior_project/screens/forgot_password.dart';
+import 'package:senior_project/screens/main_screen.dart';
 import 'package:senior_project/shared/reused_widgets.dart';
-import 'package:flutter/services.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -41,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         BackGroundImage(
           image:
-              "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg",
+          "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg",
         ),
         SafeArea(
           child: Scaffold(
@@ -52,21 +53,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Flexible(
                     child: Center(
-                      child:AnimatedTextKit(
-                        animatedTexts: [
-                          TypewriterAnimatedText(
-                            'Money Serial Number Extraction',
-                            textStyle: GoogleFonts.robotoCondensed(fontSize: 55,color: Colors.white,fontWeight: FontWeight.bold),
-                            speed: const Duration(milliseconds: 500),
-                          ),
-                        ],
-
-                        totalRepeatCount: 5,
-                        pause: const Duration(milliseconds: 500),
-                        displayFullTextOnTap: true,
-                        stopPauseOnTap: true,
-                      )
-                    ),
+                        child: AnimatedTextKit(
+                          animatedTexts: [
+                            TypewriterAnimatedText('Money Serial Number Extraction',
+                                textStyle: GoogleFonts.robotoCondensed(
+                                    fontSize: 55,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                speed: const Duration(milliseconds: 200),
+                                cursor: '|'),
+                          ],
+                          totalRepeatCount: 10,
+                          pause: const Duration(milliseconds: 500),
+                          displayFullTextOnTap: true,
+                          stopPauseOnTap: true,
+                        )),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -106,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              const EdgeInsets.symmetric(vertical: 10.0),
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -123,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     children: [
                                       Text(
                                         "Forgot Password",
-                                        style: kBoodyText,
+                                        style: kBodyText,
                                       ),
                                     ],
                                   ),
@@ -132,25 +133,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              const EdgeInsets.symmetric(vertical: 10.0),
                               child: MaterialButton(
                                   height: 70,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   onPressed: () {
-                                    if (username.text.isEmpty ||
-                                        password.text.isEmpty) {
-                                      Get.defaultDialog(
-                                          middleText:
-                                              "Can't leave any empty fields");
-                                    }
+Navigator.push(context,MaterialPageRoute(builder: (context)=>MainScreen()));
                                   },
                                   color: Colors.blue,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text('Login', style: kBoodyText),
+                                      Text('Login', style: kBodyText),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -168,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Dont't have an account ? ", style: kBoodyText),
+                        Text("Don't have an account?", style: kBodyText),
                         TextButton(
                           onPressed: () {
                             //Navigator.pushNamed(context, "CreateNewAccount");
@@ -180,10 +176,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                         CreateNewAccountScreen()));
                           },
                           child: Text(
-                            "Register now",
+                            "Create one",
                             style: TextStyle(
                               color: Colors.blue,
-                              fontSize: 15,
+                              fontSize: 20,
                             ),
                           ),
                         ),
@@ -201,11 +197,12 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class BackGroundImage extends StatelessWidget {
+  final String image;
+
   const BackGroundImage({
     Key? key,
     required this.image,
   }) : super(key: key);
-  final String image;
 
   @override
   Widget build(BuildContext context) {
