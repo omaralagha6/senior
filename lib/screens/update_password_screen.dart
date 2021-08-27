@@ -52,6 +52,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
             backgroundColor: Colors.transparent,
           ),
           body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               getDefaultTextFormField(
                 textEditingController: pass,
