@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/palette.dart';
 import 'package:senior_project/screens/add_dollar_bill.dart';
 import 'package:senior_project/screens/login_screen.dart';
+import 'package:senior_project/screens/main_screen.dart';
 import 'package:senior_project/shared/reused_widgets.dart';
 
 class CreateCustomer extends StatefulWidget {
@@ -134,7 +135,7 @@ class _CreateCustomerState extends State<CreateCustomer> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AddDollarBill()));
+                                    builder: (context) => MainScreen()));
                           },
                           color: Colors.blue,
                           child: Row(
