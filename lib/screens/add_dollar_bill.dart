@@ -28,6 +28,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
   String _text = '';
   late PickedFile _image;
   final picker = ImagePicker();
+  String amount="";
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
                 style: TextStyle(
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w500,
-                    fontSize: 40,
+                    fontSize: 25,
                     color: Color(0xffbfbfbf)),
               ),
               leading: IconButton(
@@ -73,6 +74,10 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               is20Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              setState(() {
+                                amount="1";
+                              });
+                              print(amount);
                             });
                           },
                           child: Container(
@@ -87,7 +92,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               child: Text(
                                 "\$1",
                                 style: TextStyle(
-                                  fontSize: 100,
+                                  fontSize: 60,
                                   fontFamily: "serif",
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -111,6 +116,11 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               is20Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              setState(() {
+                                amount="2";
+                              });
+
+                              print(amount);
                             });
                           },
                           child: Container(
@@ -125,7 +135,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               child: Text(
                                 "\$2",
                                 style: TextStyle(
-                                    fontSize: 100,
+                                    fontSize: 60,
                                     fontFamily: "serif",
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
@@ -149,6 +159,10 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               is20Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              setState(() {
+                                amount="5";
+                              });
+                              print(amount);
                             });
                           },
                           child: Container(
@@ -163,7 +177,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               child: Text(
                                 "\$5",
                                 style: TextStyle(
-                                  fontSize: 100,
+                                  fontSize: 60,
                                   fontFamily: "serif",
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -187,6 +201,10 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               is20Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              setState(() {
+                                amount="10";
+                              });
+                              print(amount);
                             });
                           },
                           child: Container(
@@ -201,7 +219,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               child: Text(
                                 "\$10",
                                 style: TextStyle(
-                                    fontSize: 100,
+                                    fontSize: 60,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: "serif",
                                     color: Colors.white),
@@ -225,6 +243,10 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               is20Checked = true;
                               is50Checked = false;
                               is100Checked = false;
+                              setState(() {
+                                amount="20";
+                              });
+                              print(amount);
                             });
                           },
                           child: Container(
@@ -239,7 +261,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               child: Text(
                                 "\$20",
                                 style: TextStyle(
-                                  fontSize: 100,
+                                  fontSize: 60,
                                   fontFamily: "serif",
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -263,6 +285,10 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               is20Checked = false;
                               is50Checked = true;
                               is100Checked = false;
+                              setState(() {
+                                amount="50";
+                              });
+                              print(amount);
                             });
                           },
                           child: Container(
@@ -277,7 +303,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
                               child: Text(
                                 "\$50",
                                 style: TextStyle(
-                                    fontSize: 100,
+                                    fontSize: 60,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: "serif",
                                     color: Colors.white),
@@ -298,6 +324,10 @@ class _AddDollarBillState extends State<AddDollarBill> {
                         is20Checked = false;
                         is50Checked = false;
                         is100Checked = true;
+                        setState(() {
+                          amount="100";
+                        });
+                        print(amount);
                       });
                     },
                     child: Container(
@@ -312,7 +342,7 @@ class _AddDollarBillState extends State<AddDollarBill> {
                         child: Text(
                           "\$100",
                           style: TextStyle(
-                            fontSize: 100,
+                            fontSize: 60,
                             fontFamily: "serif",
                             fontWeight: FontWeight.bold,
                             color: Colors.white,

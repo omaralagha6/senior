@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:senior_project/palette.dart';
 import 'package:senior_project/screens/add_dollar_bill.dart';
 import 'package:senior_project/screens/login_screen.dart';
 
@@ -12,13 +13,14 @@ class MainDollarScreen extends StatefulWidget {
 class _MainDollarScreenState extends State<MainDollarScreen> {
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      BackGroundImage(
-        image:
-        "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg",
-      ),
-      SafeArea(
-        child: Scaffold(
+    return Stack(
+      children: [
+        BackGroundImage(
+          image:
+              "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg",
+        ),
+        SafeArea(
+          child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
@@ -34,7 +36,277 @@ class _MainDollarScreenState extends State<MainDollarScreen> {
                     MaterialPageRoute(builder: (context) => AddDollarBill()));
               },
             ),
-            body:),),
-    ],);
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.lightGreenAccent,
+                                      Colors.white
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                height: 200,
+                                width: double.infinity,
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  "Hi",
+                                  style: kBodyText,
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

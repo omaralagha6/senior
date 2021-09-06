@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:random_color/random_color.dart';
 import 'package:senior_project/screens/create_customer.dart';
 import 'package:senior_project/screens/login_screen.dart';
 import 'package:senior_project/screens/main_dollar_screen.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -30,6 +32,7 @@ class _MainScreenState extends State<MainScreen> {
     'mohamad',
     'ahmad'
   ];
+  var _auth=FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            backgroundColor:Colors.transparent,
+            backgroundColor: Colors.transparent,
           ),
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.lightGreen,
@@ -68,25 +71,31 @@ class _MainScreenState extends State<MainScreen> {
                   Color _color =
                       _randomColor.randomColor(colorHue: ColorHue.green);
                   return GestureDetector(
-                    onTap:(){
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>MainDollarScreen()));
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainDollarScreen()));
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: _color,
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            imageList[index],
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                    child: Shimmer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: _color.withOpacity(0.5),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              imageList[index],
+                              style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         BackGroundImage(
           image:
-          "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg",
+              "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg",
         ),
         SafeArea(
           child: Scaffold(
@@ -54,20 +54,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   Flexible(
                     child: Center(
                         child: AnimatedTextKit(
-                          animatedTexts: [
-                            TypewriterAnimatedText('Money Serial Number Extraction',
-                                textStyle: GoogleFonts.robotoCondensed(
-                                    fontSize: 55,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                                speed: const Duration(milliseconds: 200),
-                                cursor: '|'),
-                          ],
-                          totalRepeatCount: 10,
-                          pause: const Duration(milliseconds: 500),
-                          displayFullTextOnTap: true,
-                          stopPauseOnTap: true,
-                        )),
+                      animatedTexts: [
+                        TypewriterAnimatedText('Money Serial Number Extraction',
+                            textStyle: GoogleFonts.robotoCondensed(
+                                fontSize: 55,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                            speed: const Duration(milliseconds: 200),
+                            cursor: '|'),
+                      ],
+                      totalRepeatCount: 10,
+                      pause: const Duration(milliseconds: 500),
+                      displayFullTextOnTap: true,
+                      stopPauseOnTap: true,
+                    )),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 10.0),
+                                  const EdgeInsets.symmetric(vertical: 10.0),
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -133,14 +133,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 10.0),
+                                  const EdgeInsets.symmetric(vertical: 10.0),
                               child: MaterialButton(
                                   height: 70,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   onPressed: () {
-Navigator.push(context,MaterialPageRoute(builder: (context)=>MainScreen()));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MainScreen()));
                                   },
                                   color: Colors.blue,
                                   child: Row(
@@ -164,22 +168,24 @@ Navigator.push(context,MaterialPageRoute(builder: (context)=>MainScreen()));
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("Don't have an account?", style: kBodyText),
-                        TextButton(
-                          onPressed: () {
-                            //Navigator.pushNamed(context, "CreateNewAccount");
-                            // Get.to(CreateNewAccountScreen());
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateNewAccountScreen()));
-                          },
-                          child: Text(
-                            "Create one",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 20,
+                        Expanded(child: Text("Don't have an account?", style: kBodyText)),
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () {
+                              //Navigator.pushNamed(context, "CreateNewAccount");
+                              // Get.to(CreateNewAccountScreen());
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CreateNewAccountScreen()));
+                            },
+                            child: Text(
+                              "Create one",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ),

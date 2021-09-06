@@ -43,7 +43,7 @@ class _CreateCustomerState extends State<CreateCustomer> {
               style: TextStyle(
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w500,
-                  fontSize: 40,
+                  fontSize: 20,
                   color: Color(0xffbfbfbf)),
             ),
             leading: IconButton(
