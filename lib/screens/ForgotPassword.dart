@@ -5,23 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:senior_project/palette.dart';
-import 'package:senior_project/screens/login_screen.dart';
-import 'package:senior_project/screens/update_password_screen.dart';
-import 'package:senior_project/shared/reused_widgets.dart';
+import 'package:senior_project/StyleTXT.dart';
+import 'package:senior_project/screens/UpdatePassword.dart';
+import 'package:senior_project/shared/BackgroundImage.dart';
+import 'package:senior_project/shared/TextFormFieldWidget.dart';
 
 enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
   SHOW_OTP_FORM_STATE,
 }
 
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPassword extends StatefulWidget {
   @override
-  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+  _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-
+class _ForgotPasswordState extends State<ForgotPassword> {
   MobileVerificationState currentState =
       MobileVerificationState.SHOW_MOBILE_FORM_STATE;
   final phoneController = TextEditingController();
@@ -43,8 +42,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         showLoading = false;
       });
       if (authCredential.user != null) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => UpdatePasswordScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => UpdatePassword()));
       }
     } on FirebaseAuthException catch (e) {
       // TODO
@@ -103,17 +102,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         this.verificationId = verificationId;
                       });
                     },
-                    codeAutoRetrievalTimeout: (verifiactionId) async {});
+                    codeAutoRetrievalTimeout: (verificationId) async {});
               },
               color: Colors.blue,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Send', style: kBodyText),
+                  Text('Send', style: buttonStyleTXT),
                   SizedBox(
                     width: 10,
                   ),
-                  Icon(Icons.send),
+                  Icon(Icons.send, size: 25, color: Colors.white),
                 ],
               ),
             ),
@@ -129,7 +128,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           getDefaultTextFormField(
               obscure: false,
-              lblText: 'Enter Verificatiion Code',
+              lblText: 'Enter Verification Code',
               txtInputAction: TextInputAction.done,
               textEditingController: otpController,
               iconData: FontAwesomeIcons.code),
@@ -151,7 +150,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Verify', style: kBodyText),
+                  Text('Verify', style: whiteStyleTXT),
                   SizedBox(
                     width: 10,
                   ),
@@ -183,7 +182,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ColorizeAnimatedText(
                   'Register New Password',
                   textStyle: GoogleFonts.robotoCondensed(
-                      fontSize: 25,
+                      fontSize: 30,
                       color: Color(0xffbfbfbf),
                       fontWeight: FontWeight.w500),
                   colors: [Colors.white, Colors.grey],

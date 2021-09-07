@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:senior_project/palette.dart';
-import 'package:senior_project/screens/login_screen.dart';
-import 'package:senior_project/screens/main_screen.dart';
-import 'package:senior_project/shared/reused_widgets.dart';
+import 'package:senior_project/StyleTXT.dart';
+import 'package:senior_project/shared/BackgroundImage.dart';
+import 'package:senior_project/screens/Home.dart';
+import 'package:senior_project/shared/TextFormFieldWidget.dart';
 
-class UpdatePasswordScreen extends StatefulWidget {
-  const UpdatePasswordScreen({Key? key}) : super(key: key);
+class UpdatePassword extends StatefulWidget {
+  const UpdatePassword({Key? key}) : super(key: key);
 
   @override
-  _UpdatePasswordScreenState createState() => _UpdatePasswordScreenState();
+  _UpdatePasswordState createState() => _UpdatePasswordState();
 }
 
-class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
+class _UpdatePasswordState extends State<UpdatePassword> {
   bool isObscure = true;
   bool isObscure2 = true;
   IconData icon = FontAwesomeIcons.solidEye;
@@ -111,13 +111,14 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   onPressed: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context)=>MainScreen()));
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
                   },
                   color: Colors.blue,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Register', style: kBodyText),
+                      Text('Register', style: whiteStyleTXT),
                       SizedBox(
                         width: 10,
                       ),

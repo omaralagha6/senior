@@ -1,20 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:random_color/random_color.dart';
-import 'package:senior_project/screens/create_customer.dart';
-import 'package:senior_project/screens/login_screen.dart';
-import 'package:senior_project/screens/main_dollar_screen.dart';
+import 'package:senior_project/screens/CreateNewCustomer.dart';
+import 'package:senior_project/screens/CustomerDetails.dart';
+import 'package:senior_project/shared/BackgroundImage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+import '../StyleTXT.dart';
+import 'Login.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   List<String> imageList = [
     'omar',
     'mohamad',
@@ -32,7 +35,6 @@ class _MainScreenState extends State<MainScreen> {
     'mohamad',
     'ahmad'
   ];
-  var _auth=FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -45,17 +47,51 @@ class _MainScreenState extends State<MainScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            title: Text(
+              'Home Page',
+              style: titleStyleTXT,
+            ),
+            actions: [
+              Container(
+                width: 100,
+                child: IconButton(
+                  onPressed: () async {
+                    SharedPreferences pref =
+                        await SharedPreferences.getInstance();
+                    pref.setBool('isLogged', false);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                  },
+                  icon: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Logout",
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "serif",
+                              color: Colors.white)),
+                      Icon(Icons.logout),
+                    ],
+                  ),
+                ),
+              ),
+            ],
             backgroundColor: Colors.transparent,
           ),
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.lightGreen,
+            backgroundColor: Colors.green.shade700,
             child: Icon(
               Icons.add,
+              size: 40,
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CreateCustomer()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CreateNewCustomer(/*prev: context,*/)));
             },
           ),
           body: Container(
@@ -67,15 +103,14 @@ class _MainScreenState extends State<MainScreen> {
                 itemCount: imageList.length,
                 itemBuilder: (context, index) {
                   RandomColor _randomColor = RandomColor();
-
-                  Color _color =
-                      _randomColor.randomColor(colorHue: ColorHue.green);
+                  ColorHue _green = ColorHue.custom(Range(80, 90));
+                  Color _color = _randomColor.randomColor(colorHue: _green);
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MainDollarScreen()));
+                              builder: (context) => CustomerDetails()));
                     },
                     child: Shimmer(
                       child: Container(
@@ -88,11 +123,7 @@ class _MainScreenState extends State<MainScreen> {
                           children: [
                             Text(
                               imageList[index],
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                              style: customerStyleTXT,
                             ),
                           ],
                         ),

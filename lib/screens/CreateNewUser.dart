@@ -4,24 +4,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:senior_project/palette.dart';
-import 'package:senior_project/screens/login_screen.dart';
-import 'package:senior_project/screens/main_screen.dart';
-import 'package:senior_project/shared/reused_widgets.dart';
+import 'package:senior_project/StyleTXT.dart';
+import 'package:senior_project/screens/Home.dart';
+import 'package:senior_project/shared/BackgroundImage.dart';
+import 'package:senior_project/shared/TextFormFieldWidget.dart';
 
-class CreateNewAccountScreen extends StatefulWidget {
+class CreateNewUser extends StatefulWidget {
   @override
-  _CreateNewAccountScreenState createState() => _CreateNewAccountScreenState();
+  _CreateNewUserState createState() => _CreateNewUserState();
 }
+
 enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
   SHOW_OTP_FORM_STATE,
 }
-class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
+
+class _CreateNewUserState extends State<CreateNewUser> {
   bool isObscure = true;
   bool isObscure2 = true;
-  var usrname = TextEditingController();
+  var username = TextEditingController();
   var pass = TextEditingController();
   var confPass = TextEditingController();
   var firstname = TextEditingController();
@@ -37,33 +38,36 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
   final otpController = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   String? verificationId;
-  final GlobalKey<ScaffoldState> _scaffoldstate = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
   bool showLoading = false;
-  void signnWithPhoneAuthCredential(
+
+  void SignWithPhoneAuthCredential(
       PhoneAuthCredential phoneAuthCredential) async {
     setState(() {
       showLoading = true;
     });
     try {
       final authCredential =
-      await _auth.signInWithCredential(phoneAuthCredential);
+          await _auth.signInWithCredential(phoneAuthCredential);
       setState(() {
         showLoading = false;
       });
       if (authCredential.user != null) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => MainScreen()));
+        print(authCredential.user!.uid);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
     } on FirebaseAuthException catch (e) {
       // TODO
       setState(() {
         showLoading = false;
       });
-      _scaffoldstate.currentState!.showSnackBar(SnackBar(
+      _scaffoldState.currentState!.showSnackBar(SnackBar(
         content: Text(e.message!),
       ));
     }
   }
+
   getMobileFormWidget(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -140,7 +144,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                   lblText: 'Username',
                   txtInputAction: TextInputAction.next,
                   type: TextInputType.text,
-                  textEditingController: usrname,
+                  textEditingController: username,
                 ),
                 getDefaultTextFormField(
                   textEditingController: pass,
@@ -191,14 +195,14 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  padding: const EdgeInsets.only(top: 10.0),
                   child: MaterialButton(
                     // height: size.height*0.1,
                     height: 65,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    onPressed: () async{
+                    onPressed: () async {
                       setState(() {
                         showLoading = true;
                       });
@@ -214,8 +218,8 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                             setState(() {
                               showLoading = false;
                             });
-                            _scaffoldstate.currentState!.showSnackBar(
-                                SnackBar(content: Text(verificationFailed.message!)));
+                            _scaffoldState.currentState!.showSnackBar(SnackBar(
+                                content: Text(verificationFailed.message!)));
                             //the key is replacing the context
                           },
                           codeSent: (verificationId, resendingToken) async {
@@ -226,17 +230,18 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                               this.verificationId = verificationId;
                             });
                           },
-                          codeAutoRetrievalTimeout: (verifiactionId) async {});
+                          codeAutoRetrievalTimeout: (verificationID) async {});
                     },
                     color: Colors.blue,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Register', style: kBodyText),
+                        Text('Register', style: buttonStyleTXT),
                         SizedBox(
                           width: 10,
                         ),
-                        Icon(Icons.app_registration_outlined)
+                        Icon(Icons.how_to_reg_outlined,
+                            size: 25, color: Colors.white)
                       ],
                     ),
                   ),
@@ -255,7 +260,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           getDefaultTextFormField(
               obscure: false,
-              lblText: 'Enter Verificatiion Code',
+              lblText: 'Enter Verification Code',
               txtInputAction: TextInputAction.done,
               textEditingController: otpController,
               iconData: FontAwesomeIcons.code),
@@ -268,16 +273,16 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
               ),
               onPressed: () async {
                 PhoneAuthCredential phoneAuthCredential =
-                PhoneAuthProvider.credential(
-                    verificationId: this.verificationId!,
-                    smsCode: otpController.text);
-                signnWithPhoneAuthCredential(phoneAuthCredential);
+                    PhoneAuthProvider.credential(
+                        verificationId: this.verificationId!,
+                        smsCode: otpController.text);
+                SignWithPhoneAuthCredential(phoneAuthCredential);
               },
               color: Colors.blue,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Verify', style: kBodyText),
+                  Text('Verify', style: whiteStyleTXT),
                   SizedBox(
                     width: 10,
                   ),
@@ -300,7 +305,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
       children: [
         BackGroundImage(
             image:
-            "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg"),
+                "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg"),
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -308,11 +313,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
             //elevation: 10,
             title: Text(
               'Register New User',
-              style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 40,
-                  color: Color(0xffbfbfbf)),
+              style: titleStyleTXT,
             ),
             leading: IconButton(
               onPressed: () {
@@ -322,23 +323,23 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
             ),
             backgroundColor: Colors.transparent,
           ),
-          body:Container(
+          body: Container(
             child: showLoading
                 ? Center(
-              child: CircularProgressIndicator(),
-            )
+                    child: CircularProgressIndicator(),
+                  )
                 : currentState == MobileVerificationState.SHOW_MOBILE_FORM_STATE
-                ? getMobileFormWidget(context)
-                : getOtpFormWidget(context),
+                    ? getMobileFormWidget(context)
+                    : getOtpFormWidget(context),
             padding: EdgeInsets.all(16),
-          ))
-
+          ),
+        )
       ],
     );
   }
 
   bool _checkRegisterFields() {
-    if (usrname.text.isEmpty ||
+    if (username.text.isEmpty ||
         pass.text.isEmpty ||
         firstname.text.isEmpty ||
         lastname.text.isEmpty ||
