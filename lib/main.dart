@@ -12,8 +12,9 @@ Future<void> main() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   //bool isLogged = false;
   bool isLogged = pref?.getBool('isLogged');
+  String userID = pref?.getString('userID');
   runApp(MaterialApp(
-    home: isLogged == true ? HomeScreen() : MyApp(),
+    home: isLogged == true ? HomeScreen(userId: userID,) : MyApp(),
   ));
 }
 

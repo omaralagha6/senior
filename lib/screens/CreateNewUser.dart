@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:senior_project/Models/Users.dart';
 import 'package:senior_project/StyleTXT.dart';
 import 'package:senior_project/screens/Home.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
@@ -40,6 +42,8 @@ class _CreateNewUserState extends State<CreateNewUser> {
   String? verificationId;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
   bool showLoading = false;
+  CollectionReference userRef = FirebaseFirestore.instance.collection('Users');
+  String? userid;
 
   void SignWithPhoneAuthCredential(
       PhoneAuthCredential phoneAuthCredential) async {
@@ -53,9 +57,35 @@ class _CreateNewUserState extends State<CreateNewUser> {
         showLoading = false;
       });
       if (authCredential.user != null) {
+        userid = authCredential.user!.uid;
         print(authCredential.user!.uid);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        Users user = Users(
+          firstname: firstname.text,
+          country: nationality.text,
+          lastname: lastname.text,
+          phonenumber: phoneController.text,
+          gender: gender.text,
+          address: address.text,
+          password: pass.text,
+          username: username.text,
+        );
+        userRef.doc(authCredential.user!.uid).set({
+          "First Name": user.firstname,
+          "Last Name": user.lastname,
+          "Country": user.country,
+          "Gender": user.gender,
+          "Address": user.address,
+          "Password": user.password,
+          "Username": user.username,
+          "Phone Number": user.phonenumber
+        }).whenComplete(() => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                      userId: authCredential.user!.uid,
+                    )))).catchError((onError){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${onError.toString()}")));
+        });
       }
     } on FirebaseAuthException catch (e) {
       // TODO
@@ -107,7 +137,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                         // optional. Shows phone code before the country name.
                         onSelect: (Country country) {
                           nationality.text = country.name;
-                          phoneController.text = "+ ${country.phoneCode}";
+                          phoneController.text = "+${country.phoneCode}";
                           print('Select country: ${country.displayName}');
                         },
                       );
@@ -151,7 +181,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   obscure: isObscure,
                   iconData: FontAwesomeIcons.lock,
                   lblText: 'Password',
-                  txtInputAction: TextInputAction.done,
+                  txtInputAction: TextInputAction.next,
                   iconData2: IconButton(
                     onPressed: () {
                       setState(() {
@@ -203,34 +233,111 @@ class _CreateNewUserState extends State<CreateNewUser> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onPressed: () async {
-                      setState(() {
-                        showLoading = true;
-                      });
-                      await _auth.verifyPhoneNumber(
-                          phoneNumber: phoneController.text,
-                          verificationCompleted: (phoneAuthCredentials) async {
-                            setState(() {
-                              showLoading = false;
+                      if (_checkRegisterFields() == true) {
+                        if (pass.text == confPass.text) {
+                          userRef
+                              .where("Username", isEqualTo: username.text)
+                              .get()
+                              .then((value) async {
+                            if (value.docs.length == 0) {
+                              setState(() {
+                                showLoading = true;
+                              });
+                              await _auth.verifyPhoneNumber(
+                                  phoneNumber: phoneController.text,
+                                  verificationCompleted:
+                                      (phoneAuthCredentials) async {
+                                    setState(() {
+                                      showLoading = false;
+                                    });
+                                    //signnWithPhoneAuthCredential(phoneAuthCredentials);
+                                  },
+                                  verificationFailed: (verificationFailed) {
+                                    setState(() {
+                                      showLoading = false;
+                                    });
+                                    _scaffoldState.currentState!.showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                verificationFailed.message!)));
+                                    //the key is replacing the context
+                                  },
+                                  codeSent:
+                                      (verificationId, resendingToken) async {
+                                    setState(() {
+                                      showLoading = false;
+                                      currentState = MobileVerificationState
+                                          .SHOW_OTP_FORM_STATE;
+                                      this.verificationId = verificationId;
+                                    });
+                                  },
+                                  codeAutoRetrievalTimeout:
+                                      (verificationID) async {});
+                            } else {
+                              showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12)
+                                      ),
+                                      title: Text("Existing User"),
+                                      content: Text(
+                                          "This User already has an account"),
+                                      actions: [
+                                        FlatButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("OK")),
+                                      ],
+                                    );
+                                  });
+                            }
+                          });
+                        } else {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)
+                                  ),
+                                  content: Text(
+                                      "Password and confirm password aren't equal"),
+                                  actions: [
+                                    FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("OK")),
+                                  ],
+                                );
+                              });
+                        }
+                      } else {
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)
+                                ),
+                                title: Text("Empty Fields"),
+                                content: Text("Can't keep any empty field"),
+                                actions: [
+                                  FlatButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("OK")),
+                                ],
+                              );
                             });
-                            //signnWithPhoneAuthCredential(phoneAuthCredentials);
-                          },
-                          verificationFailed: (verificationFailed) {
-                            setState(() {
-                              showLoading = false;
-                            });
-                            _scaffoldState.currentState!.showSnackBar(SnackBar(
-                                content: Text(verificationFailed.message!)));
-                            //the key is replacing the context
-                          },
-                          codeSent: (verificationId, resendingToken) async {
-                            setState(() {
-                              showLoading = false;
-                              currentState =
-                                  MobileVerificationState.SHOW_OTP_FORM_STATE;
-                              this.verificationId = verificationId;
-                            });
-                          },
-                          codeAutoRetrievalTimeout: (verificationID) async {});
+                      }
                     },
                     color: Colors.blue,
                     child: Row(

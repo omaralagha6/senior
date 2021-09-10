@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,6 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
   IconData icon = FontAwesomeIcons.solidEye;
   var username = TextEditingController();
   var password = TextEditingController();
+  CollectionReference userRef = FirebaseFirestore.instance.collection('Users');
+
 
   @override
   void initState() {
@@ -108,28 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
-                              // GestureDetector(
-                              //   onTap: () {
-                              //     Navigator.push(
-                              //         context,
-                              //         MaterialPageRoute(
-                              //             builder: (context) =>
-                              //                 ForgotPasswordScreen()));
-                              //     // Navigator.pushNamed(context, "ForgotPassword");
-                              //     //Get.to(ForgotPasswordScreen());
-                              //   },
-                              //   child: Container(
-                              //     child: Row(
-                              //       mainAxisAlignment: MainAxisAlignment.end,
-                              //       children: [
-                              //         Text(
-                              //           "Forgot Password",
-                              //           style: whiteStyleTXT,
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
+
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -172,10 +154,88 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () async {
                             SharedPreferences pref = await SharedPreferences.getInstance();
                             pref.setBool('isLogged', true);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()));
+
+                            if (username.text.isEmpty || password.text.isEmpty) {
+                              // Get.defaultDialog(title: "Empty Fields",middleText: "Can't leave any empty field");
+                              showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12)
+                                      ),
+                                      title: Text("Empty Fields"),
+                                      content: Text("Can't keep an empty field "),
+                                      actions: [
+                                        FlatButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("OK")),
+                                      ],
+                                    );
+                                  });
+                            } else {
+                              userRef
+                                  .where("Username", isEqualTo: username.text)
+                                  .get()
+                                  .then((value) {
+                                if(value.docs.length==0){
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(12)
+                                          ),
+                                          content: Text("This user does not exist"),
+                                          actions: [
+                                            FlatButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("OK")),
+                                          ],
+                                        );
+                                      });
+                                }
+                                else {
+                                  if (value.docs.toList()[0]["Password"] !=
+                                      password.text) {
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(12)
+                                            ),
+                                            content: Text("Password does not match"),
+                                            actions: [
+                                              FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("OK")),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                  else {
+                                    pref.setString('userID',value.docs[0].id );
+                                    Navigator.pushReplacement(context,
+                                        MaterialPageRoute(builder: (context) =>
+                                            HomeScreen(userId: "${value.docs[0].id}")));
+                                  }
+                                }
+
+                              }).catchError((onError){
+
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${onError.toString()}")));
+                              });
+                            }
                           },
                           color: Colors.blue,
                           child: Row(

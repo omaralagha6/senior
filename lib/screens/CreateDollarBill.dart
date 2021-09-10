@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:senior_project/Models/DollarBill.dart';
 import 'package:senior_project/screens/CustomerDetails.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
@@ -11,7 +14,10 @@ import 'package:senior_project/shared/TextFormFieldWidget.dart';
 import '../StyleTXT.dart';
 
 class CreateDollarBill extends StatefulWidget {
-  const CreateDollarBill({Key? key}) : super(key: key);
+  final String userId;
+  final String custId;
+
+  CreateDollarBill({required this.userId, required this.custId});
 
   @override
   _CreateDollarBillState createState() => _CreateDollarBillState();
@@ -26,12 +32,56 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
   bool is50Checked = false;
   bool is100Checked = false;
   var serialNbController = TextEditingController();
-  String _text = '';
+  var valueController = TextEditingController();
   late PickedFile _image;
   final picker = ImagePicker();
+  late String uid = widget.userId;
+  late String cid = widget.custId;
+  Map<String, String> resBank = {
+    "A": "Boston",
+    "B": "New York",
+    "C": "Philadelphia",
+    "D": "Cleveland",
+    "E": "Richmond",
+    "F": "Atlanta",
+    "G": "Chicago",
+    "H": "St. Louis",
+    "I": "Minneapolis",
+    "J": "Kansas City",
+    "K": "Dallas",
+    "L": "San Fracisco"
+  };
+
+  Map<String, String> serYear = {
+    "A": "1996",
+    "B": "1999",
+    "C": "2001",
+    "D": "2003",
+    "E": "2004",
+    "F": "2003A",
+    "G": "2004A",
+    "H": "2006",
+    "I": "2006",
+    "J": "2009",
+    "K": "2006A",
+    "L": "2009A",
+    "M": "2013"
+  };
+  CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
+  final regExp = RegExp(r'^([A-Z])([A-Z])(\s)([0-9]{8})(\s)(.*)$');
+  final regExp1 = RegExp(r'^([A-Z])([A-Z])\s([0-9]{8})(.*)$');
+  final regExp2 = RegExp(r'^([A-Z])([A-Z])([0-9]{8})(\s)(.*)$');
+  final regExp3 = RegExp(r'^([A-Z])([A-Z])([0-9]{8})(.*)$');
+  final regExp4 = RegExp(r'^([A-Z])(\s)([0-9]{8})(\s)(.*)$');
+  final regExp5 = RegExp(r'^([A-Z])([0-9]{8})(.*)$');
+  final regExp6 = RegExp(r'^([A-Z])(\s)([0-9]{8})(.*)$');
+  final regExp7 = RegExp(r'^([A-Z])([0-9]{8})(\s)(.*)$');
 
   @override
   Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return Stack(children: [
       BackGroundImage(
           image:
@@ -74,6 +124,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                               is20Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              valueController.text = "1";
                             });
                           },
                           child:
@@ -94,6 +145,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                               is20Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              valueController.text = "2";
                             });
                           },
                           child:
@@ -115,6 +167,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                               is20Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              valueController.text = "5";
                             });
                           },
                           child:
@@ -135,6 +188,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                               is20Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              valueController.text = "10";
                             });
                           },
                           child:
@@ -156,6 +210,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                               is10Checked = false;
                               is50Checked = false;
                               is100Checked = false;
+                              valueController.text = "20";
                             });
                           },
                           child:
@@ -176,6 +231,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                               is10Checked = false;
                               is20Checked = false;
                               is100Checked = false;
+                              valueController.text = "50";
                             });
                           },
                           child:
@@ -194,6 +250,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                         is10Checked = false;
                         is20Checked = false;
                         is50Checked = false;
+                        valueController.text = "100";
                       });
                     },
                     child: _dollarChecked(isChecked: is100Checked, value: 100),
@@ -205,7 +262,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                         getDefaultTextFormField(
                           lblText: 'Serial Number',
                           textEditingController: serialNbController,
-                          txtInputAction: TextInputAction.next,
+                          txtInputAction: TextInputAction.done,
                           obscure: false,
                           iconData2: IconButton(
                               icon: Icon(FontAwesomeIcons.camera),
@@ -221,12 +278,140 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        CustomerDetails()));
+                            if (valueController.text.isEmpty ||
+                                serialNbController.text.isEmpty) {
+                              if (valueController.text.isEmpty) {
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        content: Text(
+                                            "You need to specify the amount"),
+                                        actions: [
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("OK")),
+                                        ],
+                                      );
+                                    });
+                              } else {
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        content: Text(
+                                            "You need to provide the serial number"),
+                                        actions: [
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("OK")),
+                                        ],
+                                      );
+                                    });
+                              }
+                            } else {
+                                userRef
+                                    .doc(uid)
+                                    .collection("Customers")
+                                    .doc(cid)
+                                    .collection("Dollar Bills")
+                                    .where("Serial Number",
+                                        isEqualTo: serialNbController.text)
+                                    .get()
+                                    .then((value) {
+                                  if (value.docs.length == 0) {
+                                    if (valueController.text == "1" ||
+                                        valueController.text == "2") {
+                                      DollarBill db = DollarBill(
+                                        serialNb: serialNbController.text,
+                                        reserveBank:
+                                            resBank[serialNbController.text[0]],
+                                        amount: valueController.text,
+                                      );
+
+                                      userRef
+                                          .doc(uid)
+                                          .collection("Customers")
+                                          .doc(cid)
+                                          .collection("Dollar Bills")
+                                          .add({
+                                            "Serial Number": db.serialNb,
+                                            "Reserve Bank": db.reserveBank,
+                                            "Amount": db.amount,
+                                            "Series Year": "Does Not Exist"
+                                          })
+                                          .whenComplete(
+                                              () => Navigator.pop(context))
+                                          .catchError((onError) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "${onError.toString()}")));
+                                          });
+                                    } else {
+                                      DollarBill db = DollarBill(
+                                          serialNb: serialNbController.text,
+                                          reserveBank: resBank[
+                                              serialNbController.text[0]],
+                                          amount: valueController.text,
+                                          seriesYear: serYear[
+                                              serialNbController.text[1]]);
+                                      userRef
+                                          .doc(uid)
+                                          .collection("Customers")
+                                          .doc(cid)
+                                          .collection("Dollar Bills")
+                                          .add({
+                                            "Serial Number": db.serialNb,
+                                            "Reserve Bank": db.reserveBank,
+                                            "Series Year": db.seriesYear,
+                                            "Amount": db.amount
+                                          })
+                                          .whenComplete(
+                                              () => Navigator.pop(context))
+                                          .catchError((onError) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "${onError.toString()}")));
+                                          });
+                                    }
+                                  } else {
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            content: Text(
+                                                "This serial number  already exist for another bill"),
+                                            actions: [
+                                              FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("OK")),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                });
+                              }
+
                           },
                           color: Colors.blue,
                           child: Row(
@@ -253,6 +438,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
 
   Future getSerialNumber() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
+    String _text = '';
     setState(() {
       if (pickedFile != null) {
         _image = pickedFile;
@@ -272,26 +458,8 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
         _text += (line.text! + '\n');
       }
     }
-    print(_text);
     List<String> str = _text.split("\n");
-    _text = "";
 
-    final regExp = RegExp(
-        r'^([A-Z])([A-Z])(\s)([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])(\s)([A-Z])$');
-    final regExp1 = RegExp(
-        r'^([A-Z])([A-Z])\s([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])([A-Z])$');
-    final regExp2 = RegExp(
-        r'^([A-Z])([A-Z])([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])\s([A-Z])$');
-    final regExp3 = RegExp(
-        r'^([A-Z])([A-Z])([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])([A-Z])$');
-    final regExp4 = RegExp(
-        r'^([A-Z])(\s)([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])(\s)([A-Z])$');
-    final regExp5 =
-        RegExp(r'^([A-Z])([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])([A-Z])$');
-    final regExp6 = RegExp(
-        r'^([A-Z])(\s)([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])([A-Z])$');
-    final regExp7 = RegExp(
-        r'^([A-Z])([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])(\s)([A-Z])$');
     //String? serials=null;
     for (String s in str) {
       if (regExp.hasMatch(s) ||
@@ -302,14 +470,10 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
           regExp5.hasMatch(s) ||
           regExp6.hasMatch(s) ||
           regExp7.hasMatch(s)) {
-        serialNbController.text = s;
+        serialNbController.text = s.replaceAll(" ", "");
         break;
       }
     }
-    print(_text);
-
-    //print(serials);
-    //serialNbControlller.text = serials!;
   }
 
   Widget _dollarChecked({required bool isChecked, required int value}) {

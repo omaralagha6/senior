@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,7 +8,8 @@ import 'package:senior_project/screens/Home.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
 
 class UpdatePassword extends StatefulWidget {
-  const UpdatePassword({Key? key}) : super(key: key);
+  final String userId;
+  UpdatePassword( {required this.userId});
 
   @override
   _UpdatePasswordState createState() => _UpdatePasswordState();
@@ -16,10 +18,12 @@ class UpdatePassword extends StatefulWidget {
 class _UpdatePasswordState extends State<UpdatePassword> {
   bool isObscure = true;
   bool isObscure2 = true;
+  late String id=widget.userId;
   IconData icon = FontAwesomeIcons.solidEye;
   IconData icon2 = FontAwesomeIcons.solidEye;
   var pass = TextEditingController();
   var confPass = TextEditingController();
+  CollectionReference userRef=FirebaseFirestore.instance.collection("Users");
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +115,56 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   onPressed: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                    if(pass.text.isEmpty || confPass.text.isEmpty)
+                      {
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)
+                                ),
+                                content: Text("Can't keep an empty field"),
+                                actions: [
+                                  FlatButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("OK")),
+                                ],
+                              );
+                            });
+                      }
+                    else {
+                      if (pass.text != confPass.text) {
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)
+                                ),
+                                content: Text(
+                                    "Password and Confirm password do not match"),
+                                actions: [
+                                  FlatButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("OK")),
+                                ],
+                              );
+                            });
+                      }
+                      else
+                        {
+                          userRef.doc(id).update({
+                            "Password":pass.text
+                          }).whenComplete(() => Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomeScreen(userId: id,))));
+                        }
+                    }
                   },
                   color: Colors.blue,
                   child: Row(

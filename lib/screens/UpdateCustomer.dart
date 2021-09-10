@@ -4,32 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/Models/Customer.dart';
-import 'package:senior_project/screens/Home.dart';
+import 'package:senior_project/StyleTXT.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
 
-import '../StyleTXT.dart';
+class UpdateCustomer extends StatefulWidget {
+  final DocumentSnapshot customer;
 
-class CreateNewCustomer extends StatefulWidget {
-  final String userId;
-
-  CreateNewCustomer({required this.userId});
+  UpdateCustomer({required this.customer});
 
   @override
-  _CreateNewCustomerState createState() => _CreateNewCustomerState();
+  _UpdateCustomerState createState() => _UpdateCustomerState();
 }
 
-class _CreateNewCustomerState extends State<CreateNewCustomer> {
+class _UpdateCustomerState extends State<UpdateCustomer> {
   var firstname = TextEditingController();
   var lastname = TextEditingController();
   var phoneNbr = TextEditingController();
   var nationality = TextEditingController();
   var address = TextEditingController();
   var gender = TextEditingController();
-  late String id = widget.userId;
-  CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
 
-  _CreateNewCustomerState();
+  @override
+  void initState() {
+    firstname = TextEditingController(text: widget.customer.get("First Name"));
+    lastname =
+        TextEditingController(text: "${widget.customer.get("Last Name")}");
+    phoneNbr =
+        TextEditingController(text: "${widget.customer.get("Phone Number")}");
+    nationality =
+        TextEditingController(text: "${widget.customer.get("Country")}");
+    address = TextEditingController(text: "${widget.customer.get("Address")}");
+    gender = TextEditingController(text: "${widget.customer.get("Gender")}");
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +56,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
             //toolbarHeight: 80,
             //elevation: 10,
             title: Text(
-              'Create Customer',
+              'Edit Customer',
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontFamily: "serif",
@@ -150,54 +159,21 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     onPressed: () {
                       // Navigator.pop(context);
                       if (_checkRegisterFields() == true) {
-                        userRef
-                            .doc(id)
-                            .collection("Customers")
-                            .where("Phone Number", isEqualTo: phoneNbr.text)
-                            .get()
-                            .then((value) {
-                          if (value.docs.length == 0) {
-                            Customer c = Customer(
-                                firstname: firstname.text,
-                                lastname: lastname.text,
-                                country: nationality.text,
-                                phonenumber: phoneNbr.text,
-                                address: address.text,
-                                gender: gender.text);
-                            userRef.doc(id).collection("Customers").add({
-                              "First Name": c.firstname,
-                              "Last Name": c.lastname,
-                              "Country": c.country,
-                              "Phone Number": c.phonenumber,
-                              "Address": c.address,
-                              "Gender": c.gender,
-                            }).whenComplete(() => Navigator.pop(context)).catchError((onError){
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${onError.toString()}")));
-                            });
-                          } else {
-                            showDialog(
-
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12)
-                                    ),
-                                    title: Text("Existing Customer"),
-                                    content:
-                                        Text("This customer  already exist"),
-                                    actions: [
-                                      FlatButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("OK")),
-                                    ],
-                                  );
-                                });
-                          }
-                        });
+                        Customer c = Customer(
+                            firstname: firstname.text,
+                            lastname: lastname.text,
+                            country: nationality.text,
+                            phonenumber: phoneNbr.text,
+                            address: address.text,
+                            gender: gender.text);
+                        widget.customer.reference.update({
+                          "First Name": c.firstname,
+                          "Last Name": c.lastname,
+                          "Country": c.country,
+                          "Phone Number": c.phonenumber,
+                          "Address": c.address,
+                          "Gender": c.gender,
+                        }).whenComplete(() => Navigator.pop(context));
                       } else {
                         showDialog(
                             barrierDismissible: false,
@@ -205,8 +181,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                             builder: (context) {
                               return AlertDialog(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)
-                                ),
+                                    borderRadius: BorderRadius.circular(12)),
                                 content: Text("Can't keep an empty field"),
                                 actions: [
                                   FlatButton(
@@ -223,7 +198,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Create', style: buttonStyleTXT),
+                        Text('Update', style: buttonStyleTXT),
                         SizedBox(
                           width: 10,
                         ),

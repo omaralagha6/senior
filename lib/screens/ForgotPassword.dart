@@ -43,7 +43,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       });
       if (authCredential.user != null) {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => UpdatePassword()));
+            MaterialPageRoute(builder: (context) => UpdatePassword(userId: _auth.currentUser!.uid,)));
       }
     } on FirebaseAuthException catch (e) {
       // TODO

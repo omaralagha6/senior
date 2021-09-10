@@ -6,6 +6,8 @@ const TextStyle titleStyleTXT = TextStyle(
     fontFamily: "serif",
     fontSize: 30,
     color: Color(0xffbfbfbf));
+const TextStyle customerDetailStyleTXT =
+    TextStyle(fontSize: 20, color: Colors.black,fontFamily: "serif");
 const TextStyle customerStyleTXT =
     TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
 
