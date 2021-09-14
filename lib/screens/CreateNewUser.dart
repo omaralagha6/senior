@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,8 @@ import 'package:senior_project/StyleTXT.dart';
 import 'package:senior_project/screens/Home.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class CreateNewUser extends StatefulWidget {
   @override
@@ -36,14 +39,14 @@ class _CreateNewUserState extends State<CreateNewUser> {
   IconData icon2 = FontAwesomeIcons.solidEye;
   MobileVerificationState currentState =
       MobileVerificationState.SHOW_MOBILE_FORM_STATE;
-  final phoneController = TextEditingController();
-  final otpController = TextEditingController();
+  var phoneController = TextEditingController();
+  var otpController = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   String? verificationId;
   final GlobalKey<ScaffoldState> _scaffoldState = GlobalKey();
   bool showLoading = false;
   CollectionReference userRef = FirebaseFirestore.instance.collection('Users');
-  String? userid;
+
 
   void SignWithPhoneAuthCredential(
       PhoneAuthCredential phoneAuthCredential) async {
@@ -57,8 +60,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
         showLoading = false;
       });
       if (authCredential.user != null) {
-        userid = authCredential.user!.uid;
-        print(authCredential.user!.uid);
+
         Users user = Users(
           firstname: firstname.text,
           country: nationality.text,
@@ -160,13 +162,40 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   type: TextInputType.text,
                   textEditingController: address,
                 ),
-                getDefaultTextFormField(
-                  obscure: false,
-                  iconData: FontAwesomeIcons.genderless,
-                  lblText: 'Gender',
-                  txtInputAction: TextInputAction.next,
-                  type: TextInputType.text,
-                  textEditingController: gender,
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(vertical: 10),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    height: 65,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300]!.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      children: [
+                        Text("Gender" ,style:whiteStyleTXT),
+                        Radio(
+                          value: "Male",
+                          groupValue: gender.text,
+                          onChanged: (value){
+                            setState(() {
+                              gender.text=value as String ;
+                            });
+                          },
+                        ),Text("Male",style:whiteStyleTXT),
+                        Radio(
+                          value: "Female",
+                          groupValue: gender.text,
+                          onChanged: (value){
+                            setState(() {
+                              gender.text=value as String ;
+                            });
+                          },
+                        ),Text("Female",style:whiteStyleTXT),
+                      ],
+                    ),
+                  ),
                 ),
                 getDefaultTextFormField(
                   obscure: false,
@@ -235,67 +264,81 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     onPressed: () async {
                       if (_checkRegisterFields() == true) {
                         if (pass.text == confPass.text) {
-                          userRef
-                              .where("Username", isEqualTo: username.text)
-                              .get()
-                              .then((value) async {
-                            if (value.docs.length == 0) {
-                              setState(() {
-                                showLoading = true;
-                              });
-                              await _auth.verifyPhoneNumber(
-                                  phoneNumber: phoneController.text,
-                                  verificationCompleted:
-                                      (phoneAuthCredentials) async {
-                                    setState(() {
-                                      showLoading = false;
-                                    });
-                                    //signnWithPhoneAuthCredential(phoneAuthCredentials);
-                                  },
-                                  verificationFailed: (verificationFailed) {
-                                    setState(() {
-                                      showLoading = false;
-                                    });
-                                    _scaffoldState.currentState!.showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                verificationFailed.message!)));
-                                    //the key is replacing the context
-                                  },
-                                  codeSent:
-                                      (verificationId, resendingToken) async {
-                                    setState(() {
-                                      showLoading = false;
-                                      currentState = MobileVerificationState
-                                          .SHOW_OTP_FORM_STATE;
-                                      this.verificationId = verificationId;
-                                    });
-                                  },
-                                  codeAutoRetrievalTimeout:
-                                      (verificationID) async {});
-                            } else {
-                              showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12)
-                                      ),
-                                      title: Text("Existing User"),
-                                      content: Text(
-                                          "This User already has an account"),
-                                      actions: [
-                                        FlatButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("OK")),
-                                      ],
-                                    );
-                                  });
-                            }
-                          });
+                         final result =await Connectivity().checkConnectivity();
+                         if(result==ConnectivityResult.wifi || result ==ConnectivityResult.mobile)
+                           {
+                             userRef
+                                 .where("Username", isEqualTo: username.text)
+                                 .get()
+                                 .then((value) async {
+                               if (value.docs.length == 0) {
+                                 setState(() {
+                                   showLoading = true;
+                                 });
+                                 await _auth.verifyPhoneNumber(
+                                     phoneNumber: phoneController.text,
+                                     verificationCompleted:
+                                         (phoneAuthCredentials) async {
+                                       setState(() {
+                                         showLoading = false;
+                                       });
+                                       //signnWithPhoneAuthCredential(phoneAuthCredentials);
+                                     },
+                                     verificationFailed: (verificationFailed) {
+                                       setState(() {
+                                         showLoading = false;
+                                       });
+                                       _scaffoldState.currentState!.showSnackBar(
+                                           SnackBar(
+                                               content: Text(
+                                                   verificationFailed.message!)));
+                                       //the key is replacing the context
+                                     },
+                                     codeSent:
+                                         (verificationId, resendingToken) async {
+                                       setState(() {
+                                         showLoading = false;
+                                         currentState = MobileVerificationState
+                                             .SHOW_OTP_FORM_STATE;
+                                         this.verificationId = verificationId;
+                                       });
+                                     },
+                                     codeAutoRetrievalTimeout:
+                                         (verificationID) async {});
+                               } else {
+                                 showDialog(
+                                     barrierDismissible: false,
+                                     context: context,
+                                     builder: (context) {
+                                       return AlertDialog(
+                                         shape: RoundedRectangleBorder(
+                                             borderRadius: BorderRadius.circular(12)
+                                         ),
+                                         title: Text("Existing User"),
+                                         content: Text(
+                                             "This User already has an account"),
+                                         actions: [
+                                           FlatButton(
+                                               onPressed: () {
+                                                 Navigator.pop(context);
+                                               },
+                                               child: Text("OK")),
+                                         ],
+                                       );
+                                     });
+                               }
+                             });
+                           }
+                         else
+                           {
+                             showTopSnackBar(
+                               context,
+                               CustomSnackBar.error(
+                                 message:
+                                 "You don't have internet access",
+                               ),
+                             );
+                           }
                         } else {
                           showDialog(
                               barrierDismissible: false,

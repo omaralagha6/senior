@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,8 @@ import 'package:senior_project/Models/Customer.dart';
 import 'package:senior_project/screens/Home.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../StyleTXT.dart';
 
@@ -126,14 +129,41 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                 type: TextInputType.text,
                                 textEditingController: address,
                               ),
-                              getDefaultTextFormField(
-                                obscure: false,
-                                iconData: FontAwesomeIcons.genderless,
-                                lblText: 'Gender',
-                                txtInputAction: TextInputAction.next,
-                                type: TextInputType.text,
-                                textEditingController: gender,
-                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  height: 65,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300]!.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text("Gender" ,style:whiteStyleTXT),
+                                      Radio(
+                                        value: "Male",
+                                        groupValue: gender.text,
+                                        onChanged: (value){
+                                          setState(() {
+                                            gender.text=value as String ;
+                                          });
+                                        },
+                                      ),Text("Male",style:whiteStyleTXT),
+                                      Radio(
+                                        value: "Female",
+                                        groupValue: gender.text,
+                                        onChanged: (value){
+                                          setState(() {
+                                            gender.text=value as String ;
+                                          });
+                                        },
+                                      ),Text("Female",style:whiteStyleTXT),
+                                    ],
+                                  ),
+                                ),
+                              )
                             ]),
                       ),
                     ),
@@ -147,57 +177,79 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       // Navigator.pop(context);
                       if (_checkRegisterFields() == true) {
-                        userRef
-                            .doc(id)
-                            .collection("Customers")
-                            .where("Phone Number", isEqualTo: phoneNbr.text)
-                            .get()
-                            .then((value) {
-                          if (value.docs.length == 0) {
-                            Customer c = Customer(
-                                firstname: firstname.text,
-                                lastname: lastname.text,
-                                country: nationality.text,
-                                phonenumber: phoneNbr.text,
-                                address: address.text,
-                                gender: gender.text);
-                            userRef.doc(id).collection("Customers").add({
-                              "First Name": c.firstname,
-                              "Last Name": c.lastname,
-                              "Country": c.country,
-                              "Phone Number": c.phonenumber,
-                              "Address": c.address,
-                              "Gender": c.gender,
-                            }).whenComplete(() => Navigator.pop(context)).catchError((onError){
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${onError.toString()}")));
-                            });
-                          } else {
-                            showDialog(
+                      final result= await Connectivity().checkConnectivity();
+                      if(result== ConnectivityResult.wifi || result ==ConnectivityResult.mobile)
+                        {
+                          userRef
+                              .doc(id)
+                              .collection("Customers")
+                              .where("Phone Number", isEqualTo: phoneNbr.text)
+                              .get()
+                              .then((value) {
+                            if (value.docs.length == 0) {
+                              Customer c = Customer(
+                                  firstname: firstname.text,
+                                  lastname: lastname.text,
+                                  country: nationality.text,
+                                  phonenumber: phoneNbr.text,
+                                  address: address.text,
+                                  gender: gender.text);
+                              userRef
+                                  .doc(id)
+                                  .collection("Customers")
+                                  .add({
+                                "First Name": c.firstname,
+                                "Last Name": c.lastname,
+                                "Country": c.country,
+                                "Phone Number": c.phonenumber,
+                                "Address": c.address,
+                                "Gender": c.gender,
+                              })
+                                  .whenComplete(() => Navigator.pop(context))
+                                  .catchError((onError) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                        Text("${onError.toString()}")));
+                              });
+                            } else {
+                              showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(12)),
+                                      title: Text("Existing Customer"),
+                                      content:
+                                      Text("This customer  already exist"),
+                                      actions: [
+                                        FlatButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("OK")),
+                                      ],
+                                    );
+                                  });
+                            }
+                          });
 
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12)
-                                    ),
-                                    title: Text("Existing Customer"),
-                                    content:
-                                        Text("This customer  already exist"),
-                                    actions: [
-                                      FlatButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("OK")),
-                                    ],
-                                  );
-                                });
-                          }
-                        });
+                        }
+                      else
+                        {
+                          showTopSnackBar(
+                            context,
+                            CustomSnackBar.error(
+                              message:
+                              "You don't have internet access",
+                            ),
+                          );
+                        }
                       } else {
                         showDialog(
                             barrierDismissible: false,
@@ -205,8 +257,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                             builder: (context) {
                               return AlertDialog(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)
-                                ),
+                                    borderRadius: BorderRadius.circular(12)),
                                 content: Text("Can't keep an empty field"),
                                 actions: [
                                   FlatButton(

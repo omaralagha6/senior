@@ -18,7 +18,6 @@ class UpdatePassword extends StatefulWidget {
 class _UpdatePasswordState extends State<UpdatePassword> {
   bool isObscure = true;
   bool isObscure2 = true;
-  late String id=widget.userId;
   IconData icon = FontAwesomeIcons.solidEye;
   IconData icon2 = FontAwesomeIcons.solidEye;
   var pass = TextEditingController();
@@ -160,9 +159,9 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                       }
                       else
                         {
-                          userRef.doc(id).update({
+                          userRef.doc(widget.userId).update({
                             "Password":pass.text
-                          }).whenComplete(() => Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomeScreen(userId: id,))));
+                          }).whenComplete(() => Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomeScreen(userId: widget.userId,))));
                         }
                     }
                   },

@@ -8,6 +8,8 @@ const TextStyle titleStyleTXT = TextStyle(
     color: Color(0xffbfbfbf));
 const TextStyle customerDetailStyleTXT =
     TextStyle(fontSize: 20, color: Colors.black,fontFamily: "serif");
+ const TextStyle dollarDetailsTXT =
+    TextStyle(fontSize: 27, color: Colors.white,fontFamily: "serif",fontStyle: FontStyle.italic,fontWeight: FontWeight.bold);
 const TextStyle customerStyleTXT =
     TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
 

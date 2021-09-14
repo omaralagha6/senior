@@ -56,7 +56,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
             //toolbarHeight: 80,
             //elevation: 10,
             title: Text(
-              'Edit Customer',
+             "Customer's Info",
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontFamily: "serif",
@@ -135,14 +135,41 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                 type: TextInputType.text,
                                 textEditingController: address,
                               ),
-                              getDefaultTextFormField(
-                                obscure: false,
-                                iconData: FontAwesomeIcons.genderless,
-                                lblText: 'Gender',
-                                txtInputAction: TextInputAction.next,
-                                type: TextInputType.text,
-                                textEditingController: gender,
-                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.symmetric(vertical: 10),
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  height: 65,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300]!.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text("Gender" ,style:whiteStyleTXT),
+                                      Radio(
+                                        value: "Male",
+                                        groupValue: gender.text,
+                                        onChanged: (value){
+                                          setState(() {
+                                            gender.text=value as String ;
+                                          });
+                                        },
+                                      ),Text("Male",style:whiteStyleTXT),
+                                      Radio(
+                                        value: "Female",
+                                        groupValue: gender.text,
+                                        onChanged: (value){
+                                          setState(() {
+                                            gender.text=value as String ;
+                                          });
+                                        },
+                                      ),Text("Female",style:whiteStyleTXT),
+                                    ],
+                                  ),
+                                ),
+                              )
                             ]),
                       ),
                     ),
