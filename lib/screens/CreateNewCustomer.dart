@@ -78,6 +78,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               getDefaultTextFormField(
+                                  isReadable: false,
                                   obscure: false,
                                   lblText: 'First Name',
                                   txtInputAction: TextInputAction.next,
@@ -85,6 +86,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                   type: TextInputType.text,
                                   iconData: FontAwesomeIcons.user),
                               getDefaultTextFormField(
+                                isReadable: false,
                                 obscure: false,
                                 iconData: FontAwesomeIcons.user,
                                 lblText: 'Last Name',
@@ -93,6 +95,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                 type: TextInputType.text,
                               ),
                               getDefaultTextFormField(
+                                  isReadable: false,
                                   obscure: false,
                                   iconData: FontAwesomeIcons.flag,
                                   lblText: 'Country',
@@ -112,6 +115,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                     );
                                   }),
                               getDefaultTextFormField(
+                                  isReadable: false,
                                   obscure: false,
                                   iconData: FontAwesomeIcons.phoneAlt,
                                   lblText: 'Phone Number',
@@ -122,6 +126,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                     print(phoneNbr.text);
                                   }),
                               getDefaultTextFormField(
+                                isReadable: false,
                                 obscure: false,
                                 iconData: FontAwesomeIcons.addressCard,
                                 lblText: 'Address',

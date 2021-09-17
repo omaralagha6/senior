@@ -91,8 +91,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   lblText: 'Username',
                                   txtInputAction: TextInputAction.next,
                                   textEditingController: username,
+                                  isReadable: false,
                                 ),
                                 getDefaultTextFormField(
+                                  isReadable: false,
                                   textEditingController: password,
                                   obscure: isObscure,
                                   iconData: FontAwesomeIcons.unlock,

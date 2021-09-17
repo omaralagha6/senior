@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/Models/Users.dart';
 import 'package:senior_project/StyleTXT.dart';
+import 'package:senior_project/screens/Home.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class UpdateUser extends StatefulWidget {
   final DocumentSnapshot userId;
@@ -19,7 +23,6 @@ class UpdateUser extends StatefulWidget {
 
 class _UpdateUserState extends State<UpdateUser> {
   bool isObscure = true;
-  bool isObscure2 = true;
   var username = TextEditingController();
   var pass = TextEditingController();
   var confPass = TextEditingController();
@@ -29,7 +32,6 @@ class _UpdateUserState extends State<UpdateUser> {
   var address = TextEditingController();
   var gender = TextEditingController();
   var phoneController = TextEditingController();
-  CollectionReference userRef = FirebaseFirestore.instance.collection('Users');
   IconData icon = FontAwesomeIcons.solidEye;
   IconData icon2 = FontAwesomeIcons.solidEye;
 
@@ -62,7 +64,7 @@ class _UpdateUserState extends State<UpdateUser> {
           //toolbarHeight: 80,
           //elevation: 10,
           title: Text(
-            "User's Info",
+            "Update User Info",
             style: titleStyleTXT,
           ),
           leading: IconButton(
@@ -86,6 +88,7 @@ class _UpdateUserState extends State<UpdateUser> {
                         //   height: 20,
                         // ),
                         getDefaultTextFormField(
+                            isReadable: false,
                             obscure: false,
                             lblText: 'First Name',
                             txtInputAction: TextInputAction.next,
@@ -93,6 +96,7 @@ class _UpdateUserState extends State<UpdateUser> {
                             type: TextInputType.text,
                             iconData: FontAwesomeIcons.user),
                         getDefaultTextFormField(
+                          isReadable: false,
                           obscure: false,
                           iconData: FontAwesomeIcons.user,
                           lblText: 'Last Name',
@@ -101,6 +105,7 @@ class _UpdateUserState extends State<UpdateUser> {
                           type: TextInputType.text,
                         ),
                         getDefaultTextFormField(
+                            isReadable: false,
                             obscure: false,
                             iconData: FontAwesomeIcons.flag,
                             lblText: 'Country',
@@ -121,6 +126,7 @@ class _UpdateUserState extends State<UpdateUser> {
                               );
                             }),
                         getDefaultTextFormField(
+                            isReadable: false,
                             obscure: false,
                             iconData: FontAwesomeIcons.phoneAlt,
                             lblText: 'Phone Number',
@@ -131,6 +137,7 @@ class _UpdateUserState extends State<UpdateUser> {
                               print(phoneController.text);
                             }),
                         getDefaultTextFormField(
+                          isReadable: false,
                           obscure: false,
                           iconData: FontAwesomeIcons.addressCard,
                           lblText: 'Address',
@@ -175,6 +182,7 @@ class _UpdateUserState extends State<UpdateUser> {
                           ),
                         ),
                         getDefaultTextFormField(
+                          isReadable: false,
                           obscure: false,
                           iconData: FontAwesomeIcons.user,
                           lblText: 'Username',
@@ -183,6 +191,7 @@ class _UpdateUserState extends State<UpdateUser> {
                           textEditingController: username,
                         ),
                         getDefaultTextFormField(
+                          isReadable: false,
                           textEditingController: pass,
                           obscure: isObscure,
                           iconData: FontAwesomeIcons.lock,
@@ -216,7 +225,10 @@ class _UpdateUserState extends State<UpdateUser> {
                             ),
                             onPressed: () async {
                               if (_checkRegisterFields() == true) {
-                                if (pass.text == confPass.text) {
+                                final result =
+                                    await Connectivity().checkConnectivity();
+                                if (result == ConnectivityResult.wifi ||
+                                    result == ConnectivityResult.mobile) {
                                   Users user = Users(
                                     firstname: firstname.text,
                                     country: nationality.text,
@@ -236,27 +248,14 @@ class _UpdateUserState extends State<UpdateUser> {
                                     "Password": user.password,
                                     "Username": user.username,
                                     "Phone Number": user.phonenumber
-                                  }).whenComplete(() => Navigator.pop(context));
+                                  }).whenComplete(() => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen(userId:widget.userId.id))));
                                 } else {
-                                  showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12)),
-                                          content: Text(
-                                              "Password and confirm password aren't equal"),
-                                          actions: [
-                                            FlatButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text("OK")),
-                                          ],
-                                        );
-                                      });
+                                  showTopSnackBar(
+                                    context,
+                                    CustomSnackBar.error(
+                                      message: "You don't have internet access",
+                                    ),
+                                  );
                                 }
                               } else {
                                 showDialog(

@@ -10,7 +10,8 @@ Widget getDefaultTextFormField(
         IconButton? iconData2,
         required TextEditingController textEditingController,
         TextInputType? type,
-        void Function()? submitted}) =>
+        void Function()? submitted,
+required bool isReadable}) =>
     Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
@@ -20,6 +21,7 @@ Widget getDefaultTextFormField(
           borderRadius: BorderRadius.circular(16),
         ),
         child: TextFormField(
+          readOnly: isReadable,
           controller: textEditingController,
           obscureText: obscure,
           decoration: InputDecoration(

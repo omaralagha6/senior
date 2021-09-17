@@ -17,10 +17,9 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../StyleTXT.dart';
 
 class CreateDollarBill extends StatefulWidget {
-  final String userId;
-  final String custId;
+  final DocumentSnapshot customer;
 
-  CreateDollarBill({required this.userId, required this.custId});
+  CreateDollarBill({required this.customer});
 
   @override
   _CreateDollarBillState createState() => _CreateDollarBillState();
@@ -38,8 +37,6 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
   var valueController = TextEditingController();
   late PickedFile _image;
   final picker = ImagePicker();
-  late String uid = widget.userId;
-  late String cid = widget.custId;
   Map<String, String> resBank = {
     "A": "Boston",
     "B": "New York",
@@ -69,18 +66,12 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
     "K": "2006A",
     "L": "2009A",
     "M": "2013",
-    "N":"2017",
-    "P":"2017A"
+    "N": "2017",
+    "P": "2017A"
   };
   CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
-  final regExp = RegExp(r'^([A-Z])([A-Z])(\s)([0-9]{8})(\s)(.*)$');
-  final regExp1 = RegExp(r'^([A-Z])([A-Z])\s([0-9]{8})(.*)$');
-  final regExp2 = RegExp(r'^([A-Z])([A-Z])([0-9]{8})(\s)(.*)$');
-  final regExp3 = RegExp(r'^([A-Z])([A-Z])([0-9]{8})(.*)$');
-  final regExp4 = RegExp(r'^([A-Z])(\s)([0-9]{8})(\s)(.*)$');
-  final regExp5 = RegExp(r'^([A-Z])([0-9]{8})(.*)$');
-  final regExp6 = RegExp(r'^([A-Z])(\s)([0-9]{8})(.*)$');
-  final regExp7 = RegExp(r'^([A-Z])([0-9]{8})(\s)(.*)$');
+
+  final regExp = RegExp(r'^([A-Z]|[A-Z]{2})(\s|)([0-9]{8})(\s|)([A-Z]?)$');
 
   @override
   Widget build(BuildContext context) {
@@ -300,10 +291,9 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                     onPressed: () {
                                       getSerialNumber();
                                     },
-                                    onLongPress: (){
+                                    onLongPress: () {
                                       getSerialNumberGallery();
                                     },
-
                                   ),
                                 ),
                                 labelText: "Serial Number",
@@ -369,105 +359,103 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                     });
                               }
                             } else {
-                             final result =await Connectivity().checkConnectivity();
-                             if(result== ConnectivityResult.wifi || result==ConnectivityResult.mobile){
-                               userRef
-                                   .doc(uid)
-                                   .collection("Customers")
-                                   .doc(cid)
-                                   .collection("Dollar Bills")
-                                   .where("Serial Number",
-                                   isEqualTo: serialNbController.text)
-                                   .get()
-                                   .then((value) {
-                                 if (value.docs.length == 0) {
-                                   if (valueController.text == "1" ||
-                                       valueController.text == "2") {
-                                     DollarBill db = DollarBill(
-                                       serialNb: serialNbController.text,
-                                       reserveBank: resBank.containsKey(serialNbController.text[0])?resBank[serialNbController.text[0]]:"Fake Bill",
-                                       amount: valueController.text,
-                                     );
+                              final result =
+                                  await Connectivity().checkConnectivity();
+                              if (result == ConnectivityResult.wifi ||
+                                  result == ConnectivityResult.mobile) {
+                                widget.customer.reference
+                                    .collection("Dollar Bills")
+                                    .where("Serial Number",
+                                        isEqualTo: serialNbController.text)
+                                    .get()
+                                    .then((value) {
+                                  if (value.docs.length == 0) {
+                                    if (valueController.text == "1" ||
+                                        valueController.text == "2") {
+                                      DollarBill db = DollarBill(
+                                        serialNb: serialNbController.text,
+                                        reserveBank: resBank.containsKey(
+                                                serialNbController.text[0])
+                                            ? resBank[
+                                                serialNbController.text[0]]
+                                            : "Unexisting Reserve Bank",
+                                        amount: valueController.text,
+                                      );
 
-                                     userRef
-                                         .doc(uid)
-                                         .collection("Customers")
-                                         .doc(cid)
-                                         .collection("Dollar Bills")
-                                         .add({
-                                       "Serial Number": db.serialNb,
-                                       "Reserve Bank": db.reserveBank,
-                                       "Amount": db.amount,
-                                       "Series Year": "Does Not Exist"
-                                     })
-                                         .whenComplete(
-                                             () => Navigator.pop(context))
-                                         .catchError((onError) {
-                                       ScaffoldMessenger.of(context)
-                                           .showSnackBar(SnackBar(
-                                           content: Text(
-                                               "${onError.toString()}")));
-                                     });
-                                   } else {
-                                     DollarBill db = DollarBill(
-                                         serialNb: serialNbController.text,
-                                         reserveBank:resBank.containsKey(serialNbController.text[0])?resBank[serialNbController.text[0]]:"Fake Bill",
-                                         amount: valueController.text,
-                                         seriesYear: serYear[
-                                         serialNbController.text[1]]);
-                                     userRef
-                                         .doc(uid)
-                                         .collection("Customers")
-                                         .doc(cid)
-                                         .collection("Dollar Bills")
-                                         .add({
-                                       "Serial Number": db.serialNb,
-                                       "Reserve Bank": db.reserveBank,
-                                       "Series Year": db.seriesYear,
-                                       "Amount": db.amount
-                                     })
-                                         .whenComplete(
-                                             () => Navigator.pop(context))
-                                         .catchError((onError) {
-                                       ScaffoldMessenger.of(context)
-                                           .showSnackBar(SnackBar(
-                                           content: Text(
-                                               "${onError.toString()}")));
-                                     });
-                                   }
-                                 } else {
-                                   showDialog(
-                                       barrierDismissible: false,
-                                       context: context,
-                                       builder: (context) {
-                                         return AlertDialog(
-                                           shape: RoundedRectangleBorder(
-                                               borderRadius:
-                                               BorderRadius.circular(12)),
-                                           content: Text(
-                                               "This serial number  already exist for another bill"),
-                                           actions: [
-                                             FlatButton(
-                                                 onPressed: () {
-                                                   Navigator.pop(context);
-                                                 },
-                                                 child: Text("OK")),
-                                           ],
-                                         );
-                                       });
-                                 }
-                               });
-                             }
-                             else
-                               {
-                                 showTopSnackBar(
-                                   context,
-                                   CustomSnackBar.error(
-                                     message:
-                                     "You don't have internet access",
-                                   ),
-                                 );
-                               }
+                                      widget.customer.reference
+                                          .collection("Dollar Bills")
+                                          .add({
+                                            "Serial Number": db.serialNb,
+                                            "Reserve Bank": db.reserveBank,
+                                            "Amount": db.amount,
+                                            "Series Year": "Does Not Exist"
+                                          })
+                                          .whenComplete(
+                                              () => Navigator.pop(context))
+                                          .catchError((onError) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "${onError.toString()}")));
+                                          });
+                                    } else {
+                                      DollarBill db = DollarBill(
+                                          serialNb: serialNbController.text,
+                                          reserveBank: resBank.containsKey(
+                                                  serialNbController.text[0])
+                                              ? resBank[
+                                                  serialNbController.text[0]]
+                                              : "Unexisting Reserve Bank",
+                                          amount: valueController.text,
+                                          seriesYear: serYear[
+                                              serialNbController.text[1]]);
+                                      widget.customer.reference
+                                          .collection("Dollar Bills")
+                                          .add({
+                                            "Serial Number": db.serialNb,
+                                            "Reserve Bank": db.reserveBank,
+                                            "Series Year": db.seriesYear,
+                                            "Amount": db.amount
+                                          })
+                                          .whenComplete(
+                                              () => Navigator.pop(context))
+                                          .catchError((onError) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "${onError.toString()}")));
+                                          });
+                                    }
+                                  } else {
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12)),
+                                            content: Text(
+                                                "This serial number  already exist for another bill"),
+                                            actions: [
+                                              FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text("OK")),
+                                            ],
+                                          );
+                                        });
+                                  }
+                                });
+                              } else {
+                                showTopSnackBar(
+                                  context,
+                                  CustomSnackBar.error(
+                                    message: "You don't have internet access",
+                                  ),
+                                );
+                              }
                             }
                           },
                           color: Colors.blue,
@@ -516,22 +504,34 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
       }
     }
     List<String> str = _text.split("\n");
-
+    print(_text);
     //String? serials=null;
+    String temp = "";
+
     for (String s in str) {
-      if (regExp.hasMatch(s) ||
-          regExp1.hasMatch(s) ||
-          regExp2.hasMatch(s) ||
-          regExp3.hasMatch(s) ||
-          regExp4.hasMatch(s) ||
-          regExp5.hasMatch(s) ||
-          regExp6.hasMatch(s) ||
-          regExp7.hasMatch(s)) {
-        serialNbController.text = s.replaceAll(" ", "");
+      if (regExp.hasMatch(s)) {
+        if (RegExp("[0-9]").hasMatch(s[s.length - 1])) {
+          temp = s.replaceAll(" ", "") + "*";
+        } else {
+          temp = s.replaceAll(" ", "");
+        }
         break;
       }
     }
+
+    if (temp.isEmpty) {
+      showTopSnackBar(
+        context,
+        CustomSnackBar.info(
+          message:
+              "Serial Number could not be captured properly please try again ",
+        ),
+      );
+    } else {
+      serialNbController.text = temp;
+    }
   }
+
   Future getSerialNumberGallery() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     String _text = '';
@@ -554,25 +554,35 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
         _text += (line.text! + '\n');
       }
     }
+    print(_text);
     List<String> str = _text.split("\n");
 
     //String? serials=null;
+    String temp = "";
+
     for (String s in str) {
-      if (regExp.hasMatch(s) ||
-          regExp1.hasMatch(s) ||
-          regExp2.hasMatch(s) ||
-          regExp3.hasMatch(s) ||
-          regExp4.hasMatch(s) ||
-          regExp5.hasMatch(s) ||
-          regExp6.hasMatch(s) ||
-          regExp7.hasMatch(s)) {
-        serialNbController.text = s.replaceAll(" ", "");
+      if (regExp.hasMatch(s)) {
+        if (RegExp("[0-9]").hasMatch(s[s.length - 1])) {
+          temp = s.replaceAll(" ", "") + "*";
+        } else {
+          temp = s.replaceAll(" ", "");
+        }
         break;
       }
     }
+
+    if (temp.isEmpty) {
+      showTopSnackBar(
+        context,
+        CustomSnackBar.info(
+          message:
+              "Serial Number could not be captured properly please try again ",
+        ),
+      );
+    } else {
+      serialNbController.text = temp;
+    }
   }
-
-
 
   Widget _dollarChecked({required bool isChecked, required int value}) {
     return Container(

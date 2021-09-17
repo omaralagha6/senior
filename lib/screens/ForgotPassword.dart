@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:senior_project/StyleTXT.dart';
 import 'package:senior_project/screens/UpdatePassword.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
@@ -61,6 +64,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       child: Form(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           getDefaultTextFormField(
+              isReadable: false,
               obscure: false,
               lblText: 'Phone Number',
               txtInputAction: TextInputAction.done,
@@ -75,34 +79,60 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 borderRadius: BorderRadius.circular(16),
               ),
               onPressed: () async {
-                setState(() {
-                  showLoading = true;
-                });
-                await _auth.verifyPhoneNumber(
-                    phoneNumber: phoneController.text,
-                    verificationCompleted: (phoneAuthCredentials) async {
+                if(phoneController.text.isEmpty)
+                  {
+                    showTopSnackBar(
+                      context,
+                      CustomSnackBar.error(
+                        message:
+                        "Can't have an empty field",
+                      ),
+                    );
+                  }
+                else
+                  {
+                    final result = await Connectivity().checkConnectivity();
+                    if (result == ConnectivityResult.wifi ||
+                        result == ConnectivityResult.mobile) {
                       setState(() {
-                        showLoading = false;
+                        showLoading = true;
                       });
-                      //signnWithPhoneAuthCredential(phoneAuthCredentials);
-                    },
-                    verificationFailed: (verificationFailed) {
-                      setState(() {
-                        showLoading = false;
-                      });
-                      _scaffoldstate.currentState!.showSnackBar(
-                          SnackBar(content: Text(verificationFailed.message!)));
-                      //the key is replacing the context
-                    },
-                    codeSent: (verificationId, resendingToken) async {
-                      setState(() {
-                        showLoading = false;
-                        currentState =
-                            MobileVerificationState.SHOW_OTP_FORM_STATE;
-                        this.verificationId = verificationId;
-                      });
-                    },
-                    codeAutoRetrievalTimeout: (verificationId) async {});
+                      await _auth.verifyPhoneNumber(
+                          phoneNumber: phoneController.text,
+                          verificationCompleted: (phoneAuthCredentials) async {
+                            setState(() {
+                              showLoading = false;
+                            });
+                            //signnWithPhoneAuthCredential(phoneAuthCredentials);
+                          },
+                          verificationFailed: (verificationFailed) {
+                            setState(() {
+                              showLoading = false;
+                            });
+                            _scaffoldstate.currentState!.showSnackBar(
+                                SnackBar(content: Text(verificationFailed.message!)));
+                            //the key is replacing the context
+                          },
+                          codeSent: (verificationId, resendingToken) async {
+                            setState(() {
+                              showLoading = false;
+                              currentState =
+                                  MobileVerificationState.SHOW_OTP_FORM_STATE;
+                              this.verificationId = verificationId;
+                            });
+                          },
+                          codeAutoRetrievalTimeout: (verificationId) async {});
+                    }
+                    else {
+                      showTopSnackBar(
+                        context,
+                        CustomSnackBar.error(
+                          message:
+                          "You don't have internet access",
+                        ),
+                      );
+                    }
+                  }
               },
               color: Colors.blue,
               child: Row(
@@ -127,6 +157,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       child: Form(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           getDefaultTextFormField(
+              isReadable: false,
               obscure: false,
               lblText: 'Enter Verification Code',
               txtInputAction: TextInputAction.done,
@@ -180,7 +211,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             title: AnimatedTextKit(
               animatedTexts: [
                 ColorizeAnimatedText(
-                  'Register New Password',
+                  'Phone Verification',
                   textStyle: GoogleFonts.robotoCondensed(
                       fontSize: 30,
                       color: Color(0xffbfbfbf),

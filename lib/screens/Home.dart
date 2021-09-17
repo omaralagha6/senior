@@ -9,8 +9,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:random_color/random_color.dart';
 import 'package:senior_project/screens/CreateNewCustomer.dart';
 import 'package:senior_project/screens/CustomerDetails.dart';
+import 'package:senior_project/screens/CustomerInfo.dart';
 import 'package:senior_project/screens/UpdateCustomer.dart';
 import 'package:senior_project/screens/UpdateUser.dart';
+import 'package:senior_project/screens/UserInfo.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
@@ -47,6 +49,23 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            leading: IconButton(
+              onPressed: () async {
+                DocumentSnapshot user = await userRef.doc(id).get();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserInfo(
+                              userId: user,
+                            )));
+              },
+              icon: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.info_outlined),
+                ],
+              ),
+            ),
             title: Text(
               'Home Page',
               style: titleStyleTXT,
@@ -74,23 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icon(Icons.logout),
                     ],
                   ),
-                ),
-              ),
-              IconButton(
-                onPressed: () async {
-                  DocumentSnapshot user = await userRef.doc(id).get();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UpdateUser(
-                                userId: user,
-                              )));
-                },
-                icon: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.info_outlined),
-                  ],
                 ),
               ),
             ],
@@ -201,53 +203,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => UpdateCustomer(
+                                    builder: (context) => CustomerInfo(
+                                        userId: widget.userId,
                                         customer: snapshot.data!.docs[index])));
-                            // showDialog(
-                            //     barrierDismissible: false,
-                            //     context: context,
-                            //     builder: (context) {
-                            //       return AlertDialog(
-                            //         backgroundColor:Colors.white,
-                            //         shape: RoundedRectangleBorder(
-                            //           borderRadius: BorderRadius.circular(12)
-                            //         ),
-                            //         content:Container(
-                            //           height: 150,
-                            //           child: Column(
-                            //             crossAxisAlignment: CrossAxisAlignment.start,
-                            //             children: [
-                            //               Text("Full Name : "+ snapshot.data!.docs[index]["First Name"]+" "+snapshot.data!.docs[index]["Last Name"],style: customerDetailStyleTXT,),
-                            //               Text("Phone Number : "+snapshot.data!.docs[index]["Phone Number"],style: customerDetailStyleTXT),
-                            //               Text("Gender : "+snapshot.data!.docs[index]["Gender"],style: customerDetailStyleTXT),
-                            //               Text("Country : "+snapshot.data!.docs[index]["Country"],style: customerDetailStyleTXT),
-                            //               Text("Address : "+snapshot.data!.docs[index]["Address"],style: customerDetailStyleTXT),
-                            //             ],
-                            //           ),
-                            //         ),
-                            //         actions: [
-                            //           FlatButton(
-                            //               onPressed: () {
-                            //                 Navigator.pop(context);
-                            //               },
-                            //               child: Text("OK")),
-                            //           FlatButton(
-                            //               onPressed: () {
-                            //                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>UpdateCustomer(customer: snapshot.data!.docs[index])));
-                            //               },
-                            //               child: Text("Edit")),
-                            //         ],
-                            //       );
-                            //     });
                           },
                           onTap: () {
                             print(snapshot.data!.docs[index].id);
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => CustomerDetails(
-                                          userId: id,
-                                          custId: snapshot.data!.docs[index].id,
+                                          customer: snapshot.data!.docs[index],
                                         )));
                           },
                           child: Container(

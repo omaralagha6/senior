@@ -1,17 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:senior_project/Models/Customer.dart';
 import 'package:senior_project/StyleTXT.dart';
+import 'package:senior_project/screens/Home.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class UpdateCustomer extends StatefulWidget {
   final DocumentSnapshot customer;
+  final String userId;
 
-  UpdateCustomer({required this.customer});
+  UpdateCustomer({required this.customer, required this.userId});
 
   @override
   _UpdateCustomerState createState() => _UpdateCustomerState();
@@ -56,7 +61,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
             //toolbarHeight: 80,
             //elevation: 10,
             title: Text(
-             "Customer's Info",
+             "Update Customer Info",
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontFamily: "serif",
@@ -84,6 +89,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               getDefaultTextFormField(
+                                  isReadable: false,
                                   obscure: false,
                                   lblText: 'First Name',
                                   txtInputAction: TextInputAction.next,
@@ -91,6 +97,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                   type: TextInputType.text,
                                   iconData: FontAwesomeIcons.user),
                               getDefaultTextFormField(
+                                isReadable: false,
                                 obscure: false,
                                 iconData: FontAwesomeIcons.user,
                                 lblText: 'Last Name',
@@ -99,6 +106,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                 type: TextInputType.text,
                               ),
                               getDefaultTextFormField(
+                                  isReadable: false,
                                   obscure: false,
                                   iconData: FontAwesomeIcons.flag,
                                   lblText: 'Country',
@@ -118,6 +126,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                     );
                                   }),
                               getDefaultTextFormField(
+                                  isReadable: false,
                                   obscure: false,
                                   iconData: FontAwesomeIcons.phoneAlt,
                                   lblText: 'Phone Number',
@@ -128,6 +137,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                     print(phoneNbr.text);
                                   }),
                               getDefaultTextFormField(
+                                isReadable: false,
                                 obscure: false,
                                 iconData: FontAwesomeIcons.addressCard,
                                 lblText: 'Address',
@@ -183,24 +193,41 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       // Navigator.pop(context);
                       if (_checkRegisterFields() == true) {
-                        Customer c = Customer(
-                            firstname: firstname.text,
-                            lastname: lastname.text,
-                            country: nationality.text,
-                            phonenumber: phoneNbr.text,
-                            address: address.text,
-                            gender: gender.text);
-                        widget.customer.reference.update({
-                          "First Name": c.firstname,
-                          "Last Name": c.lastname,
-                          "Country": c.country,
-                          "Phone Number": c.phonenumber,
-                          "Address": c.address,
-                          "Gender": c.gender,
-                        }).whenComplete(() => Navigator.pop(context));
+                      final result=await Connectivity().checkConnectivity();
+                      if(result==ConnectivityResult.mobile || result==ConnectivityResult.wifi)
+                        {
+                          Customer c = Customer(
+                              firstname: firstname.text,
+                              lastname: lastname.text,
+                              country: nationality.text,
+                              phonenumber: phoneNbr.text,
+                              address: address.text,
+                              gender: gender.text);
+                          widget.customer.reference.update({
+                            "First Name": c.firstname,
+                            "Last Name": c.lastname,
+                            "Country": c.country,
+                            "Phone Number": c.phonenumber,
+                            "Address": c.address,
+                            "Gender": c.gender,
+                          }).whenComplete(() {
+                            print(widget.userId);
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen(userId:widget.userId)));});
+
+                        }
+                      else
+                        {
+                          showTopSnackBar(
+                            context,
+                            CustomSnackBar.error(
+                              message:
+                              "You don't have internet access",
+                            ),
+                          );
+                        }
                       } else {
                         showDialog(
                             barrierDismissible: false,

@@ -112,6 +112,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                 //   height: 20,
                 // ),
                 getDefaultTextFormField(
+                    isReadable: false,
                     obscure: false,
                     lblText: 'First Name',
                     txtInputAction: TextInputAction.next,
@@ -119,6 +120,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     type: TextInputType.text,
                     iconData: FontAwesomeIcons.user),
                 getDefaultTextFormField(
+                  isReadable: false,
                   obscure: false,
                   iconData: FontAwesomeIcons.user,
                   lblText: 'Last Name',
@@ -127,6 +129,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   type: TextInputType.text,
                 ),
                 getDefaultTextFormField(
+                    isReadable: false,
                     obscure: false,
                     iconData: FontAwesomeIcons.flag,
                     lblText: 'Country',
@@ -145,6 +148,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                       );
                     }),
                 getDefaultTextFormField(
+                    isReadable: false,
                     obscure: false,
                     iconData: FontAwesomeIcons.phoneAlt,
                     lblText: 'Phone Number',
@@ -155,6 +159,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                       print(phoneController.text);
                     }),
                 getDefaultTextFormField(
+                  isReadable: false,
                   obscure: false,
                   iconData: FontAwesomeIcons.addressCard,
                   lblText: 'Address',
@@ -198,6 +203,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   ),
                 ),
                 getDefaultTextFormField(
+                  isReadable: false,
                   obscure: false,
                   iconData: FontAwesomeIcons.user,
                   lblText: 'Username',
@@ -206,6 +212,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   textEditingController: username,
                 ),
                 getDefaultTextFormField(
+                  isReadable: false,
                   textEditingController: pass,
                   obscure: isObscure,
                   iconData: FontAwesomeIcons.lock,
@@ -230,6 +237,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   ),
                 ),
                 getDefaultTextFormField(
+                  isReadable: false,
                   textEditingController: confPass,
                   obscure: isObscure2,
                   iconData: FontAwesomeIcons.unlock,
@@ -409,6 +417,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
       child: Form(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           getDefaultTextFormField(
+              isReadable: false,
               obscure: false,
               lblText: 'Enter Verification Code',
               txtInputAction: TextInputAction.done,

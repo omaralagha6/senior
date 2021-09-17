@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,6 +7,8 @@ import 'package:senior_project/StyleTXT.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/screens/Home.dart';
 import 'package:senior_project/shared/TextFormFieldWidget.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class UpdatePassword extends StatefulWidget {
   final String userId;
@@ -39,7 +42,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
             //toolbarHeight: 80,
             //elevation: 10,
             title: Text(
-              'Register New User',
+              'Register New Password',
               style: TextStyle(
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w500,
@@ -58,6 +61,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               getDefaultTextFormField(
+                isReadable: false,
                 textEditingController: pass,
                 obscure: isObscure,
                 iconData: FontAwesomeIcons.lock,
@@ -82,6 +86,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                 ),
               ),
               getDefaultTextFormField(
+                isReadable: false,
                 textEditingController: confPass,
                 obscure: isObscure2,
                 iconData: FontAwesomeIcons.unlock,
@@ -113,7 +118,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if(pass.text.isEmpty || confPass.text.isEmpty)
                       {
                         showDialog(
@@ -157,14 +162,26 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                               );
                             });
                       }
-                      else
-                        {
+                      else {
+                        final result = await Connectivity().checkConnectivity();
+                        if (result == ConnectivityResult.wifi ||
+                            result == ConnectivityResult.mobile) {
                           userRef.doc(widget.userId).update({
                             "Password":pass.text
                           }).whenComplete(() => Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomeScreen(userId: widget.userId,))));
                         }
-                    }
-                  },
+                        else
+                          {
+                            showTopSnackBar(
+                              context,
+                              CustomSnackBar.error(
+                                message:
+                                "You don't have internet access",
+                              ),
+                            );
+                          }
+                      }
+                    }},
                   color: Colors.blue,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
