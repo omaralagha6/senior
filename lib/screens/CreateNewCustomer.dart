@@ -47,8 +47,6 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            //toolbarHeight: 80,
-            //elevation: 10,
             title: Text(
               'Create Customer',
               style: TextStyle(
@@ -146,25 +144,27 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                   ),
                                   child: Row(
                                     children: [
-                                      Text("Gender" ,style:whiteStyleTXT),
+                                      Text("Gender", style: whiteStyleTXT),
                                       Radio(
                                         value: "Male",
                                         groupValue: gender.text,
-                                        onChanged: (value){
+                                        onChanged: (value) {
                                           setState(() {
-                                            gender.text=value as String ;
+                                            gender.text = value as String;
                                           });
                                         },
-                                      ),Text("Male",style:whiteStyleTXT),
+                                      ),
+                                      Text("Male", style: whiteStyleTXT),
                                       Radio(
                                         value: "Female",
                                         groupValue: gender.text,
-                                        onChanged: (value){
+                                        onChanged: (value) {
                                           setState(() {
-                                            gender.text=value as String ;
+                                            gender.text = value as String;
                                           });
                                         },
-                                      ),Text("Female",style:whiteStyleTXT),
+                                      ),
+                                      Text("Female", style: whiteStyleTXT),
                                     ],
                                   ),
                                 ),
@@ -185,41 +185,56 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     onPressed: () async {
                       // Navigator.pop(context);
                       if (_checkRegisterFields() == true) {
-                      final result= await Connectivity().checkConnectivity();
-                      if(result== ConnectivityResult.wifi || result ==ConnectivityResult.mobile)
-                        {
+                        final result = await Connectivity().checkConnectivity();
+                        if (result == ConnectivityResult.wifi ||
+                            result == ConnectivityResult.mobile) {
                           userRef
                               .doc(id)
                               .collection("Customers")
                               .where("Phone Number", isEqualTo: phoneNbr.text)
                               .get()
-                              .then((value) {
+                              .then((value) async {
                             if (value.docs.length == 0) {
-                              Customer c = Customer(
-                                  firstname: firstname.text,
-                                  lastname: lastname.text,
-                                  country: nationality.text,
-                                  phonenumber: phoneNbr.text,
-                                  address: address.text,
-                                  gender: gender.text);
-                              userRef
-                                  .doc(id)
-                                  .collection("Customers")
-                                  .add({
-                                "First Name": c.firstname,
-                                "Last Name": c.lastname,
-                                "Country": c.country,
-                                "Phone Number": c.phonenumber,
-                                "Address": c.address,
-                                "Gender": c.gender,
-                              })
-                                  .whenComplete(() => Navigator.pop(context))
-                                  .catchError((onError) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                              DocumentSnapshot temp =
+                                  await userRef.doc(id).get();
+
+                              if (temp.get("Phone Number") == phoneNbr.text) {
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(12)),
                                         content:
-                                        Text("${onError.toString()}")));
-                              });
+                                        Text("Can't create a customer and a user with the same phone number"),
+                                        actions: [
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("OK")),
+                                        ],
+                                      );
+                                    });
+                              } else {
+                                Customer c = Customer(
+                                    firstname: firstname.text,
+                                    lastname: lastname.text,
+                                    country: nationality.text,
+                                    phonenumber: phoneNbr.text,
+                                    address: address.text,
+                                    gender: gender.text);
+                                userRef.doc(id).collection("Customers").add({
+                                  "First Name": c.firstname,
+                                  "Last Name": c.lastname,
+                                  "Country": c.country,
+                                  "Phone Number": c.phonenumber,
+                                  "Address": c.address,
+                                  "Gender": c.gender,
+                                }).whenComplete(() => Navigator.pop(context));
+                              }
                             } else {
                               showDialog(
                                   barrierDismissible: false,
@@ -228,10 +243,10 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                     return AlertDialog(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(12)),
+                                              BorderRadius.circular(12)),
                                       title: Text("Existing Customer"),
                                       content:
-                                      Text("This customer  already exist"),
+                                          Text("This customer  already exist"),
                                       actions: [
                                         FlatButton(
                                             onPressed: () {
@@ -243,15 +258,11 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                   });
                             }
                           });
-
-                        }
-                      else
-                        {
+                        } else {
                           showTopSnackBar(
                             context,
                             CustomSnackBar.error(
-                              message:
-                              "You don't have internet access",
+                              message: "You don't have internet access",
                             ),
                           );
                         }

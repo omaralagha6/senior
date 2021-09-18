@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:random_color/random_color.dart';
 import 'package:senior_project/screens/CreateNewCustomer.dart';
 import 'package:senior_project/screens/CustomerDetails.dart';
 import 'package:senior_project/screens/CustomerInfo.dart';
+import 'package:senior_project/screens/SearchCustomer.dart';
 import 'package:senior_project/screens/UpdateCustomer.dart';
 import 'package:senior_project/screens/UpdateUser.dart';
 import 'package:senior_project/screens/UserInfo.dart';
@@ -34,6 +34,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late var id = widget.userId;
   CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
+  var textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,22 +50,80 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            leading: IconButton(
-              onPressed: () async {
-                DocumentSnapshot user = await userRef.doc(id).get();
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => UserInfo(
-                              userId: user,
-                            )));
-              },
-              icon: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.info_outlined),
-                ],
-              ),
+            leadingWidth: MediaQuery.of(context).size.width / 4,
+            centerTitle: true,
+            leading: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            title: Text("Functionalities & Features"),
+                            titleTextStyle: TextStyle(
+                              fontFamily: "Raleway-SemiBold",
+                              color: Colors.black,
+                              fontSize: 30,
+                            ),
+                            contentTextStyle: TextStyle(
+                              fontFamily: "Raleway-Regular",
+                              color: Colors.black,
+                              fontSize: 22,
+                            ),
+                            content: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text("Welcome"),
+                                Text("We're here to help you"),
+                                Text("in the functionalities"),
+                                Text("& features of our application."),
+                                Text("First of all, to see each"),
+                                Text("Customer's Bills, you"),
+                                Text("just need to click on"),
+                                Text("any Customer you have."),
+                                Text("Second, to see your Customers'"),
+                                Text("Information, double click"),
+                                Text("on any one of them"),
+                                Text("and it will appear."),
+                                Text("Finally, to delete one of"),
+                                Text("your Customers, a long press"),
+                                Text("on him is enough for apply."),
+                                Text("\n"),
+                                Text("The long click functionality"),
+                                Text("also work on each Bill you have."),
+                                Text("Thank you for listening and Enjoy."),
+                              ],
+                            ),
+                            actions: [
+                              FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("OK")),
+                            ],
+                          );
+                        });
+                  },
+                  icon: Icon(Icons.info_outlined),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    DocumentSnapshot user = await userRef.doc(id).get();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UserInfo(
+                                  userId: user,
+                                )));
+                  },
+                  icon: Icon(Icons.update),
+                ),
+              ],
             ),
             title: Text(
               'Home Page',
@@ -72,9 +131,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             actions: [
               Container(
-                width: 100,
+                width: MediaQuery.of(context).size.width / 4,
                 child: IconButton(
                   onPressed: () async {
+                    userRef.doc(id).update({"isLoggedIn": false});
                     SharedPreferences pref =
                         await SharedPreferences.getInstance();
                     pref.setBool('isLogged', false);
@@ -98,21 +158,43 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
             backgroundColor: Colors.transparent,
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.green.shade700,
-            child: Icon(
-              Icons.add,
-              size: 40,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CreateNewCustomer(
-                            userId: id,
-                          )));
-            },
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                heroTag: "btnSearch",
+                backgroundColor: Colors.green.shade700,
+                child: Icon(
+                  Icons.search,
+                  size: 40,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SearchCustomer(userId: widget.userId,)));
+                },
+              ),
+              SizedBox(width:5),
+              FloatingActionButton(
+                heroTag: "btnAdd",
+                backgroundColor: Colors.green.shade700,
+                child: Icon(
+                  Icons.add,
+                  size: 40,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateNewCustomer(
+                                userId: id,
+                              )));
+                },
+              ),
+            ],
           ),
           body: Container(
             margin: EdgeInsets.all(12),
@@ -179,11 +261,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ConnectivityResult.wifi ||
                                                 result ==
                                                     ConnectivityResult.mobile) {
+                                              var snapshots = snapshot
+                                                  .data!.docs[index].reference
+                                                  .collection("Dollar Bills")
+                                                  .get();
+                                              await snapshots.then((value) =>
+                                                  value.docs.forEach((element) {
+                                                    element.reference.delete();
+                                                  }));
+                                              CollectionReference cust =
+                                                  FirebaseFirestore.instance
+                                                      .collection(
+                                                          "Bills-Users-Customers");
+                                              cust
+                                                  .where("CustId",
+                                                      isEqualTo: snapshot
+                                                          .data!.docs[index].id)
+                                                  .get()
+                                                  .then((value) => value.docs
+                                                          .forEach((element) {
+                                                        element.reference
+                                                            .delete();
+                                                      }));
                                               snapshot
                                                   .data!.docs[index].reference
-                                                  .delete()
-                                                  .whenComplete(() =>
-                                                      Navigator.pop(context));
+                                                  .delete();
+
+                                              Navigator.pop(context);
                                             } else {
                                               showTopSnackBar(
                                                 context,
@@ -215,6 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 MaterialPageRoute(
                                     builder: (context) => CustomerDetails(
                                           customer: snapshot.data!.docs[index],
+                                          userId: widget.userId,
                                         )));
                           },
                           child: Container(
@@ -250,3 +355,6 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
   }
 }
+
+
+

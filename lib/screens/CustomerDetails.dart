@@ -13,15 +13,15 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class CustomerDetails extends StatefulWidget {
   final DocumentSnapshot customer;
+  final String userId;
 
-  CustomerDetails({required this.customer});
+  CustomerDetails({required this.customer,required this.userId});
 
   @override
   _CustomerDetailsState createState() => _CustomerDetailsState();
 }
 
 class _CustomerDetailsState extends State<CustomerDetails> {
-
   @override
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +31,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
       children: [
         BackGroundImage(
           image:
-          "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg",
+              "assets/100 Dollar Bills IPhone Wallpaper - IPhone Wallpapers.jpeg",
         ),
         SafeArea(
           child: Scaffold(
@@ -56,9 +56,8 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CreateDollarBill(
-                           customer:widget.customer
-                          )));
+                          builder: (context) =>
+                              CreateDollarBill(customer: widget.customer,userId: widget.userId,)));
                 },
               ),
               body: StreamBuilder(
@@ -66,133 +65,128 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                     .collection("Dollar Bills")
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  RandomColor _randomColor = RandomColor();
-                  ColorHue _green = ColorHue.custom(Range(80, 90));
-                  Color _color = _randomColor.randomColor(colorHue: _green);
                   return ListView.builder(
                       itemCount:
-                      snapshot.hasData ? snapshot.data!.docs.length : 0,
+                          snapshot.hasData ? snapshot.data!.docs.length : 0,
                       itemBuilder: (context, index) {
                         return SingleChildScrollView(
                             child: GestureDetector(
-                              onLongPress: () {
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
+                          onLongPress: () {
+                            showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
                                             BorderRadius.circular(12)),
-                                        content: Container(
-                                          height: 120,
-                                          child: Column(
-                                            mainAxisAlignment:
+                                    content: Container(
+                                      height: 120,
+                                      child: Column(
+                                        mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                FontAwesomeIcons
-                                                    .exclamationTriangle,
-                                                size: 55,
-                                                color: Colors.yellow,
-                                              ),
-                                              SizedBox(
-                                                height: 15,
-                                              ),
-                                              Text(
-                                                  "Are You Sure you want to delete this bill?",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontStyle: FontStyle.italic,
-                                                    fontFamily: "serif",
-                                                  )),
-                                            ],
+                                        children: [
+                                          Icon(
+                                            FontAwesomeIcons
+                                                .exclamationTriangle,
+                                            size: 55,
+                                            color: Colors.yellow,
                                           ),
-                                        ),
-                                        actions: [
-                                          FlatButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text("Cancel")),
-                                          FlatButton(
-                                              onPressed: () async {
-                                                final result = await Connectivity()
-                                                    .checkConnectivity();
-                                                if (result ==
-                                                    ConnectivityResult.wifi ||
-                                                    result ==
-                                                        ConnectivityResult.mobile) {
-                                                  snapshot
-                                                      .data!.docs[index].reference
-                                                      .delete()
-                                                      .whenComplete(() =>
-                                                      Navigator.pop(context));
-                                                } else {
-                                                  showTopSnackBar(
-                                                    context,
-                                                    CustomSnackBar.error(
-                                                      message:
-                                                      "You don't have internet access",
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              child: Text("OK")),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Text(
+                                              "Are You Sure you want to delete this bill?",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontStyle: FontStyle.italic,
+                                                fontFamily: "serif",
+                                              )),
                                         ],
-                                      );
-                                    });
-                              },
-                              child: Container(
-                                height: 150,
-                                margin: EdgeInsets.all(12),
-                                padding: EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Colors.transparent,
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/${snapshot.data!.docs[index]["Amount"]}dollarbill.jpg"),
-                                      fit: BoxFit.fill,
-                                      colorFilter: ColorFilter.mode(
-                                          Colors.black45, BlendMode.hardLight),
+                                      ),
+                                    ),
+                                    actions: [
+                                      FlatButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Cancel")),
+                                      FlatButton(
+                                          onPressed: () async {
+                                            final result = await Connectivity()
+                                                .checkConnectivity();
+                                            if (result ==
+                                                    ConnectivityResult.wifi ||
+                                                result ==
+                                                    ConnectivityResult.mobile) {
+                                              snapshot
+                                                  .data!.docs[index].reference
+                                                  .delete();
+                                              Navigator.pop(context);
 
-                                    )),
-                                child: Shimmer(
-                                  duration: Duration(
-                                    seconds: 10,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Amount : " +
-                                            snapshot.data!.docs[index]["Amount"],
-                                        style: dollarDetailsTXT,
-                                      ),
-                                      Text(
-                                        "Reserve Bank : " +
-                                            snapshot.data!.docs[index]
-                                            ["Reserve Bank"],
-                                        style: dollarDetailsTXT,
-                                      ),
-                                      Text(
-                                        "Serial Number : " +
-                                            snapshot.data!.docs[index]
-                                            ["Serial Number"],
-                                        style: dollarDetailsTXT,
-                                      ),
-                                      Text(
-                                        "Series Year : " +
-                                            snapshot.data!.docs[index]
-                                            ["Series Year"],
-                                        style: dollarDetailsTXT,
-                                      ),
+                                            } else {
+                                              showTopSnackBar(
+                                                context,
+                                                CustomSnackBar.error(
+                                                  message:
+                                                      "You don't have internet access",
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          child: Text("OK")),
                                     ],
-                                  ),
-                                ),
+                                  );
+                                });
+                          },
+                          child: Container(
+                            height: 2 * MediaQuery.of(context).size.width / 5,
+                            margin: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.transparent,
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      "assets/${snapshot.data!.docs[index]["Amount"]}dollarbill.jpg"),
+                                  fit: BoxFit.fill,
+                                  colorFilter: ColorFilter.mode(
+                                      Colors.black45, BlendMode.hardLight),
+                                )),
+                            child: Shimmer(
+                              duration: Duration(
+                                seconds: 10,
                               ),
-                            ));
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Amount : " +
+                                        snapshot.data!.docs[index]["Amount"],
+                                    style: dollarDetailsTXT,
+                                  ),
+                                  Text(
+                                    "Reserve Bank : " +
+                                        snapshot.data!.docs[index]
+                                            ["Reserve Bank"],
+                                    style: dollarDetailsTXT,
+                                  ),
+                                  Text(
+                                    "Serial Number : " +
+                                        snapshot.data!.docs[index]
+                                            ["Serial Number"],
+                                    style: dollarDetailsTXT,
+                                  ),
+                                  Text(
+                                    "Series Year : " +
+                                        snapshot.data!.docs[index]
+                                            ["Series Year"],
+                                    style: dollarDetailsTXT,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ));
                       });
                 },
               )),

@@ -18,8 +18,9 @@ import '../StyleTXT.dart';
 
 class CreateDollarBill extends StatefulWidget {
   final DocumentSnapshot customer;
+  final String userId;
 
-  CreateDollarBill({required this.customer});
+  CreateDollarBill({required this.customer, required this.userId});
 
   @override
   _CreateDollarBillState createState() => _CreateDollarBillState();
@@ -69,7 +70,8 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
     "N": "2017",
     "P": "2017A"
   };
-  CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
+  CollectionReference viewRef =
+      FirebaseFirestore.instance.collection("Bills-Users-Customers");
 
   final regExp = RegExp(r'^([A-Z]|[A-Z]{2})(\s|)([0-9]{8})(\s|)([A-Z]?)$');
 
@@ -86,8 +88,6 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
         child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              //toolbarHeight: 80,
-              //elevation: 10,
               title: Text(
                 'Create Dollar Bill',
                 style: TextStyle(
@@ -363,68 +363,78 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                   await Connectivity().checkConnectivity();
                               if (result == ConnectivityResult.wifi ||
                                   result == ConnectivityResult.mobile) {
-                                widget.customer.reference
-                                    .collection("Dollar Bills")
+                                viewRef
                                     .where("Serial Number",
                                         isEqualTo: serialNbController.text)
                                     .get()
                                     .then((value) {
                                   if (value.docs.length == 0) {
+                                    List<String>splitList=serialNbController.text.split(" ");
+                                    List<String>indexList=[];
+                                    for(int i=0;i<splitList.length;i++)
+                                      {
+                                        for(int j=0;j<splitList[0].length+i;j++)
+                                          {
+                                            indexList.add(splitList[i].substring(0,j));
+                                          }
+                                      }
                                     if (valueController.text == "1" ||
                                         valueController.text == "2") {
-                                      DollarBill db = DollarBill(
-                                        serialNb: serialNbController.text,
-                                        reserveBank: resBank.containsKey(
-                                                serialNbController.text[0])
-                                            ? resBank[
-                                                serialNbController.text[0]]
-                                            : "Unexisting Reserve Bank",
-                                        amount: valueController.text,
-                                      );
+                                     String year="";
+                                     if(valueController.text=="1")year="1963";
+                                     else year="1976";
+                                     DollarBill db = DollarBill(
+                                       serialNb: serialNbController.text,
+                                       reserveBank: resBank.containsKey(
+                                           serialNbController.text[0])
+                                           ? resBank[
+                                       serialNbController.text[0]]
+                                           : "Invalid Reserve Bank",
+                                       amount: valueController.text,
+                                     );
+                                     viewRef.add({
+                                       "Serial Number":serialNbController.text,
+                                       "UserId":widget.userId,
+                                       "CustId":widget.customer.id,
+                                       "Search Index":indexList
+                                     });
 
-                                      widget.customer.reference
-                                          .collection("Dollar Bills")
-                                          .add({
-                                            "Serial Number": db.serialNb,
-                                            "Reserve Bank": db.reserveBank,
-                                            "Amount": db.amount,
-                                            "Series Year": "Does Not Exist"
-                                          })
-                                          .whenComplete(
-                                              () => Navigator.pop(context))
-                                          .catchError((onError) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        "${onError.toString()}")));
-                                          });
+                                     widget.customer.reference
+                                         .collection("Dollar Bills")
+                                         .add({
+                                       "Serial Number": db.serialNb,
+                                       "Reserve Bank": db.reserveBank,
+                                       "Amount": db.amount,
+                                       "Series Year": year
+                                     }).whenComplete(
+                                             () => Navigator.pop(context));
+
                                     } else {
                                       DollarBill db = DollarBill(
                                           serialNb: serialNbController.text,
                                           reserveBank: resBank.containsKey(
-                                                  serialNbController.text[0])
+                                                  serialNbController.text[1])
                                               ? resBank[
-                                                  serialNbController.text[0]]
-                                              : "Unexisting Reserve Bank",
+                                                  serialNbController.text[1]]
+                                              : "Invalid Reserve Bank",
                                           amount: valueController.text,
                                           seriesYear: serYear[
-                                              serialNbController.text[1]]);
+                                              serialNbController.text[0]]);
+                                      viewRef.add({
+                                        "Serial Number":serialNbController.text,
+                                        "UserId":widget.userId,
+                                        "CustId":widget.customer.id,
+                                        "Search Index":indexList
+                                      });
                                       widget.customer.reference
                                           .collection("Dollar Bills")
                                           .add({
-                                            "Serial Number": db.serialNb,
-                                            "Reserve Bank": db.reserveBank,
-                                            "Series Year": db.seriesYear,
-                                            "Amount": db.amount
-                                          })
-                                          .whenComplete(
-                                              () => Navigator.pop(context))
-                                          .catchError((onError) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        "${onError.toString()}")));
-                                          });
+                                        "Serial Number": db.serialNb,
+                                        "Reserve Bank": db.reserveBank,
+                                        "Series Year": db.seriesYear,
+                                        "Amount": db.amount
+                                      }).whenComplete(
+                                              () => Navigator.pop(context));
                                     }
                                   } else {
                                     showDialog(
@@ -436,7 +446,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                                 borderRadius:
                                                     BorderRadius.circular(12)),
                                             content: Text(
-                                                "This serial number  already exist for another bill"),
+                                                "This serial number already exist for another bill"),
                                             actions: [
                                               FlatButton(
                                                   onPressed: () {
@@ -480,6 +490,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
       )
     ]);
   }
+
 
   Future getSerialNumber() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);

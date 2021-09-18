@@ -42,7 +42,7 @@ required bool isReadable}) =>
             ),
             labelText: lblText,
             hintStyle: whiteStyleTXT,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               color: Colors.white,
             ),
           ),

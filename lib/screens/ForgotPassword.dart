@@ -45,8 +45,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         showLoading = false;
       });
       if (authCredential.user != null) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => UpdatePassword(userId: authCredential.user!.uid,)));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => UpdatePassword(
+                      userId: authCredential.user!.uid,
+                    )));
       }
     } on FirebaseAuthException catch (e) {
       // TODO
@@ -79,60 +83,54 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 borderRadius: BorderRadius.circular(16),
               ),
               onPressed: () async {
-                if(phoneController.text.isEmpty)
-                  {
+                if (phoneController.text.isEmpty) {
+                  showTopSnackBar(
+                    context,
+                    CustomSnackBar.error(
+                      message: "Can't have an empty field",
+                    ),
+                  );
+                } else {
+                  final result = await Connectivity().checkConnectivity();
+                  if (result == ConnectivityResult.wifi ||
+                      result == ConnectivityResult.mobile) {
+                    setState(() {
+                      showLoading = true;
+                    });
+                    await _auth.verifyPhoneNumber(
+                        phoneNumber: phoneController.text,
+                        verificationCompleted: (phoneAuthCredentials) async {
+                          setState(() {
+                            showLoading = false;
+                          });
+                          //signnWithPhoneAuthCredential(phoneAuthCredentials);
+                        },
+                        verificationFailed: (verificationFailed) {
+                          setState(() {
+                            showLoading = false;
+                          });
+                          _scaffoldstate.currentState!.showSnackBar(SnackBar(
+                              content: Text(verificationFailed.message!)));
+                          //the key is replacing the context
+                        },
+                        codeSent: (verificationId, resendingToken) async {
+                          setState(() {
+                            showLoading = false;
+                            currentState =
+                                MobileVerificationState.SHOW_OTP_FORM_STATE;
+                            this.verificationId = verificationId;
+                          });
+                        },
+                        codeAutoRetrievalTimeout: (verificationId) async {});
+                  } else {
                     showTopSnackBar(
                       context,
                       CustomSnackBar.error(
-                        message:
-                        "Can't have an empty field",
+                        message: "You don't have internet access",
                       ),
                     );
                   }
-                else
-                  {
-                    final result = await Connectivity().checkConnectivity();
-                    if (result == ConnectivityResult.wifi ||
-                        result == ConnectivityResult.mobile) {
-                      setState(() {
-                        showLoading = true;
-                      });
-                      await _auth.verifyPhoneNumber(
-                          phoneNumber: phoneController.text,
-                          verificationCompleted: (phoneAuthCredentials) async {
-                            setState(() {
-                              showLoading = false;
-                            });
-                            //signnWithPhoneAuthCredential(phoneAuthCredentials);
-                          },
-                          verificationFailed: (verificationFailed) {
-                            setState(() {
-                              showLoading = false;
-                            });
-                            _scaffoldstate.currentState!.showSnackBar(
-                                SnackBar(content: Text(verificationFailed.message!)));
-                            //the key is replacing the context
-                          },
-                          codeSent: (verificationId, resendingToken) async {
-                            setState(() {
-                              showLoading = false;
-                              currentState =
-                                  MobileVerificationState.SHOW_OTP_FORM_STATE;
-                              this.verificationId = verificationId;
-                            });
-                          },
-                          codeAutoRetrievalTimeout: (verificationId) async {});
-                    }
-                    else {
-                      showTopSnackBar(
-                        context,
-                        CustomSnackBar.error(
-                          message:
-                          "You don't have internet access",
-                        ),
-                      );
-                    }
-                  }
+                }
               },
               color: Colors.blue,
               child: Row(
@@ -212,7 +210,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               animatedTexts: [
                 ColorizeAnimatedText(
                   'Phone Verification',
-                  textStyle: GoogleFonts.robotoCondensed(
+                  textStyle:TextStyle(
+                      fontFamily: "Raleway-Thin",
                       fontSize: 30,
                       color: Color(0xffbfbfbf),
                       fontWeight: FontWeight.w500),

@@ -58,15 +58,9 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            //toolbarHeight: 80,
-            //elevation: 10,
             title: Text(
-             "Update Customer Info",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontFamily: "serif",
-                  fontSize: 30,
-                  color: Color(0xffbfbfbf)),
+              "Update Customer Info",
+              style: infoStyleTXT,
             ),
             leading: IconButton(
               onPressed: () {
@@ -147,7 +141,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                               ),
                               Padding(
                                 padding:
-                                const EdgeInsets.symmetric(vertical: 10),
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 child: Container(
                                   padding: EdgeInsets.all(8),
                                   height: 65,
@@ -157,25 +151,27 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                   ),
                                   child: Row(
                                     children: [
-                                      Text("Gender" ,style:whiteStyleTXT),
+                                      Text("Gender", style: whiteStyleTXT),
                                       Radio(
                                         value: "Male",
                                         groupValue: gender.text,
-                                        onChanged: (value){
+                                        onChanged: (value) {
                                           setState(() {
-                                            gender.text=value as String ;
+                                            gender.text = value as String;
                                           });
                                         },
-                                      ),Text("Male",style:whiteStyleTXT),
+                                      ),
+                                      Text("Male", style: whiteStyleTXT),
                                       Radio(
                                         value: "Female",
                                         groupValue: gender.text,
-                                        onChanged: (value){
+                                        onChanged: (value) {
                                           setState(() {
-                                            gender.text=value as String ;
+                                            gender.text = value as String;
                                           });
                                         },
-                                      ),Text("Female",style:whiteStyleTXT),
+                                      ),
+                                      Text("Female", style: whiteStyleTXT),
                                     ],
                                   ),
                                 ),
@@ -196,9 +192,9 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                     onPressed: () async {
                       // Navigator.pop(context);
                       if (_checkRegisterFields() == true) {
-                      final result=await Connectivity().checkConnectivity();
-                      if(result==ConnectivityResult.mobile || result==ConnectivityResult.wifi)
-                        {
+                        final result = await Connectivity().checkConnectivity();
+                        if (result == ConnectivityResult.mobile ||
+                            result == ConnectivityResult.wifi) {
                           Customer c = Customer(
                               firstname: firstname.text,
                               lastname: lastname.text,
@@ -215,16 +211,18 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                             "Gender": c.gender,
                           }).whenComplete(() {
                             print(widget.userId);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen(userId:widget.userId)));});
-
-                        }
-                      else
-                        {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        HomeScreen(userId: widget.userId)));
+                          });
+                        } else {
                           showTopSnackBar(
                             context,
                             CustomSnackBar.error(
-                              message:
-                              "You don't have internet access",
+                              message: "You don't have internet access",
                             ),
                           );
                         }
@@ -256,7 +254,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                         SizedBox(
                           width: 10,
                         ),
-                        Icon(Icons.person_add_outlined,
+                        Icon(Icons.check_circle_outline,
                             size: 25, color: Colors.white),
                       ],
                     ),

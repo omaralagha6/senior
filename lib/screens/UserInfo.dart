@@ -57,11 +57,9 @@ class _UserInfoState extends State<UserInfo> {
       Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          //toolbarHeight: 80,
-          //elevation: 10,
           title: Text(
             "User's Info",
-            style: titleStyleTXT,
+            style: infoStyleTXT,
           ),
           leading: IconButton(
             onPressed: () {
@@ -177,7 +175,7 @@ class _UserInfoState extends State<UserInfo> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => UpdateUser(

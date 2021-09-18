@@ -61,11 +61,9 @@ class _UpdateUserState extends State<UpdateUser> {
       Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          //toolbarHeight: 80,
-          //elevation: 10,
           title: Text(
             "Update User Info",
-            style: titleStyleTXT,
+            style: infoStyleTXT,
           ),
           leading: IconButton(
             onPressed: () {
@@ -225,38 +223,69 @@ class _UpdateUserState extends State<UpdateUser> {
                             ),
                             onPressed: () async {
                               if (_checkRegisterFields() == true) {
-                                final result =
-                                    await Connectivity().checkConnectivity();
-                                if (result == ConnectivityResult.wifi ||
-                                    result == ConnectivityResult.mobile) {
-                                  Users user = Users(
-                                    firstname: firstname.text,
-                                    country: nationality.text,
-                                    lastname: lastname.text,
-                                    phonenumber: phoneController.text,
-                                    gender: gender.text,
-                                    address: address.text,
-                                    password: pass.text,
-                                    username: username.text,
-                                  );
-                                  widget.userId.reference.update({
-                                    "First Name": user.firstname,
-                                    "Last Name": user.lastname,
-                                    "Country": user.country,
-                                    "Gender": user.gender,
-                                    "Address": user.address,
-                                    "Password": user.password,
-                                    "Username": user.username,
-                                    "Phone Number": user.phonenumber
-                                  }).whenComplete(() => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen(userId:widget.userId.id))));
-                                } else {
-                                  showTopSnackBar(
-                                    context,
-                                    CustomSnackBar.error(
-                                      message: "You don't have internet access",
-                                    ),
-                                  );
+                              if(RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$').hasMatch(pass.text))
+                                {
+                                  final result =
+                                  await Connectivity().checkConnectivity();
+                                  if (result == ConnectivityResult.wifi ||
+                                      result == ConnectivityResult.mobile) {
+                                    Users user = Users(
+                                      firstname: firstname.text,
+                                      country: nationality.text,
+                                      lastname: lastname.text,
+                                      phonenumber: phoneController.text,
+                                      gender: gender.text,
+                                      address: address.text,
+                                      password: pass.text,
+                                      username: username.text,
+                                    );
+                                    widget.userId.reference.update({
+                                      "First Name": user.firstname,
+                                      "Last Name": user.lastname,
+                                      "Country": user.country,
+                                      "Gender": user.gender,
+                                      "Address": user.address,
+                                      "Password": user.password,
+                                      "Username": user.username,
+                                      "Phone Number": user.phonenumber
+                                    }).whenComplete(() {
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => HomeScreen(
+                                                  userId: widget.userId.id)));
+                                    });
+                                  } else {
+                                    showTopSnackBar(
+                                      context,
+                                      CustomSnackBar.error(
+                                        message: "You don't have internet access",
+                                      ),
+                                    );
+                                  }
                                 }
+                              else{
+
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12)),
+                                        content: Text(
+                                            "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length"),
+                                        actions: [
+                                          FlatButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("OK")),
+                                        ],
+                                      );
+                                    });
+                              }
                               } else {
                                 showDialog(
                                     barrierDismissible: false,
@@ -288,7 +317,7 @@ class _UpdateUserState extends State<UpdateUser> {
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Icon(Icons.update,
+                                Icon(Icons.check_circle_outline,
                                     size: 25, color: Colors.white)
                               ],
                             ),

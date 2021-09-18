@@ -47,7 +47,6 @@ class _CreateNewUserState extends State<CreateNewUser> {
   bool showLoading = false;
   CollectionReference userRef = FirebaseFirestore.instance.collection('Users');
 
-
   void SignWithPhoneAuthCredential(
       PhoneAuthCredential phoneAuthCredential) async {
     setState(() {
@@ -60,7 +59,6 @@ class _CreateNewUserState extends State<CreateNewUser> {
         showLoading = false;
       });
       if (authCredential.user != null) {
-
         Users user = Users(
           firstname: firstname.text,
           country: nationality.text,
@@ -71,23 +69,25 @@ class _CreateNewUserState extends State<CreateNewUser> {
           password: pass.text,
           username: username.text,
         );
-        userRef.doc(authCredential.user!.uid).set({
-          "First Name": user.firstname,
-          "Last Name": user.lastname,
-          "Country": user.country,
-          "Gender": user.gender,
-          "Address": user.address,
-          "Password": user.password,
-          "Username": user.username,
-          "Phone Number": user.phonenumber
-        }).whenComplete(() => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomeScreen(
-                      userId: authCredential.user!.uid,
-                    )))).catchError((onError){
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${onError.toString()}")));
-        });
+        userRef
+            .doc(authCredential.user!.uid)
+            .set({
+              "First Name": user.firstname,
+              "Last Name": user.lastname,
+              "Country": user.country,
+              "Gender": user.gender,
+              "Address": user.address,
+              "Password": user.password,
+              "Username": user.username,
+              "Phone Number": user.phonenumber,
+              "isLoggedIn": true
+            })
+            .whenComplete(() => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HomeScreen(
+                          userId: authCredential.user!.uid,
+                        ))));
       }
     } on FirebaseAuthException catch (e) {
       // TODO
@@ -108,9 +108,6 @@ class _CreateNewUserState extends State<CreateNewUser> {
           child: SingleChildScrollView(
             child: Form(
               child: Column(children: [
-                // SizedBox(
-                //   height: 20,
-                // ),
                 getDefaultTextFormField(
                     isReadable: false,
                     obscure: false,
@@ -168,8 +165,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   textEditingController: address,
                 ),
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Container(
                     padding: EdgeInsets.all(8),
                     height: 65,
@@ -179,25 +175,27 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     ),
                     child: Row(
                       children: [
-                        Text("Gender" ,style:whiteStyleTXT),
+                        Text("Gender", style: whiteStyleTXT),
                         Radio(
                           value: "Male",
                           groupValue: gender.text,
-                          onChanged: (value){
+                          onChanged: (value) {
                             setState(() {
-                              gender.text=value as String ;
+                              gender.text = value as String;
                             });
                           },
-                        ),Text("Male",style:whiteStyleTXT),
+                        ),
+                        Text("Male", style: whiteStyleTXT),
                         Radio(
                           value: "Female",
                           groupValue: gender.text,
-                          onChanged: (value){
+                          onChanged: (value) {
                             setState(() {
-                              gender.text=value as String ;
+                              gender.text = value as String;
                             });
                           },
-                        ),Text("Female",style:whiteStyleTXT),
+                        ),
+                        Text("Female", style: whiteStyleTXT),
                       ],
                     ),
                   ),
@@ -272,81 +270,135 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     onPressed: () async {
                       if (_checkRegisterFields() == true) {
                         if (pass.text == confPass.text) {
-                         final result =await Connectivity().checkConnectivity();
-                         if(result==ConnectivityResult.wifi || result ==ConnectivityResult.mobile)
-                           {
-                             userRef
-                                 .where("Username", isEqualTo: username.text)
-                                 .get()
-                                 .then((value) async {
-                               if (value.docs.length == 0) {
-                                 setState(() {
-                                   showLoading = true;
-                                 });
-                                 await _auth.verifyPhoneNumber(
-                                     phoneNumber: phoneController.text,
-                                     verificationCompleted:
-                                         (phoneAuthCredentials) async {
-                                       setState(() {
-                                         showLoading = false;
-                                       });
-                                       //signnWithPhoneAuthCredential(phoneAuthCredentials);
-                                     },
-                                     verificationFailed: (verificationFailed) {
-                                       setState(() {
-                                         showLoading = false;
-                                       });
-                                       _scaffoldState.currentState!.showSnackBar(
-                                           SnackBar(
-                                               content: Text(
-                                                   verificationFailed.message!)));
-                                       //the key is replacing the context
-                                     },
-                                     codeSent:
-                                         (verificationId, resendingToken) async {
-                                       setState(() {
-                                         showLoading = false;
-                                         currentState = MobileVerificationState
-                                             .SHOW_OTP_FORM_STATE;
-                                         this.verificationId = verificationId;
-                                       });
-                                     },
-                                     codeAutoRetrievalTimeout:
-                                         (verificationID) async {});
-                               } else {
-                                 showDialog(
-                                     barrierDismissible: false,
-                                     context: context,
-                                     builder: (context) {
-                                       return AlertDialog(
-                                         shape: RoundedRectangleBorder(
-                                             borderRadius: BorderRadius.circular(12)
-                                         ),
-                                         title: Text("Existing User"),
-                                         content: Text(
-                                             "This User already has an account"),
-                                         actions: [
-                                           FlatButton(
-                                               onPressed: () {
-                                                 Navigator.pop(context);
-                                               },
-                                               child: Text("OK")),
-                                         ],
-                                       );
-                                     });
-                               }
-                             });
-                           }
-                         else
-                           {
-                             showTopSnackBar(
-                               context,
-                               CustomSnackBar.error(
-                                 message:
-                                 "You don't have internet access",
-                               ),
-                             );
-                           }
+                          if (RegExp(
+                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
+                              .hasMatch(pass.text)) {
+                            final result =
+                                await Connectivity().checkConnectivity();
+                            if (result == ConnectivityResult.wifi ||
+                                result == ConnectivityResult.mobile) {
+                              userRef
+                                  .where("Phone Number",
+                                      isEqualTo: phoneController.text)
+                                  .get()
+                                  .then((value) {
+                                if (value.docs.length == 0) {
+                                  userRef
+                                      .where("Username",
+                                          isEqualTo: username.text)
+                                      .get()
+                                      .then((value) async {
+                                    if (value.docs.length == 0) {
+                                      setState(() {
+                                        showLoading = true;
+                                      });
+                                      await _auth.verifyPhoneNumber(
+                                          phoneNumber: phoneController.text,
+                                          verificationCompleted:
+                                              (phoneAuthCredentials) async {
+                                            setState(() {
+                                              showLoading = false;
+                                            });
+                                          },
+                                          verificationFailed:
+                                              (verificationFailed) {
+                                            setState(() {
+                                              showLoading = false;
+                                            });
+                                            _scaffoldState.currentState!
+                                                .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        verificationFailed
+                                                            .message!)));
+                                            //the key is replacing the context
+                                          },
+                                          codeSent: (verificationId,
+                                              resendingToken) async {
+                                            setState(() {
+                                              showLoading = false;
+                                              currentState =
+                                                  MobileVerificationState
+                                                      .SHOW_OTP_FORM_STATE;
+                                              this.verificationId =
+                                                  verificationId;
+                                            });
+                                          },
+                                          codeAutoRetrievalTimeout:
+                                              (verificationID) async {});
+                                    } else {
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              content: Text(
+                                                  "This Username is already taken"),
+                                              actions: [
+                                                FlatButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("OK")),
+                                              ],
+                                            );
+                                          });
+                                    }
+                                  });
+                                } else {
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          content: Text(
+                                              "This phone number is already associated to an existing user"),
+                                          actions: [
+                                            FlatButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("OK")),
+                                          ],
+                                        );
+                                      });
+                                }
+                              });
+                            } else {
+                              showTopSnackBar(
+                                context,
+                                CustomSnackBar.error(
+                                  message: "You don't have internet access",
+                                ),
+                              );
+                            }
+                          } else {
+                            showDialog(
+                                barrierDismissible: false,
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    content: Text(
+                                        "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length"),
+                                    actions: [
+                                      FlatButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("OK")),
+                                    ],
+                                  );
+                                });
+                          }
                         } else {
                           showDialog(
                               barrierDismissible: false,
@@ -354,8 +406,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                               builder: (context) {
                                 return AlertDialog(
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)
-                                  ),
+                                      borderRadius: BorderRadius.circular(12)),
                                   content: Text(
                                       "Password and confirm password aren't equal"),
                                   actions: [
@@ -375,8 +426,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                             builder: (context) {
                               return AlertDialog(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)
-                                ),
+                                    borderRadius: BorderRadius.circular(12)),
                                 title: Text("Empty Fields"),
                                 content: Text("Can't keep any empty field"),
                                 actions: [
@@ -441,11 +491,11 @@ class _CreateNewUserState extends State<CreateNewUser> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Verify', style: whiteStyleTXT),
+                  Text('Verify', style: buttonStyleTXT),
                   SizedBox(
                     width: 10,
                   ),
-                  Icon(Icons.send),
+                  Icon(Icons.send, size: 25, color: Colors.white),
                 ],
               ),
             ),

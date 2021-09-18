@@ -12,7 +12,8 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class UpdatePassword extends StatefulWidget {
   final String userId;
-  UpdatePassword( {required this.userId});
+
+  UpdatePassword({required this.userId});
 
   @override
   _UpdatePasswordState createState() => _UpdatePasswordState();
@@ -25,7 +26,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   IconData icon2 = FontAwesomeIcons.solidEye;
   var pass = TextEditingController();
   var confPass = TextEditingController();
-  CollectionReference userRef=FirebaseFirestore.instance.collection("Users");
+  CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +40,9 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            //toolbarHeight: 80,
-            //elevation: 10,
             title: Text(
               'Register New Password',
-              style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 40,
-                  color: Color(0xffbfbfbf)),
+              style: infoStyleTXT,
             ),
             leading: IconButton(
               onPressed: () {
@@ -111,7 +106,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0),
+                padding: const EdgeInsets.symmetric(vertical: 40.0),
                 child: MaterialButton(
                   // height: size.height*0.1,
                   height: 65,
@@ -119,28 +114,25 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   onPressed: () async {
-                    if(pass.text.isEmpty || confPass.text.isEmpty)
-                      {
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)
-                                ),
-                                content: Text("Can't keep an empty field"),
-                                actions: [
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("OK")),
-                                ],
-                              );
-                            });
-                      }
-                    else {
+                    if (pass.text.isEmpty || confPass.text.isEmpty) {
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              content: Text("Can't keep an empty field"),
+                              actions: [
+                                FlatButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("OK")),
+                              ],
+                            );
+                          });
+                    } else {
                       if (pass.text != confPass.text) {
                         showDialog(
                             barrierDismissible: false,
@@ -148,8 +140,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                             builder: (context) {
                               return AlertDialog(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)
-                                ),
+                                    borderRadius: BorderRadius.circular(12)),
                                 content: Text(
                                     "Password and Confirm password do not match"),
                                 actions: [
@@ -161,36 +152,39 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                                 ],
                               );
                             });
-                      }
-                      else {
+                      } else {
                         final result = await Connectivity().checkConnectivity();
                         if (result == ConnectivityResult.wifi ||
                             result == ConnectivityResult.mobile) {
-                          userRef.doc(widget.userId).update({
-                            "Password":pass.text
-                          }).whenComplete(() => Navigator.pushReplacement(context, MaterialPageRoute(builder:(context)=>HomeScreen(userId: widget.userId,))));
+                          userRef
+                              .doc(widget.userId)
+                              .update({"Password": pass.text}).whenComplete(
+                                  () => Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomeScreen(
+                                                userId: widget.userId,
+                                              ))));
+                        } else {
+                          showTopSnackBar(
+                            context,
+                            CustomSnackBar.error(
+                              message: "You don't have internet access",
+                            ),
+                          );
                         }
-                        else
-                          {
-                            showTopSnackBar(
-                              context,
-                              CustomSnackBar.error(
-                                message:
-                                "You don't have internet access",
-                              ),
-                            );
-                          }
                       }
-                    }},
+                    }
+                  },
                   color: Colors.blue,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Register', style: whiteStyleTXT),
+                      Text('Register', style: buttonStyleTXT),
                       SizedBox(
                         width: 10,
                       ),
-                      Icon(Icons.app_registration_outlined)
+                      Icon(Icons.app_registration_outlined, size: 25, color: Colors.white)
                     ],
                   ),
                 ),

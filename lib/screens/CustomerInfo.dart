@@ -53,15 +53,9 @@ class _CustomerInfoState extends State<CustomerInfo> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            //toolbarHeight: 80,
-            //elevation: 10,
             title: Text(
               "Customer's Info",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontFamily: "serif",
-                  fontSize: 30,
-                  color: Color(0xffbfbfbf)),
+              style: infoStyleTXT,
             ),
             leading: IconButton(
               onPressed: () {
@@ -149,7 +143,7 @@ class _CustomerInfoState extends State<CustomerInfo> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => UpdateCustomer(
@@ -165,7 +159,7 @@ class _CustomerInfoState extends State<CustomerInfo> {
                         SizedBox(
                           width: 10,
                         ),
-                        Icon(Icons.person_add_outlined,
+                        Icon(Icons.update,
                             size: 25, color: Colors.white),
                       ],
                     ),
