@@ -102,6 +102,52 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                 },
                 icon: Icon(Icons.arrow_back_ios),
               ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            title: Text("Functionalities & Features"),
+                            titleTextStyle: TextStyle(
+                              fontFamily: "Raleway-SemiBold",
+                              color: Colors.black,
+                              fontSize: 30,
+                            ),
+                            contentTextStyle: TextStyle(
+                              fontFamily: "Raleway-Regular",
+                              color: Colors.black,
+                              fontSize: 22,
+                            ),
+                            content: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const <Widget>[
+                                Text("Hello"),
+                                Text("If you have a photo on"),
+                                Text("your phone, and you want to"),
+                                Text("scan it, you can simply"),
+                                Text("make a long press on the"),
+                                Text("'Camera Icon' below and it"),
+                                Text("will open the gallery for you."),
+                              ],
+                            ),
+                            actions: [
+                              FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("OK")),
+                            ],
+                          );
+                        });
+                  },
+                  icon: Icon(Icons.info_outline),
+                ),
+              ],
               backgroundColor: Colors.transparent,
             ),
             body: SingleChildScrollView(
