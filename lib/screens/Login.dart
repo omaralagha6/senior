@@ -4,7 +4,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:senior_project/StyleTXT.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 import 'package:senior_project/screens/CreateNewUser.dart';
@@ -118,27 +117,25 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Container(
                                 width: MediaQuery.of(context).size.width,
-                                child: Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Don't have an account?",
-                                          style: whiteStyleTXT),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CreateNewUser()));
-                                        },
-                                        child: Text(
-                                          "Create one",
-                                          style: blueStyleTXT,
-                                        ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Don't have an account?",
+                                        style: whiteStyleTXT),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateNewUser()));
+                                      },
+                                      child: Text(
+                                        "Create one",
+                                        style: blueStyleTXT,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],

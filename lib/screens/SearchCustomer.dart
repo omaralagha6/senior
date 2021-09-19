@@ -40,8 +40,8 @@ class _SearchCustomerState extends State<SearchCustomer> {
                     child: Container(
                       height: 65,
                       decoration: BoxDecoration(
-                        color: Colors.grey[300]!.withOpacity(0.5),
-                      borderRadius: BorderRadius.zero
+                        color: Colors.blueGrey.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(12)
 
                       ),
                       child: TextFormField(
@@ -156,7 +156,7 @@ class _SearchCustomerState extends State<SearchCustomer> {
                                       color: Colors.white,
                                       fontSize: 20
                                     ),),
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: Colors.indigo,
                                   ),
                                   title: Text(
                                     document["Serial Number"],

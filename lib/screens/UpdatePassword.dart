@@ -156,15 +156,15 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                         final result = await Connectivity().checkConnectivity();
                         if (result == ConnectivityResult.wifi ||
                             result == ConnectivityResult.mobile) {
-                          userRef
-                              .doc(widget.userId)
-                              .update({"Password": pass.text}).whenComplete(
-                                  () => Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => HomeScreen(
-                                                userId: widget.userId,
-                                              ))));
+                          userRef.doc(widget.userId).update({
+                            "Password": pass.text,
+                            "isLoggedIn": true
+                          }).whenComplete(() => Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen(
+                                        userId: widget.userId,
+                                      ))));
                         } else {
                           showTopSnackBar(
                             context,
@@ -184,7 +184,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                       SizedBox(
                         width: 10,
                       ),
-                      Icon(Icons.app_registration_outlined, size: 25, color: Colors.white)
+                      Icon(Icons.app_registration_outlined,
+                          size: 25, color: Colors.white)
                     ],
                   ),
                 ),

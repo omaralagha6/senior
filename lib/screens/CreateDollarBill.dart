@@ -102,6 +102,52 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                 },
                 icon: Icon(Icons.arrow_back_ios),
               ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            title: Text("Functionalities & Features"),
+                            titleTextStyle: TextStyle(
+                              fontFamily: "Raleway-SemiBold",
+                              color: Colors.black,
+                              fontSize: 30,
+                            ),
+                            contentTextStyle: TextStyle(
+                              fontFamily: "Raleway-Regular",
+                              color: Colors.black,
+                              fontSize: 22,
+                            ),
+                            content: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const <Widget>[
+                                Text("Hello"),
+                                Text("If you have a photo on"),
+                                Text("your phone, and you want to"),
+                                Text("scan it, you can simply"),
+                                Text("make a long press on the"),
+                                Text("'Camera Icon' below and it"),
+                                Text("will open the gallery for you."),
+                              ],
+                            ),
+                            actions: [
+                              FlatButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("OK")),
+                            ],
+                          );
+                        });
+                  },
+                  icon: Icon(Icons.info_outline),
+                ),
+              ],
               backgroundColor: Colors.transparent,
             ),
             body: SingleChildScrollView(
@@ -369,49 +415,54 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                     .get()
                                     .then((value) {
                                   if (value.docs.length == 0) {
-                                    List<String>splitList=serialNbController.text.split(" ");
-                                    List<String>indexList=[];
-                                    for(int i=0;i<splitList.length;i++)
-                                      {
-                                        for(int j=0;j<splitList[0].length+i;j++)
-                                          {
-                                            indexList.add(splitList[i].substring(0,j));
-                                          }
+                                    List<String> splitList =
+                                        serialNbController.text.split(" ");
+                                    List<String> indexList = [];
+                                    for (int i = 0; i < splitList.length; i++) {
+                                      for (int j = 0;
+                                          j < splitList[0].length + i;
+                                          j++) {
+                                        indexList
+                                            .add(splitList[i].substring(0, j));
                                       }
+                                    }
                                     if (valueController.text == "1" ||
                                         valueController.text == "2") {
-                                      if(isNumeric(serialNbController.text[1])==true)
-                                        {
-                                          String year="";
-                                          if(valueController.text=="1")year="1963";
-                                          else year="1976";
-                                          DollarBill db = DollarBill(
-                                            serialNb: serialNbController.text,
-                                            reserveBank: resBank.containsKey(
-                                                serialNbController.text[0])
-                                                ? resBank[
-                                            serialNbController.text[0]]
-                                                : "Invalid Reserve Bank",
-                                            amount: valueController.text,
-                                          );
-                                          viewRef.add({
-                                            "Serial Number":serialNbController.text,
-                                            "UserId":widget.userId,
-                                            "CustId":widget.customer.id,
-                                            "Search Index":indexList
-                                          });
+                                      if (isNumeric(
+                                              serialNbController.text[1]) ==
+                                          true) {
+                                        String year = "";
+                                        if (valueController.text == "1")
+                                          year = "1963";
+                                        else
+                                          year = "1976";
+                                        DollarBill db = DollarBill(
+                                          serialNb: serialNbController.text,
+                                          reserveBank: resBank.containsKey(
+                                                  serialNbController.text[0])
+                                              ? resBank[
+                                                  serialNbController.text[0]]
+                                              : "Invalid Reserve Bank",
+                                          amount: valueController.text,
+                                        );
+                                        viewRef.add({
+                                          "Serial Number":
+                                              serialNbController.text,
+                                          "UserId": widget.userId,
+                                          "CustId": widget.customer.id,
+                                          "Search Index": indexList
+                                        });
 
-                                          widget.customer.reference
-                                              .collection("Dollar Bills")
-                                              .add({
-                                            "Serial Number": db.serialNb,
-                                            "Reserve Bank": db.reserveBank,
-                                            "Amount": db.amount,
-                                            "Series Year": year
-                                          }).whenComplete(
-                                                  () => Navigator.pop(context));
-                                        }
-                                      else{
+                                        widget.customer.reference
+                                            .collection("Dollar Bills")
+                                            .add({
+                                          "Serial Number": db.serialNb,
+                                          "Reserve Bank": db.reserveBank,
+                                          "Amount": db.amount,
+                                          "Series Year": year
+                                        }).whenComplete(
+                                                () => Navigator.pop(context));
+                                      } else {
                                         showDialog(
                                             barrierDismissible: false,
                                             context: context,
@@ -419,7 +470,8 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                               return AlertDialog(
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                    BorderRadius.circular(12)),
+                                                        BorderRadius.circular(
+                                                            12)),
                                                 content: Text(
                                                     "This Serial Number cannot be assigned to this amount "),
                                                 actions: [
@@ -432,59 +484,58 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                               );
                                             });
                                       }
-
-
                                     } else {
-                                     if(isNumeric(serialNbController.text[1])==false)
-                                       {
-                                         DollarBill db = DollarBill(
-                                             serialNb: serialNbController.text,
-                                             reserveBank: resBank.containsKey(
-                                                 serialNbController.text[1])
-                                                 ? resBank[
-                                             serialNbController.text[1]]
-                                                 : "Invalid Reserve Bank",
-                                             amount: valueController.text,
-                                             seriesYear: serYear[
-                                             serialNbController.text[0]]);
-                                         viewRef.add({
-                                           "Serial Number":serialNbController.text,
-                                           "UserId":widget.userId,
-                                           "CustId":widget.customer.id,
-                                           "Search Index":indexList
-                                         });
-                                         widget.customer.reference
-                                             .collection("Dollar Bills")
-                                             .add({
-                                           "Serial Number": db.serialNb,
-                                           "Reserve Bank": db.reserveBank,
-                                           "Series Year": db.seriesYear,
-                                           "Amount": db.amount
-                                         }).whenComplete(
-                                                 () => Navigator.pop(context));
-                                       }
-                                     else
-                                       {
-                                         showDialog(
-                                             barrierDismissible: false,
-                                             context: context,
-                                             builder: (context) {
-                                               return AlertDialog(
-                                                 shape: RoundedRectangleBorder(
-                                                     borderRadius:
-                                                     BorderRadius.circular(12)),
-                                                 content: Text(
-                                                     "This Serial Number cannot be assigned to this amount "),
-                                                 actions: [
-                                                   FlatButton(
-                                                       onPressed: () {
-                                                         Navigator.pop(context);
-                                                       },
-                                                       child: Text("OK")),
-                                                 ],
-                                               );
-                                             });
-                                       }
+                                      if (isNumeric(
+                                              serialNbController.text[1]) ==
+                                          false) {
+                                        DollarBill db = DollarBill(
+                                            serialNb: serialNbController.text,
+                                            reserveBank: resBank.containsKey(
+                                                    serialNbController.text[1])
+                                                ? resBank[
+                                                    serialNbController.text[1]]
+                                                : "Invalid Reserve Bank",
+                                            amount: valueController.text,
+                                            seriesYear: serYear[
+                                                serialNbController.text[0]]);
+                                        viewRef.add({
+                                          "Serial Number":
+                                              serialNbController.text,
+                                          "UserId": widget.userId,
+                                          "CustId": widget.customer.id,
+                                          "Search Index": indexList
+                                        });
+                                        widget.customer.reference
+                                            .collection("Dollar Bills")
+                                            .add({
+                                          "Serial Number": db.serialNb,
+                                          "Reserve Bank": db.reserveBank,
+                                          "Series Year": db.seriesYear,
+                                          "Amount": db.amount
+                                        }).whenComplete(
+                                                () => Navigator.pop(context));
+                                      } else {
+                                        showDialog(
+                                            barrierDismissible: false,
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                                content: Text(
+                                                    "This Serial Number cannot be assigned to this amount "),
+                                                actions: [
+                                                  FlatButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text("OK")),
+                                                ],
+                                              );
+                                            });
+                                      }
                                     }
                                   } else {
                                     showDialog(
@@ -540,7 +591,6 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
       )
     ]);
   }
-
 
   Future getSerialNumber() async {
     final pickedFile = await picker.getImage(source: ImageSource.camera);
@@ -667,6 +717,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
       ),
     );
   }
+
   bool isNumeric(String s) {
     if (s == null) {
       return false;
