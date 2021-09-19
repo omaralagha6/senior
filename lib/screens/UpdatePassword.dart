@@ -158,7 +158,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                             result == ConnectivityResult.mobile) {
                           userRef
                               .doc(widget.userId)
-                              .update({"Password": pass.text}).whenComplete(
+                              .update({"Password": pass.text, "isLoggedIn": true}).whenComplete(
                                   () => Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
