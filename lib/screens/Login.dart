@@ -116,25 +116,30 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Don't have an account?",
-                                      style: whiteStyleTXT),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CreateNewUser()));
-                                    },
-                                    child: Text(
-                                      "Create one",
-                                      style: blueStyleTXT,
-                                    ),
+                              Container(
+                                width: MediaQuery.of(context).size.width,
+                                child: Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Don't have an account?",
+                                          style: whiteStyleTXT),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CreateNewUser()));
+                                        },
+                                        child: Text(
+                                          "Create one",
+                                          style: blueStyleTXT,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ],
                           ),

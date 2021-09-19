@@ -119,6 +119,10 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                                     ConnectivityResult.wifi ||
                                                 result ==
                                                     ConnectivityResult.mobile) {
+                                              FirebaseFirestore.instance.collection("Bills-Users-Customers").where("Serial Number",isEqualTo: snapshot.data!.docs[index]["Serial Number"]).get().then((value) {
+                                                value.docs.forEach((element) {element.reference.delete();});
+                                              });
+
                                               snapshot
                                                   .data!.docs[index].reference
                                                   .delete();

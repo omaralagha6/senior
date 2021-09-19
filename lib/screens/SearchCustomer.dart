@@ -7,9 +7,9 @@ import 'package:senior_project/screens/CustomerInfo.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
 
 class SearchCustomer extends StatefulWidget {
-  final String userId;
+  final DocumentSnapshot user;
 
-  SearchCustomer({required this.userId});
+  SearchCustomer({required this.user});
 
   @override
   _SearchCustomerState createState() => _SearchCustomerState();
@@ -41,14 +41,14 @@ class _SearchCustomerState extends State<SearchCustomer> {
                       height: 65,
                       decoration: BoxDecoration(
                         color: Colors.grey[300]!.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.zero
+
                       ),
                       child: TextFormField(
                         controller: searchController,
                         obscureText: false,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
                           ),
                           prefixIcon: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -61,6 +61,21 @@ class _SearchCustomerState extends State<SearchCustomer> {
                             ),
                               onPressed: (){
                                 Navigator.pop(context);
+                              },
+                            ),
+
+                          ),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20),
+                            child: IconButton(
+                              icon:Icon(
+                                Icons.clear_sharp,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              onPressed: (){
+                                searchController.clear();
                               },
                             ),
 
@@ -83,9 +98,9 @@ class _SearchCustomerState extends State<SearchCustomer> {
                     child: StreamBuilder<QuerySnapshot>(
                       stream: (searchString.isEmpty)
                           ? searchCust
-                              .where("UserId", isEqualTo: widget.userId)
+                              .where("UserId", isEqualTo: widget.user.id)
                               .snapshots()
-                          : searchCust
+                          : searchCust.where("UserId",isEqualTo:widget.user.id)
                               .where("Search Index",
                                   arrayContains: searchString)
                               .snapshots(),
@@ -124,9 +139,7 @@ class _SearchCustomerState extends State<SearchCustomer> {
                                 child: new ListTile(
                                   onTap: () async {
                                     DocumentSnapshot cust =
-                                        await FirebaseFirestore.instance
-                                            .collection("Users")
-                                            .doc(widget.userId)
+                                        await widget.user.reference
                                             .collection("Customers")
                                             .doc(document["CustId"])
                                             .get();
@@ -134,10 +147,17 @@ class _SearchCustomerState extends State<SearchCustomer> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => CustomerInfo(
-                                                  userId: widget.userId,
+                                                  userId: widget.user.id,
                                                   customer: cust,
                                                 )));
                                   },
+                                  leading: CircleAvatar(
+                                    child: Text(widget.user.get("First Name")[0]+widget.user.get("Last Name")[0],style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20
+                                    ),),
+                                    backgroundColor: Colors.green,
+                                  ),
                                   title: Text(
                                     document["Serial Number"],
                                     style: whiteStyleTXT,

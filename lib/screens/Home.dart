@@ -169,11 +169,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   size: 40,
                   color: Colors.white,
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  DocumentSnapshot user=await userRef.doc(id).get();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SearchCustomer(userId: widget.userId,)));
+                          builder: (context) => SearchCustomer(user: user,)));
                 },
               ),
               SizedBox(width:5),
