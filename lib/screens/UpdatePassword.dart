@@ -33,6 +33,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
     return Stack(children: [
       BackGroundImage(
           image:
@@ -60,6 +61,10 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                 textEditingController: pass,
                 obscure: isObscure,
                 iconData: FontAwesomeIcons.lock,
+                style: TextStyle(
+                    fontSize: 20 / scaleFactor,
+                    color: Colors.white,
+                    fontFamily: "Raleway-Regular"),
                 lblText: 'Password',
                 txtInputAction: TextInputAction.done,
                 iconData2: IconButton(
@@ -86,6 +91,10 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                 obscure: isObscure2,
                 iconData: FontAwesomeIcons.unlock,
                 lblText: 'Confirm Password',
+                style: TextStyle(
+                    fontSize: 20 / scaleFactor,
+                    color: Colors.white,
+                    fontFamily: "Raleway-Regular"),
                 txtInputAction: TextInputAction.done,
                 iconData2: IconButton(
                   onPressed: () {
@@ -180,12 +189,12 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Register', style: buttonStyleTXT),
+                      Text('Register', style: buttonStyleTXT,textScaleFactor: 2.5,),
                       SizedBox(
                         width: 10,
                       ),
                       Icon(Icons.app_registration_outlined,
-                          size: 25, color: Colors.white)
+                          size: 25, color: Colors.white,)
                     ],
                   ),
                 ),

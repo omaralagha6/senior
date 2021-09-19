@@ -5,7 +5,6 @@ import 'package:random_color/random_color.dart';
 import 'package:senior_project/StyleTXT.dart';
 import 'package:senior_project/screens/CustomerInfo.dart';
 import 'package:senior_project/shared/BackgroundImage.dart';
-
 class SearchCustomer extends StatefulWidget {
   final DocumentSnapshot user;
 
@@ -23,6 +22,7 @@ class _SearchCustomerState extends State<SearchCustomer> {
 
   @override
   Widget build(BuildContext context) {
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
     return Stack(children: [
       BackGroundImage(
         image:
@@ -40,54 +40,50 @@ class _SearchCustomerState extends State<SearchCustomer> {
                     child: Container(
                       height: 65,
                       decoration: BoxDecoration(
-                        color: Colors.blueGrey.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(12)
-
-                      ),
+                          color: Colors.grey[300]!.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(16)),
                       child: TextFormField(
                         controller: searchController,
                         obscureText: false,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                          ),
+                              borderRadius: BorderRadius.circular(16)),
                           prefixIcon: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: IconButton(
-                              icon:Icon(
-                              Icons.arrow_back_ios,
-                              size: 30,
-                              color: Colors.white,
-                            ),
-                              onPressed: (){
+                              icon: Icon(
+                                Icons.arrow_back_ios,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
                                 Navigator.pop(context);
                               },
                             ),
-
                           ),
                           suffixIcon: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: IconButton(
-                              icon:Icon(
+                              icon: Icon(
                                 Icons.clear_sharp,
                                 size: 30,
                                 color: Colors.white,
                               ),
-                              onPressed: (){
+                              onPressed: () {
                                 searchController.clear();
                               },
                             ),
-
                           ),
                           hintText: "Search Serial Number",
-                          hintStyle: whiteStyleTXT,
-
+                          hintStyle: TextStyle(
+                              fontSize: 20 / scaleFactor,
+                              color: Colors.white,
+                              fontFamily: "Raleway-Regular"),
                         ),
                         style: whiteStyleTXT,
-                        onChanged: (value){
+                        onChanged: (value) {
                           setState(() {
-                            searchString=value;
+                            searchString = value;
                           });
                         },
                         textInputAction: TextInputAction.done,
@@ -100,7 +96,8 @@ class _SearchCustomerState extends State<SearchCustomer> {
                           ? searchCust
                               .where("UserId", isEqualTo: widget.user.id)
                               .snapshots()
-                          : searchCust.where("UserId",isEqualTo:widget.user.id)
+                          : searchCust
+                              .where("UserId", isEqualTo: widget.user.id)
                               .where("Search Index",
                                   arrayContains: searchString)
                               .snapshots(),
@@ -138,11 +135,11 @@ class _SearchCustomerState extends State<SearchCustomer> {
                                 padding: EdgeInsets.all(8),
                                 child: new ListTile(
                                   onTap: () async {
-                                    DocumentSnapshot cust =
-                                        await widget.user.reference
-                                            .collection("Customers")
-                                            .doc(document["CustId"])
-                                            .get();
+                                    DocumentSnapshot cust = await widget
+                                        .user.reference
+                                        .collection("Customers")
+                                        .doc(document["CustId"])
+                                        .get();
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -152,10 +149,12 @@ class _SearchCustomerState extends State<SearchCustomer> {
                                                 )));
                                   },
                                   leading: CircleAvatar(
-                                    child: Text(widget.user.get("First Name")[0]+widget.user.get("Last Name")[0],style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20
-                                    ),),
+                                    child: Text(
+                                      widget.user.get("First Name")[0] +
+                                          widget.user.get("Last Name")[0],
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
                                     backgroundColor: Colors.indigo,
                                   ),
                                   title: Text(

@@ -63,6 +63,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   getMobileFormWidget(context) {
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       child: Form(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -72,6 +73,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               lblText: 'Phone Number',
               txtInputAction: TextInputAction.done,
               textEditingController: phoneController,
+              style: TextStyle(
+                  fontSize: 20 / scaleFactor,
+                  color: Colors.white,
+                  fontFamily: "Raleway-Regular"),
               iconData: FontAwesomeIcons.phone),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -135,7 +140,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Send', style: buttonStyleTXT),
+                  Text(
+                    'Send',
+                    style: buttonStyleTXT,
+                    textScaleFactor: 2.5,
+                  ),
                   SizedBox(
                     width: 10,
                   ),
@@ -150,14 +159,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   getOtpFormWidget(context) {
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       child: Form(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           getDefaultTextFormField(
               isReadable: false,
               obscure: false,
-              lblText: 'Enter Verification Code',
+              lblText: 'Enter Code',
               txtInputAction: TextInputAction.done,
+              style: TextStyle(
+                  fontSize: 20 / scaleFactor,
+                  color: Colors.white,
+                  fontFamily: "Raleway-Regular"),
               textEditingController: otpController,
               iconData: FontAwesomeIcons.code),
           Padding(
@@ -178,7 +192,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Verify', style: whiteStyleTXT),
+                  Text(
+                    'Verify',
+                    style: whiteStyleTXT,
+                    textScaleFactor: 2.5,
+                  ),
                   SizedBox(
                     width: 10,
                   ),
@@ -197,6 +215,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
     return Stack(children: [
       BackGroundImage(
           image:
@@ -204,22 +223,24 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            //elevation: 0,
-            title: AnimatedTextKit(
-              animatedTexts: [
-                ColorizeAnimatedText(
-                  'Phone Verification',
-                  textStyle:TextStyle(
-                      fontFamily: "Raleway-Thin",
-                      fontSize: 30,
-                      color: Color(0xffbfbfbf),
-                      fontWeight: FontWeight.w500),
-                  colors: [Colors.white, Colors.grey],
-                  speed: const Duration(milliseconds: 200),
-                ),
-              ],
-              totalRepeatCount: 1,
-              isRepeatingAnimation: true,
+            title: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  ColorizeAnimatedText(
+                    'Phone Verification',
+                    textStyle: TextStyle(
+                        fontFamily: "Raleway-Thin",
+                        fontSize: 30 / scaleFactor,
+                        color: Color(0xffbfbfbf),
+                        fontWeight: FontWeight.w500),
+                    colors: [Colors.white, Colors.grey],
+                    speed: const Duration(milliseconds: 200),
+                  ),
+                ],
+                totalRepeatCount: 1,
+                isRepeatingAnimation: true,
+              ),
             ),
             //centerTitle: true,
             leading: IconButton(

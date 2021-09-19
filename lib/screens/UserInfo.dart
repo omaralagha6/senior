@@ -50,6 +50,11 @@ class _UserInfoState extends State<UserInfo> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
+    TextStyle fontStyle = TextStyle(
+        fontSize: 20 / scaleFactor,
+        color: Colors.white,
+        fontFamily: "Raleway-Regular");
     return Stack(children: [
       BackGroundImage(
           image:
@@ -60,6 +65,7 @@ class _UserInfoState extends State<UserInfo> {
           title: Text(
             "User's Info",
             style: infoStyleTXT,
+            textScaleFactor: 1.5,
           ),
           leading: IconButton(
             onPressed: () {
@@ -85,24 +91,25 @@ class _UserInfoState extends State<UserInfo> {
                             txtInputAction: TextInputAction.next,
                             textEditingController: firstname,
                             type: TextInputType.text,
-                            iconData: FontAwesomeIcons.user),
+                            iconData: FontAwesomeIcons.user,
+                            style: fontStyle),
                         getDefaultTextFormField(
-                          isReadable: true,
-                          obscure: false,
-                          iconData: FontAwesomeIcons.user,
-                          lblText: 'Last Name',
-                          txtInputAction: TextInputAction.next,
-                          textEditingController: lastname,
-                          type: TextInputType.text,
-                        ),
+                            isReadable: true,
+                            obscure: false,
+                            iconData: FontAwesomeIcons.user,
+                            lblText: 'Last Name',
+                            txtInputAction: TextInputAction.next,
+                            textEditingController: lastname,
+                            type: TextInputType.text,
+                            style: fontStyle),
                         getDefaultTextFormField(
-                          isReadable: true,
-                          obscure: false,
-                          iconData: FontAwesomeIcons.flag,
-                          lblText: 'Country',
-                          txtInputAction: TextInputAction.next,
-                          textEditingController: nationality,
-                        ),
+                            isReadable: true,
+                            obscure: false,
+                            iconData: FontAwesomeIcons.flag,
+                            lblText: 'Country',
+                            txtInputAction: TextInputAction.next,
+                            textEditingController: nationality,
+                            style: fontStyle),
                         getDefaultTextFormField(
                             isReadable: true,
                             obscure: false,
@@ -111,27 +118,28 @@ class _UserInfoState extends State<UserInfo> {
                             txtInputAction: TextInputAction.next,
                             textEditingController: phoneController,
                             type: TextInputType.phone,
+                            style: fontStyle,
                             submitted: () {
                               print(phoneController.text);
                             }),
                         getDefaultTextFormField(
-                          isReadable: true,
-                          obscure: false,
-                          iconData: FontAwesomeIcons.addressCard,
-                          lblText: 'Address',
-                          txtInputAction: TextInputAction.next,
-                          type: TextInputType.text,
-                          textEditingController: address,
-                        ),
+                            isReadable: true,
+                            obscure: false,
+                            iconData: FontAwesomeIcons.addressCard,
+                            lblText: 'Address',
+                            txtInputAction: TextInputAction.next,
+                            type: TextInputType.text,
+                            textEditingController: address,
+                            style: fontStyle),
                         getDefaultTextFormField(
-                          isReadable: true,
-                          obscure: false,
-                          iconData: FontAwesomeIcons.addressCard,
-                          lblText: 'Gender',
-                          txtInputAction: TextInputAction.next,
-                          type: TextInputType.text,
-                          textEditingController: gender,
-                        ),
+                            isReadable: true,
+                            obscure: false,
+                            iconData: FontAwesomeIcons.addressCard,
+                            lblText: 'Gender',
+                            txtInputAction: TextInputAction.next,
+                            type: TextInputType.text,
+                            textEditingController: gender,
+                            style: fontStyle),
                         getDefaultTextFormField(
                           isReadable: true,
                           obscure: false,
@@ -140,6 +148,7 @@ class _UserInfoState extends State<UserInfo> {
                           txtInputAction: TextInputAction.next,
                           type: TextInputType.text,
                           textEditingController: username,
+                          style: fontStyle,
                         ),
                         getDefaultTextFormField(
                           isReadable: true,
@@ -148,6 +157,7 @@ class _UserInfoState extends State<UserInfo> {
                           iconData: FontAwesomeIcons.lock,
                           lblText: 'Password',
                           txtInputAction: TextInputAction.next,
+                          style: fontStyle,
                           iconData2: IconButton(
                             onPressed: () {
                               setState(() {
@@ -166,38 +176,37 @@ class _UserInfoState extends State<UserInfo> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: MaterialButton(
-                            // height: size.height*0.1,
-                            height: 65,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UpdateUser(
-                                            userId: widget.userId,
-                                          )));
-                            },
-                            color: Colors.blue,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text('Edit', style: buttonStyleTXT),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Icon(Icons.update,
-                                    size: 25, color: Colors.white)
-                              ],
-                            ),
-                          ),
-                        ),
                       ],
                     ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: MaterialButton(
+                  // height: size.height*0.1,
+                  height: 65,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdateUser(
+                                  userId: widget.userId,
+                                )));
+                  },
+                  color: Colors.blue,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Edit', style: buttonStyleTXT, textScaleFactor: 2.5,),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Icon(Icons.update, size: 25, color: Colors.white)
+                    ],
                   ),
                 ),
               ),

@@ -11,11 +11,12 @@ Widget getDefaultTextFormField(
         required TextEditingController textEditingController,
         TextInputType? type,
         void Function()? submitted,
-required bool isReadable}) =>
+        required bool isReadable,
+        required TextStyle style}) =>
     Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
-        height: 65,
+        height: 70,
         decoration: BoxDecoration(
           color: Colors.grey[300]!.withOpacity(0.5),
           borderRadius: BorderRadius.circular(16),
@@ -41,12 +42,12 @@ required bool isReadable}) =>
               child: iconData2,
             ),
             labelText: lblText,
-            hintStyle: whiteStyleTXT,
+            hintStyle: style,
             labelStyle: const TextStyle(
               color: Colors.white,
             ),
           ),
-          style: whiteStyleTXT,
+          style: style,
           onTap: submitted,
           textInputAction: txtInputAction,
           keyboardType: type,

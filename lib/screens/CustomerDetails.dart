@@ -15,7 +15,7 @@ class CustomerDetails extends StatefulWidget {
   final DocumentSnapshot customer;
   final String userId;
 
-  CustomerDetails({required this.customer,required this.userId});
+  CustomerDetails({required this.customer, required this.userId});
 
   @override
   _CustomerDetailsState createState() => _CustomerDetailsState();
@@ -56,8 +56,10 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              CreateDollarBill(customer: widget.customer,userId: widget.userId,)));
+                          builder: (context) => CreateDollarBill(
+                                customer: widget.customer,
+                                userId: widget.userId,
+                              )));
                 },
               ),
               body: StreamBuilder(
@@ -89,7 +91,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                           Icon(
                                             FontAwesomeIcons
                                                 .exclamationTriangle,
-                                            size: 55,
+                                            size: 45,
                                             color: Colors.yellow,
                                           ),
                                           SizedBox(
@@ -97,6 +99,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                           ),
                                           Text(
                                               "Are You Sure you want to delete this bill?",
+                                              textScaleFactor: 1.0,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontStyle: FontStyle.italic,
@@ -107,38 +110,54 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                     ),
                                     actions: [
                                       FlatButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Cancel")),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "Cancel",
+                                          textScaleFactor: 1.0,
+                                        ),
+                                      ),
                                       FlatButton(
-                                          onPressed: () async {
-                                            final result = await Connectivity()
-                                                .checkConnectivity();
-                                            if (result ==
-                                                    ConnectivityResult.wifi ||
-                                                result ==
-                                                    ConnectivityResult.mobile) {
-                                              FirebaseFirestore.instance.collection("Bills-Users-Customers").where("Serial Number",isEqualTo: snapshot.data!.docs[index]["Serial Number"]).get().then((value) {
-                                                value.docs.forEach((element) {element.reference.delete();});
+                                        onPressed: () async {
+                                          final result = await Connectivity()
+                                              .checkConnectivity();
+                                          if (result ==
+                                                  ConnectivityResult.wifi ||
+                                              result ==
+                                                  ConnectivityResult.mobile) {
+                                            FirebaseFirestore.instance
+                                                .collection(
+                                                    "Bills-Users-Customers")
+                                                .where("Serial Number",
+                                                    isEqualTo: snapshot
+                                                            .data!.docs[index]
+                                                        ["Serial Number"])
+                                                .get()
+                                                .then((value) {
+                                              value.docs.forEach((element) {
+                                                element.reference.delete();
                                               });
+                                            });
 
-                                              snapshot
-                                                  .data!.docs[index].reference
-                                                  .delete();
-                                              Navigator.pop(context);
-
-                                            } else {
-                                              showTopSnackBar(
-                                                context,
-                                                CustomSnackBar.error(
-                                                  message:
-                                                      "You don't have internet access",
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: Text("OK")),
+                                            snapshot.data!.docs[index].reference
+                                                .delete();
+                                            Navigator.pop(context);
+                                          } else {
+                                            showTopSnackBar(
+                                              context,
+                                              CustomSnackBar.error(
+                                                message:
+                                                    "You don't have internet access",
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          "OK",
+                                          textScaleFactor: 1.0,
+                                        ),
+                                      ),
                                     ],
                                   );
                                 });
@@ -167,24 +186,28 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                     "Amount : " +
                                         snapshot.data!.docs[index]["Amount"],
                                     style: dollarDetailsTXT,
+                                    textScaleFactor: 1.5,
                                   ),
                                   Text(
                                     "Reserve Bank : " +
                                         snapshot.data!.docs[index]
                                             ["Reserve Bank"],
                                     style: dollarDetailsTXT,
+                                    textScaleFactor: 1.5,
                                   ),
                                   Text(
                                     "Serial Number : " +
                                         snapshot.data!.docs[index]
                                             ["Serial Number"],
                                     style: dollarDetailsTXT,
+                                    textScaleFactor: 1.5,
                                   ),
                                   Text(
                                     "Series Year : " +
                                         snapshot.data!.docs[index]
                                             ["Series Year"],
                                     style: dollarDetailsTXT,
+                                    textScaleFactor: 2.0,
                                   ),
                                 ],
                               ),

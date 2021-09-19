@@ -13,7 +13,6 @@ import 'package:senior_project/shared/TextFormFieldWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -43,6 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
+    var fontStyle = TextStyle(
+        fontSize: 20 / scaleFactor,
+        color: Colors.white,
+        fontFamily: "Raleway-Regular");
     return Stack(
       children: [
         BackGroundImage(
@@ -63,10 +67,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       animatedTexts: [
                         TypewriterAnimatedText('Money Serial Number Extraction',
                             textStyle: TextStyle(
-                                fontFamily: "Raleway-Medium",
-                                fontSize: 55,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                              fontSize: 40 / scaleFactor,
+                              fontFamily: "Raleway-Medium",
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                             speed: const Duration(milliseconds: 200),
                             cursor: '|'),
                       ],
@@ -86,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 obscure: false,
                                 iconData: FontAwesomeIcons.user,
                                 lblText: 'Username',
+                                style: fontStyle,
                                 txtInputAction: TextInputAction.next,
                                 textEditingController: username,
                                 isReadable: false,
@@ -96,6 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 obscure: isObscure,
                                 iconData: FontAwesomeIcons.unlock,
                                 lblText: 'Password',
+                                style: fontStyle,
                                 txtInputAction: TextInputAction.done,
                                 iconData2: IconButton(
                                   onPressed: () {
@@ -115,28 +122,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("Don't have an account?",
-                                        style: whiteStyleTXT),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CreateNewUser()));
-                                      },
-                                      child: Text(
-                                        "Create one",
-                                        style: blueStyleTXT,
-                                      ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Don't have an account?",
+                                    style: whiteStyleTXT,
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CreateNewUser()));
+                                    },
+                                    child: Text(
+                                      "Create one",
+                                      style: blueStyleTXT,
+                                      textScaleFactor: 1.4,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -148,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       MaterialButton(
-                          height: 70,
+                          height: 60,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -164,15 +172,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12)),
-                                      title: Text("Empty Fields"),
-                                      content:
-                                          Text("Can't keep an empty field "),
+                                      title: Text(
+                                        "Empty Fields",
+                                        textScaleFactor: 1.1,
+                                      ),
+                                      content: Text(
+                                        "Can't keep an empty field ",
+                                        textScaleFactor: 0.8,
+                                      ),
                                       actions: [
                                         FlatButton(
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            child: Text("OK")),
+                                            child: Text(
+                                              "OK",
+                                              textScaleFactor: 1.2,
+                                            )),
                                       ],
                                     );
                                   });
@@ -195,13 +211,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(12)),
                                             content: Text(
-                                                "This user does not exist"),
+                                              "This user does not exist",
+                                              textScaleFactor: 1.0,
+                                            ),
                                             actions: [
                                               FlatButton(
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
-                                                  child: Text("OK")),
+                                                  child: Text(
+                                                    "OK",
+                                                    textScaleFactor: 1.0,
+                                                  )),
                                             ],
                                           );
                                         });
@@ -218,13 +239,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                                       BorderRadius.circular(
                                                           12)),
                                               content: Text(
-                                                  "Password does not match"),
+                                                  "Password does not match",
+                                                  textScaleFactor: 1.0),
                                               actions: [
                                                 FlatButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
-                                                    child: Text("OK")),
+                                                    child: Text("OK",
+                                                        textScaleFactor: 1.0)),
                                               ],
                                             );
                                           });
@@ -276,7 +299,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Login', style: buttonStyleTXT),
+                              Text(
+                                'Login',
+                                style: buttonStyleTXT,
+                                textScaleFactor: 2.5,
+                              ),
                               SizedBox(
                                 width: 10,
                               ),
@@ -286,7 +313,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Forgot Password?", style: whiteStyleTXT),
+                          Text(
+                            "Forgot Password?",
+                            style: whiteStyleTXT,
+                            textScaleFactor: 1.0,
+                          ),
                           TextButton(
                             onPressed: () {
                               Navigator.push(
@@ -296,10 +327,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: Text(
                               "Click here",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 20,
-                              ),
+                              style: blueStyleTXT,
+                              textScaleFactor: 1.4,
                             ),
                           ),
                         ],

@@ -54,6 +54,11 @@ class _UpdateUserState extends State<UpdateUser> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
+    TextStyle fontStyle = TextStyle(
+        fontSize: 20 / scaleFactor,
+        color: Colors.white,
+        fontFamily: "Raleway-Regular");
     return Stack(children: [
       BackGroundImage(
           image:
@@ -64,6 +69,7 @@ class _UpdateUserState extends State<UpdateUser> {
           title: Text(
             "Update User Info",
             style: infoStyleTXT,
+            textScaleFactor: 1.0,
           ),
           leading: IconButton(
             onPressed: () {
@@ -86,22 +92,24 @@ class _UpdateUserState extends State<UpdateUser> {
                         //   height: 20,
                         // ),
                         getDefaultTextFormField(
-                            isReadable: false,
-                            obscure: false,
-                            lblText: 'First Name',
-                            txtInputAction: TextInputAction.next,
-                            textEditingController: firstname,
-                            type: TextInputType.text,
-                            iconData: FontAwesomeIcons.user),
-                        getDefaultTextFormField(
                           isReadable: false,
                           obscure: false,
-                          iconData: FontAwesomeIcons.user,
-                          lblText: 'Last Name',
+                          lblText: 'First Name',
                           txtInputAction: TextInputAction.next,
-                          textEditingController: lastname,
+                          textEditingController: firstname,
                           type: TextInputType.text,
+                          iconData: FontAwesomeIcons.user,
+                          style: fontStyle,
                         ),
+                        getDefaultTextFormField(
+                            isReadable: false,
+                            obscure: false,
+                            iconData: FontAwesomeIcons.user,
+                            lblText: 'Last Name',
+                            txtInputAction: TextInputAction.next,
+                            textEditingController: lastname,
+                            type: TextInputType.text,
+                            style: fontStyle),
                         getDefaultTextFormField(
                             isReadable: false,
                             obscure: false,
@@ -109,6 +117,7 @@ class _UpdateUserState extends State<UpdateUser> {
                             lblText: 'Country',
                             txtInputAction: TextInputAction.next,
                             textEditingController: nationality,
+                            style: fontStyle,
                             submitted: () {
                               showCountryPicker(
                                 context: context,
@@ -131,6 +140,7 @@ class _UpdateUserState extends State<UpdateUser> {
                             txtInputAction: TextInputAction.next,
                             textEditingController: phoneController,
                             type: TextInputType.phone,
+                            style: fontStyle,
                             submitted: () {
                               print(phoneController.text);
                             }),
@@ -141,6 +151,7 @@ class _UpdateUserState extends State<UpdateUser> {
                           lblText: 'Address',
                           txtInputAction: TextInputAction.next,
                           type: TextInputType.text,
+                          style: fontStyle,
                           textEditingController: address,
                         ),
                         Padding(
@@ -154,7 +165,10 @@ class _UpdateUserState extends State<UpdateUser> {
                             ),
                             child: Row(
                               children: [
-                                Text("Gender", style: whiteStyleTXT),
+                                Text(
+                                  "Gender",
+                                  style: fontStyle,
+                                ),
                                 Radio(
                                   value: "Male",
                                   groupValue: gender.text,
@@ -164,7 +178,11 @@ class _UpdateUserState extends State<UpdateUser> {
                                     });
                                   },
                                 ),
-                                Text("Male", style: whiteStyleTXT),
+                                Text(
+                                  "Male",
+                                  style: whiteStyleTXT,
+                                  textScaleFactor: 1.0,
+                                ),
                                 Radio(
                                   value: "Female",
                                   groupValue: gender.text,
@@ -174,7 +192,11 @@ class _UpdateUserState extends State<UpdateUser> {
                                     });
                                   },
                                 ),
-                                Text("Female", style: whiteStyleTXT),
+                                Text(
+                                  "Female",
+                                  style: whiteStyleTXT,
+                                  textScaleFactor: 1.0,
+                                ),
                               ],
                             ),
                           ),
@@ -186,6 +208,7 @@ class _UpdateUserState extends State<UpdateUser> {
                           lblText: 'Username',
                           txtInputAction: TextInputAction.next,
                           type: TextInputType.text,
+                          style: fontStyle,
                           textEditingController: username,
                         ),
                         getDefaultTextFormField(
@@ -194,6 +217,7 @@ class _UpdateUserState extends State<UpdateUser> {
                           obscure: isObscure,
                           iconData: FontAwesomeIcons.lock,
                           lblText: 'Password',
+                          style: fontStyle,
                           txtInputAction: TextInputAction.next,
                           iconData2: IconButton(
                             onPressed: () {
@@ -223,10 +247,11 @@ class _UpdateUserState extends State<UpdateUser> {
                             ),
                             onPressed: () async {
                               if (_checkRegisterFields() == true) {
-                              if(RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$').hasMatch(pass.text))
-                                {
+                                if (RegExp(
+                                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
+                                    .hasMatch(pass.text)) {
                                   final result =
-                                  await Connectivity().checkConnectivity();
+                                      await Connectivity().checkConnectivity();
                                   if (result == ConnectivityResult.wifi ||
                                       result == ConnectivityResult.mobile) {
                                     Users user = Users(
@@ -260,32 +285,32 @@ class _UpdateUserState extends State<UpdateUser> {
                                     showTopSnackBar(
                                       context,
                                       CustomSnackBar.error(
-                                        message: "You don't have internet access",
+                                        message:
+                                            "You don't have internet access",
                                       ),
                                     );
                                   }
+                                } else {
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          content: Text(
+                                              "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length"),
+                                          actions: [
+                                            FlatButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text("OK")),
+                                          ],
+                                        );
+                                      });
                                 }
-                              else{
-
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12)),
-                                        content: Text(
-                                            "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length"),
-                                        actions: [
-                                          FlatButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text("OK")),
-                                        ],
-                                      );
-                                    });
-                              }
                               } else {
                                 showDialog(
                                     barrierDismissible: false,
@@ -313,7 +338,7 @@ class _UpdateUserState extends State<UpdateUser> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text('Update', style: buttonStyleTXT),
+                                Text('Update', style: buttonStyleTXT, textScaleFactor: 2.5,),
                                 SizedBox(
                                   width: 10,
                                 ),

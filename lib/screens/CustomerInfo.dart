@@ -45,6 +45,11 @@ class _CustomerInfoState extends State<CustomerInfo> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
+    var fontStyle = TextStyle(
+        fontSize: 20 / scaleFactor,
+        color: Colors.white,
+        fontFamily: "Raleway-Regular");
     return Stack(
       children: [
         BackGroundImage(
@@ -56,6 +61,7 @@ class _CustomerInfoState extends State<CustomerInfo> {
             title: Text(
               "Customer's Info",
               style: infoStyleTXT,
+              textScaleFactor: 1.5,
             ),
             leading: IconButton(
               onPressed: () {
@@ -84,12 +90,14 @@ class _CustomerInfoState extends State<CustomerInfo> {
                                   txtInputAction: TextInputAction.next,
                                   textEditingController: firstname,
                                   type: TextInputType.text,
+                                  style: fontStyle,
                                   iconData: FontAwesomeIcons.user),
                               getDefaultTextFormField(
                                 isReadable: true,
                                 obscure: false,
                                 iconData: FontAwesomeIcons.user,
                                 lblText: 'Last Name',
+                                style: fontStyle,
                                 txtInputAction: TextInputAction.next,
                                 textEditingController: lastname,
                                 type: TextInputType.text,
@@ -99,6 +107,7 @@ class _CustomerInfoState extends State<CustomerInfo> {
                                 obscure: false,
                                 iconData: FontAwesomeIcons.flag,
                                 lblText: 'Country',
+                                style: fontStyle,
                                 txtInputAction: TextInputAction.next,
                                 textEditingController: nationality,
                               ),
@@ -108,6 +117,7 @@ class _CustomerInfoState extends State<CustomerInfo> {
                                 iconData: FontAwesomeIcons.phoneAlt,
                                 lblText: 'Phone Number',
                                 txtInputAction: TextInputAction.next,
+                                style: fontStyle,
                                 textEditingController: phoneNbr,
                                 type: TextInputType.phone,
                               ),
@@ -117,6 +127,7 @@ class _CustomerInfoState extends State<CustomerInfo> {
                                 iconData: FontAwesomeIcons.addressCard,
                                 lblText: 'Address',
                                 txtInputAction: TextInputAction.next,
+                                style: fontStyle,
                                 type: TextInputType.text,
                                 textEditingController: address,
                               ),
@@ -125,6 +136,7 @@ class _CustomerInfoState extends State<CustomerInfo> {
                                 obscure: false,
                                 iconData: FontAwesomeIcons.addressCard,
                                 lblText: 'Gender',
+                                style: fontStyle,
                                 txtInputAction: TextInputAction.next,
                                 type: TextInputType.text,
                                 textEditingController: gender,
@@ -155,12 +167,11 @@ class _CustomerInfoState extends State<CustomerInfo> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Edit', style: buttonStyleTXT),
+                        Text('Edit', style: buttonStyleTXT, textScaleFactor: 2.5,),
                         SizedBox(
                           width: 10,
                         ),
-                        Icon(Icons.update,
-                            size: 25, color: Colors.white),
+                        Icon(Icons.update, size: 25, color: Colors.white),
                       ],
                     ),
                   ),

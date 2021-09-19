@@ -39,6 +39,11 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
+    var fontStyle = TextStyle(
+        fontSize: 20 / scaleFactor,
+        color: Colors.white,
+        fontFamily: "Raleway-Regular");
     return Stack(
       children: [
         BackGroundImage(
@@ -47,13 +52,13 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Text(
-              'Create Customer',
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontFamily: "serif",
-                  fontSize: 30,
-                  color: Color(0xffbfbfbf)),
+            title: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                'Create Customer',
+                style: titleStyleTXT,
+                textScaleFactor: 1.5,
+              ),
             ),
             leading: IconButton(
               onPressed: () {
@@ -82,6 +87,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                   txtInputAction: TextInputAction.next,
                                   textEditingController: firstname,
                                   type: TextInputType.text,
+                                  style: fontStyle,
                                   iconData: FontAwesomeIcons.user),
                               getDefaultTextFormField(
                                 isReadable: false,
@@ -91,6 +97,10 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                 txtInputAction: TextInputAction.next,
                                 textEditingController: lastname,
                                 type: TextInputType.text,
+                                style: TextStyle(
+                                    fontSize: 20 / scaleFactor,
+                                    color: Colors.white,
+                                    fontFamily: "Raleway-Regular"),
                               ),
                               getDefaultTextFormField(
                                   isReadable: false,
@@ -99,6 +109,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                   lblText: 'Country',
                                   txtInputAction: TextInputAction.next,
                                   textEditingController: nationality,
+                                  style: fontStyle,
                                   submitted: () {
                                     showCountryPicker(
                                       context: context,
@@ -120,6 +131,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                   txtInputAction: TextInputAction.next,
                                   textEditingController: phoneNbr,
                                   type: TextInputType.phone,
+                                  style: fontStyle,
                                   submitted: () {
                                     print(phoneNbr.text);
                                   }),
@@ -131,6 +143,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                 txtInputAction: TextInputAction.next,
                                 type: TextInputType.text,
                                 textEditingController: address,
+                                style: fontStyle,
                               ),
                               Padding(
                                 padding:
@@ -144,7 +157,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                   ),
                                   child: Row(
                                     children: [
-                                      Text("Gender", style: whiteStyleTXT),
+                                      Text("Gender", style: fontStyle),
                                       Radio(
                                         value: "Male",
                                         groupValue: gender.text,
@@ -154,7 +167,11 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                           });
                                         },
                                       ),
-                                      Text("Male", style: whiteStyleTXT),
+                                      Text(
+                                        "Male",
+                                        style: whiteStyleTXT,
+                                        textScaleFactor: 1.0,
+                                      ),
                                       Radio(
                                         value: "Female",
                                         groupValue: gender.text,
@@ -164,139 +181,168 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                           });
                                         },
                                       ),
-                                      Text("Female", style: whiteStyleTXT),
+                                      Text(
+                                        "Female",
+                                        style: whiteStyleTXT,
+                                        textScaleFactor: 1.0,
+                                      ),
                                     ],
                                   ),
                                 ),
-                              )
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
+                                child: MaterialButton(
+                                  // height: size.height*0.1,
+                                  height: 65,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  onPressed: () async {
+                                    // Navigator.pop(context);
+                                    if (_checkRegisterFields() == true) {
+                                      final result = await Connectivity()
+                                          .checkConnectivity();
+                                      if (result == ConnectivityResult.wifi ||
+                                          result == ConnectivityResult.mobile) {
+                                        userRef
+                                            .doc(id)
+                                            .collection("Customers")
+                                            .where("Phone Number",
+                                                isEqualTo: phoneNbr.text)
+                                            .get()
+                                            .then((value) async {
+                                          if (value.docs.length == 0) {
+                                            DocumentSnapshot temp =
+                                                await userRef.doc(id).get();
+
+                                            if (temp.get("Phone Number") ==
+                                                phoneNbr.text) {
+                                              showDialog(
+                                                  barrierDismissible: false,
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12)),
+                                                      content: Text(
+                                                          "Can't create a customer and a user with the same phone number"),
+                                                      actions: [
+                                                        FlatButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text("OK")),
+                                                      ],
+                                                    );
+                                                  });
+                                            } else {
+                                              Customer c = Customer(
+                                                  firstname: firstname.text,
+                                                  lastname: lastname.text,
+                                                  country: nationality.text,
+                                                  phonenumber: phoneNbr.text,
+                                                  address: address.text,
+                                                  gender: gender.text);
+                                              userRef
+                                                  .doc(id)
+                                                  .collection("Customers")
+                                                  .add({
+                                                "First Name": c.firstname,
+                                                "Last Name": c.lastname,
+                                                "Country": c.country,
+                                                "Phone Number": c.phonenumber,
+                                                "Address": c.address,
+                                                "Gender": c.gender,
+                                              }).whenComplete(() =>
+                                                      Navigator.pop(context));
+                                            }
+                                          } else {
+                                            showDialog(
+                                                barrierDismissible: false,
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        12)),
+                                                    title: Text(
+                                                        "Existing Customer"),
+                                                    content: Text(
+                                                        "This customer  already exist"),
+                                                    actions: [
+                                                      FlatButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Text("OK")),
+                                                    ],
+                                                  );
+                                                });
+                                          }
+                                        });
+                                      } else {
+                                        showTopSnackBar(
+                                          context,
+                                          CustomSnackBar.error(
+                                            message:
+                                                "You don't have internet access",
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              content: Text(
+                                                  "Can't keep an empty field"),
+                                              actions: [
+                                                FlatButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("OK")),
+                                              ],
+                                            );
+                                          });
+                                    }
+                                  },
+                                  color: Colors.blue,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Create',
+                                        style: buttonStyleTXT,
+                                        textScaleFactor: 2.5,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Icon(Icons.person_add_outlined,
+                                          size: 25, color: Colors.white),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ]),
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: MaterialButton(
-                    // height: size.height*0.1,
-                    height: 65,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    onPressed: () async {
-                      // Navigator.pop(context);
-                      if (_checkRegisterFields() == true) {
-                        final result = await Connectivity().checkConnectivity();
-                        if (result == ConnectivityResult.wifi ||
-                            result == ConnectivityResult.mobile) {
-                          userRef
-                              .doc(id)
-                              .collection("Customers")
-                              .where("Phone Number", isEqualTo: phoneNbr.text)
-                              .get()
-                              .then((value) async {
-                            if (value.docs.length == 0) {
-                              DocumentSnapshot temp =
-                                  await userRef.doc(id).get();
-
-                              if (temp.get("Phone Number") == phoneNbr.text) {
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(12)),
-                                        content:
-                                        Text("Can't create a customer and a user with the same phone number"),
-                                        actions: [
-                                          FlatButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text("OK")),
-                                        ],
-                                      );
-                                    });
-                              } else {
-                                Customer c = Customer(
-                                    firstname: firstname.text,
-                                    lastname: lastname.text,
-                                    country: nationality.text,
-                                    phonenumber: phoneNbr.text,
-                                    address: address.text,
-                                    gender: gender.text);
-                                userRef.doc(id).collection("Customers").add({
-                                  "First Name": c.firstname,
-                                  "Last Name": c.lastname,
-                                  "Country": c.country,
-                                  "Phone Number": c.phonenumber,
-                                  "Address": c.address,
-                                  "Gender": c.gender,
-                                }).whenComplete(() => Navigator.pop(context));
-                              }
-                            } else {
-                              showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      title: Text("Existing Customer"),
-                                      content:
-                                          Text("This customer  already exist"),
-                                      actions: [
-                                        FlatButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("OK")),
-                                      ],
-                                    );
-                                  });
-                            }
-                          });
-                        } else {
-                          showTopSnackBar(
-                            context,
-                            CustomSnackBar.error(
-                              message: "You don't have internet access",
-                            ),
-                          );
-                        }
-                      } else {
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                content: Text("Can't keep an empty field"),
-                                actions: [
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("OK")),
-                                ],
-                              );
-                            });
-                      }
-                    },
-                    color: Colors.blue,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Create', style: buttonStyleTXT),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(Icons.person_add_outlined,
-                            size: 25, color: Colors.white),
-                      ],
                     ),
                   ),
                 ),

@@ -50,6 +50,11 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
+    var fontStyle = TextStyle(
+        fontSize: 20 / scaleFactor,
+        color: Colors.white,
+        fontFamily: "Raleway-Regular");
     return Stack(
       children: [
         BackGroundImage(
@@ -58,9 +63,13 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Text(
-              "Update Customer Info",
-              style: infoStyleTXT,
+            title: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                "Update Customer Info",
+                style: infoStyleTXT,
+                textScaleFactor: 1.3,
+              ),
             ),
             leading: IconButton(
               onPressed: () {
@@ -86,6 +95,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                   isReadable: false,
                                   obscure: false,
                                   lblText: 'First Name',
+                                  style: fontStyle,
                                   txtInputAction: TextInputAction.next,
                                   textEditingController: firstname,
                                   type: TextInputType.text,
@@ -94,6 +104,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                 isReadable: false,
                                 obscure: false,
                                 iconData: FontAwesomeIcons.user,
+                                style: fontStyle,
                                 lblText: 'Last Name',
                                 txtInputAction: TextInputAction.next,
                                 textEditingController: lastname,
@@ -104,6 +115,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                   obscure: false,
                                   iconData: FontAwesomeIcons.flag,
                                   lblText: 'Country',
+                                  style: fontStyle,
                                   txtInputAction: TextInputAction.next,
                                   textEditingController: nationality,
                                   submitted: () {
@@ -126,12 +138,14 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                   lblText: 'Phone Number',
                                   txtInputAction: TextInputAction.next,
                                   textEditingController: phoneNbr,
+                                  style: fontStyle,
                                   type: TextInputType.phone,
                                   submitted: () {
                                     print(phoneNbr.text);
                                   }),
                               getDefaultTextFormField(
                                 isReadable: false,
+                                style: fontStyle,
                                 obscure: false,
                                 iconData: FontAwesomeIcons.addressCard,
                                 lblText: 'Address',
@@ -151,7 +165,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                   ),
                                   child: Row(
                                     children: [
-                                      Text("Gender", style: whiteStyleTXT),
+                                      Text("Gender", style: fontStyle),
                                       Radio(
                                         value: "Male",
                                         groupValue: gender.text,
@@ -161,7 +175,11 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                           });
                                         },
                                       ),
-                                      Text("Male", style: whiteStyleTXT),
+                                      Text(
+                                        "Male",
+                                        style: whiteStyleTXT,
+                                        textScaleFactor: 1,
+                                      ),
                                       Radio(
                                         value: "Female",
                                         groupValue: gender.text,
@@ -171,92 +189,106 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                           });
                                         },
                                       ),
-                                      Text("Female", style: whiteStyleTXT),
+                                      Text(
+                                        "Female",
+                                        style: whiteStyleTXT,
+                                        textScaleFactor: 1,
+                                      ),
                                     ],
                                   ),
                                 ),
-                              )
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
+                                child: MaterialButton(
+                                  height: 65,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  onPressed: () async {
+                                    if (_checkRegisterFields() == true) {
+                                      final result = await Connectivity()
+                                          .checkConnectivity();
+                                      if (result == ConnectivityResult.mobile ||
+                                          result == ConnectivityResult.wifi) {
+                                        Customer c = Customer(
+                                            firstname: firstname.text,
+                                            lastname: lastname.text,
+                                            country: nationality.text,
+                                            phonenumber: phoneNbr.text,
+                                            address: address.text,
+                                            gender: gender.text);
+                                        widget.customer.reference.update({
+                                          "First Name": c.firstname,
+                                          "Last Name": c.lastname,
+                                          "Country": c.country,
+                                          "Phone Number": c.phonenumber,
+                                          "Address": c.address,
+                                          "Gender": c.gender,
+                                        }).whenComplete(() {
+                                          print(widget.userId);
+                                          Navigator.pop(context);
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HomeScreen(
+                                                          userId:
+                                                              widget.userId)));
+                                        });
+                                      } else {
+                                        showTopSnackBar(
+                                          context,
+                                          CustomSnackBar.error(
+                                            message:
+                                                "You don't have internet access",
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      showDialog(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          12)),
+                                              content: Text(
+                                                  "Can't keep an empty field"),
+                                              actions: [
+                                                FlatButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("OK")),
+                                              ],
+                                            );
+                                          });
+                                    }
+                                  },
+                                  color: Colors.blue,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Update',
+                                        style: buttonStyleTXT,
+                                        textScaleFactor: 2.5,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Icon(Icons.check_circle_outline,
+                                          size: 25, color: Colors.white),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ]),
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: MaterialButton(
-                    // height: size.height*0.1,
-                    height: 65,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    onPressed: () async {
-                      // Navigator.pop(context);
-                      if (_checkRegisterFields() == true) {
-                        final result = await Connectivity().checkConnectivity();
-                        if (result == ConnectivityResult.mobile ||
-                            result == ConnectivityResult.wifi) {
-                          Customer c = Customer(
-                              firstname: firstname.text,
-                              lastname: lastname.text,
-                              country: nationality.text,
-                              phonenumber: phoneNbr.text,
-                              address: address.text,
-                              gender: gender.text);
-                          widget.customer.reference.update({
-                            "First Name": c.firstname,
-                            "Last Name": c.lastname,
-                            "Country": c.country,
-                            "Phone Number": c.phonenumber,
-                            "Address": c.address,
-                            "Gender": c.gender,
-                          }).whenComplete(() {
-                            print(widget.userId);
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomeScreen(userId: widget.userId)));
-                          });
-                        } else {
-                          showTopSnackBar(
-                            context,
-                            CustomSnackBar.error(
-                              message: "You don't have internet access",
-                            ),
-                          );
-                        }
-                      } else {
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                content: Text("Can't keep an empty field"),
-                                actions: [
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text("OK")),
-                                ],
-                              );
-                            });
-                      }
-                    },
-                    color: Colors.blue,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Update', style: buttonStyleTXT),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(Icons.check_circle_outline,
-                            size: 25, color: Colors.white),
-                      ],
                     ),
                   ),
                 ),

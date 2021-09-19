@@ -80,6 +80,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
     return Stack(children: [
       BackGroundImage(
           image:
@@ -88,13 +89,13 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
         child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              title: Text(
-                'Create Dollar Bill',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "serif",
-                    fontSize: 30,
-                    color: Color(0xffbfbfbf)),
+              title: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  'Create Dollar Bill',
+                  style: titleStyleTXT,
+                  textScaleFactor: 1.5,
+                ),
               ),
               leading: IconButton(
                 onPressed: () {
@@ -112,28 +113,55 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                           return AlertDialog(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
-                            title: Text("Functionalities & Features"),
+                            title: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text("Functionalities & Features",
+                                  textScaleFactor: 2.0),
+                            ),
                             titleTextStyle: TextStyle(
                               fontFamily: "Raleway-SemiBold",
                               color: Colors.black,
-                              fontSize: 30,
                             ),
                             contentTextStyle: TextStyle(
                               fontFamily: "Raleway-Regular",
                               color: Colors.black,
-                              fontSize: 22,
+                              fontSize: 12,
                             ),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const <Widget>[
-                                Text("Hello"),
-                                Text("If you have a photo on"),
-                                Text("your phone, and you want to"),
-                                Text("scan it, you can simply"),
-                                Text("make a long press on the"),
-                                Text("'Camera Icon' below and it"),
-                                Text("will open the gallery for you."),
-                              ],
+                            content: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const <Widget>[
+                                  Text(
+                                    "Hello",
+                                    textScaleFactor: 1.8,
+                                  ),
+                                  Text(
+                                    "If you have a photo on",
+                                    textScaleFactor: 1.8,
+                                  ),
+                                  Text(
+                                    "your phone, and you want to",
+                                    textScaleFactor: 1.8,
+                                  ),
+                                  Text(
+                                    "scan it, you can simply",
+                                    textScaleFactor: 1.8,
+                                  ),
+                                  Text(
+                                    "make a long press on the",
+                                    textScaleFactor: 1.8,
+                                  ),
+                                  Text(
+                                    "'Camera Icon' below and it",
+                                    textScaleFactor: 1.8,
+                                  ),
+                                  Text(
+                                    "will open the gallery for you.",
+                                    textScaleFactor: 1.8,
+                                  ),
+                                ],
+                              ),
                             ),
                             actions: [
                               FlatButton(
@@ -304,7 +332,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Container(
-                            height: 65,
+                            height: 70,
                             decoration: BoxDecoration(
                               color: Colors.grey[300]!.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(16),
@@ -343,12 +371,14 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                   ),
                                 ),
                                 labelText: "Serial Number",
-                                hintStyle: whiteStyleTXT,
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
-                              style: whiteStyleTXT,
+                              style: TextStyle(
+                                  fontSize: 20 / scaleFactor,
+                                  color: Colors.white,
+                                  fontFamily: "Raleway-Regular"),
                               readOnly: true,
                               textInputAction: TextInputAction.done,
                             ),
@@ -373,7 +403,9 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                             borderRadius:
                                                 BorderRadius.circular(12)),
                                         content: Text(
-                                            "You need to specify the amount"),
+                                          "You need to specify the amount",
+                                          textScaleFactor: 1.0,
+                                        ),
                                         actions: [
                                           FlatButton(
                                               onPressed: () {
@@ -393,7 +425,8 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                             borderRadius:
                                                 BorderRadius.circular(12)),
                                         content: Text(
-                                            "You need to provide the serial number"),
+                                            "You need to provide the serial number",
+                                            style: TextStyle(fontSize: 15)),
                                         actions: [
                                           FlatButton(
                                               onPressed: () {
@@ -573,7 +606,11 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Create', style: buttonStyleTXT),
+                              Text(
+                                'Create',
+                                style: buttonStyleTXT,
+                                textScaleFactor: 2.5,
+                              ),
                               SizedBox(
                                 width: 10,
                               ),
@@ -636,6 +673,10 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
         CustomSnackBar.info(
           message:
               "Serial Number could not be captured properly please try again ",
+          textStyle: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
       );
     } else {
@@ -698,7 +739,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
   Widget _dollarChecked({required bool isChecked, required int value}) {
     return Container(
       //width: double.infinity,
-      height: 200,
+      height: MediaQuery.of(context).size.height / 4,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color:
@@ -707,8 +748,8 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
       child: Center(
         child: Text(
           "\$$value",
+          textScaleFactor: 5.5,
           style: TextStyle(
-            fontSize: 100,
             fontFamily: "serif",
             fontWeight: FontWeight.bold,
             color: Colors.white,

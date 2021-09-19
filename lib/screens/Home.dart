@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            leadingWidth: MediaQuery.of(context).size.width / 4,
+            leadingWidth: MediaQuery.of(context).size.width * 0.28,
             centerTitle: true,
             leading: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -64,40 +64,100 @@ class _HomeScreenState extends State<HomeScreen> {
                           return AlertDialog(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
-                            title: Text("Functionalities & Features"),
+                            title: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                "Functionalities & Features",
+                                textScaleFactor: 2.0,
+                              ),
+                            ),
                             titleTextStyle: TextStyle(
                               fontFamily: "Raleway-SemiBold",
                               color: Colors.black,
-                              fontSize: 30,
                             ),
                             contentTextStyle: TextStyle(
                               fontFamily: "Raleway-Regular",
                               color: Colors.black,
-                              fontSize: 22,
                             ),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text("Welcome"),
-                                Text("We're here to help you"),
-                                Text("in the functionalities"),
-                                Text("& features of our application."),
-                                Text("First of all, to see each"),
-                                Text("Customer's Bills, you"),
-                                Text("just need to click on"),
-                                Text("any Customer you have."),
-                                Text("Second, to see your Customers'"),
-                                Text("Information, double click"),
-                                Text("on any one of them"),
-                                Text("and it will appear."),
-                                Text("Finally, to delete one of"),
-                                Text("your Customers, a long press"),
-                                Text("on him is enough for apply."),
-                                Text("\n"),
-                                Text("The long click functionality"),
-                                Text("also work on each Bill you have."),
-                                Text("Thank you for listening and Enjoy."),
-                              ],
+                            content: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "Welcome",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "We're here to help you",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "in the functionalities",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "& features of our application.",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "First of all, to see each",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "Customer's Bills, you",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "just need to click on",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "any Customer you have.",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "Second, to see your Customers'",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "Information, double click",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "on any one of them",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "and it will appear.",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "Finally, to delete one of",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "your Customers, a long press",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "on him is enough to apply.",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text("\n"),
+                                  Text(
+                                    "The long click functionality",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "also work on each Bill you have.",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    "Thank you for listening and Enjoy.",
+                                    textScaleFactor: 1.2,
+                                  ),
+                                ],
+                              ),
                             ),
                             actions: [
                               FlatButton(
@@ -109,9 +169,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         });
                   },
-                  icon: Icon(Icons.info_outlined),
+                  icon: Icon(
+                    Icons.info_outlined,
+                  ),
                 ),
                 IconButton(
+                  constraints: BoxConstraints(
+                    minWidth: 0,
+                  ),
                   onPressed: () async {
                     DocumentSnapshot user = await userRef.doc(id).get();
                     Navigator.push(
@@ -125,13 +190,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            title: Text(
-              'Home Page',
-              style: titleStyleTXT,
+            title: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                'Home Page',
+                textScaleFactor: 1.5,
+                style: titleStyleTXT,
+              ),
             ),
             actions: [
               Container(
-                width: MediaQuery.of(context).size.width / 4,
+                width: MediaQuery.of(context).size.width * 0.24,
                 child: IconButton(
                   onPressed: () async {
                     userRef.doc(id).update({"isLoggedIn": false});
@@ -145,12 +214,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Logout",
+                          textScaleFactor: 0.8,
                           style: TextStyle(
-                              fontSize: 17,
                               fontWeight: FontWeight.bold,
                               fontFamily: "serif",
                               color: Colors.white)),
-                      Icon(Icons.logout),
+                      Icon(Icons.logout, size: 20),
                     ],
                   ),
                 ),
@@ -170,14 +239,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                 ),
                 onPressed: () async {
-                  DocumentSnapshot user=await userRef.doc(id).get();
+                  DocumentSnapshot user = await userRef.doc(id).get();
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SearchCustomer(user: user,)));
+                          builder: (context) => SearchCustomer(
+                                user: user,
+                              )));
                 },
               ),
-              SizedBox(width:5),
+              SizedBox(width: 15),
               FloatingActionButton(
                 heroTag: "btnAdd",
                 backgroundColor: Colors.green.shade700,
@@ -232,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Icon(
                                             FontAwesomeIcons
                                                 .exclamationTriangle,
-                                            size: 55,
+                                            size: 45,
                                             color: Colors.yellow,
                                           ),
                                           SizedBox(
@@ -240,6 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           Text(
                                               "Are You Sure you want to delete this customer?",
+                                              textScaleFactor: 1.0,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontStyle: FontStyle.italic,
@@ -250,56 +322,63 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     actions: [
                                       FlatButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Cancel")),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "Cancel",
+                                          textScaleFactor: 1.0,
+                                        ),
+                                      ),
                                       FlatButton(
-                                          onPressed: () async {
-                                            final result = await Connectivity()
-                                                .checkConnectivity();
-                                            if (result ==
-                                                    ConnectivityResult.wifi ||
-                                                result ==
-                                                    ConnectivityResult.mobile) {
-                                              var snapshots = snapshot
-                                                  .data!.docs[index].reference
-                                                  .collection("Dollar Bills")
-                                                  .get();
-                                              await snapshots.then((value) =>
-                                                  value.docs.forEach((element) {
-                                                    element.reference.delete();
-                                                  }));
-                                              CollectionReference cust =
-                                                  FirebaseFirestore.instance
-                                                      .collection(
-                                                          "Bills-Users-Customers");
-                                              cust
-                                                  .where("CustId",
-                                                      isEqualTo: snapshot
-                                                          .data!.docs[index].id)
-                                                  .get()
-                                                  .then((value) => value.docs
-                                                          .forEach((element) {
-                                                        element.reference
-                                                            .delete();
-                                                      }));
-                                              snapshot
-                                                  .data!.docs[index].reference
-                                                  .delete();
+                                        onPressed: () async {
+                                          final result = await Connectivity()
+                                              .checkConnectivity();
+                                          if (result ==
+                                                  ConnectivityResult.wifi ||
+                                              result ==
+                                                  ConnectivityResult.mobile) {
+                                            var snapshots = snapshot
+                                                .data!.docs[index].reference
+                                                .collection("Dollar Bills")
+                                                .get();
+                                            await snapshots.then((value) =>
+                                                value.docs.forEach((element) {
+                                                  element.reference.delete();
+                                                }));
+                                            CollectionReference cust =
+                                                FirebaseFirestore.instance
+                                                    .collection(
+                                                        "Bills-Users-Customers");
+                                            cust
+                                                .where("CustId",
+                                                    isEqualTo: snapshot
+                                                        .data!.docs[index].id)
+                                                .get()
+                                                .then((value) => value.docs
+                                                        .forEach((element) {
+                                                      element.reference
+                                                          .delete();
+                                                    }));
+                                            snapshot.data!.docs[index].reference
+                                                .delete();
 
-                                              Navigator.pop(context);
-                                            } else {
-                                              showTopSnackBar(
-                                                context,
-                                                CustomSnackBar.error(
-                                                  message:
-                                                      "You don't have internet access",
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          child: Text("OK")),
+                                            Navigator.pop(context);
+                                          } else {
+                                            showTopSnackBar(
+                                              context,
+                                              CustomSnackBar.error(
+                                                message:
+                                                    "You don't have internet access",
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          "OK",
+                                          textScaleFactor: 1.0,
+                                        ),
+                                      ),
                                     ],
                                   );
                                 });
@@ -334,10 +413,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Text(
                                     snapshot.data!.docs[index]["First Name"],
+                                    textScaleFactor: 2.0,
                                     style: customerStyleTXT,
                                   ),
                                   Text(
                                     snapshot.data!.docs[index]["Last Name"],
+                                    textScaleFactor: 1.5,
                                     style: customerStyleTXT,
                                   ),
                                 ],
@@ -347,7 +428,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                       staggeredTileBuilder: (index) {
-                        return StaggeredTile.count(1, index.isEven ? 1.2 : 1.6);
+                        return StaggeredTile.count(1, index.isEven ? 1 : 1.4);
                       });
                 }),
           ),
@@ -356,6 +437,3 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
   }
 }
-
-
-

@@ -69,25 +69,22 @@ class _CreateNewUserState extends State<CreateNewUser> {
           password: pass.text,
           username: username.text,
         );
-        userRef
-            .doc(authCredential.user!.uid)
-            .set({
-              "First Name": user.firstname,
-              "Last Name": user.lastname,
-              "Country": user.country,
-              "Gender": user.gender,
-              "Address": user.address,
-              "Password": user.password,
-              "Username": user.username,
-              "Phone Number": user.phonenumber,
-              "isLoggedIn": true
-            })
-            .whenComplete(() => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => HomeScreen(
-                          userId: authCredential.user!.uid,
-                        ))));
+        userRef.doc(authCredential.user!.uid).set({
+          "First Name": user.firstname,
+          "Last Name": user.lastname,
+          "Country": user.country,
+          "Gender": user.gender,
+          "Address": user.address,
+          "Password": user.password,
+          "Username": user.username,
+          "Phone Number": user.phonenumber,
+          "isLoggedIn": true
+        }).whenComplete(() => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                      userId: authCredential.user!.uid,
+                    ))));
       }
     } on FirebaseAuthException catch (e) {
       // TODO
@@ -101,6 +98,11 @@ class _CreateNewUserState extends State<CreateNewUser> {
   }
 
   getMobileFormWidget(context) {
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
+    var fontStyle = TextStyle(
+        fontSize: 20 / scaleFactor,
+        color: Colors.white,
+        fontFamily: "Raleway-Regular");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(children: [
@@ -115,12 +117,14 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     txtInputAction: TextInputAction.next,
                     textEditingController: firstname,
                     type: TextInputType.text,
+                    style: fontStyle,
                     iconData: FontAwesomeIcons.user),
                 getDefaultTextFormField(
                   isReadable: false,
                   obscure: false,
                   iconData: FontAwesomeIcons.user,
                   lblText: 'Last Name',
+                  style: fontStyle,
                   txtInputAction: TextInputAction.next,
                   textEditingController: lastname,
                   type: TextInputType.text,
@@ -132,6 +136,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     lblText: 'Country',
                     txtInputAction: TextInputAction.next,
                     textEditingController: nationality,
+                    style: fontStyle,
                     submitted: () {
                       showCountryPicker(
                         context: context,
@@ -152,6 +157,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     txtInputAction: TextInputAction.next,
                     textEditingController: phoneController,
                     type: TextInputType.phone,
+                    style: fontStyle,
                     submitted: () {
                       print(phoneController.text);
                     }),
@@ -163,6 +169,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   txtInputAction: TextInputAction.next,
                   type: TextInputType.text,
                   textEditingController: address,
+                  style: fontStyle,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -175,7 +182,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     ),
                     child: Row(
                       children: [
-                        Text("Gender", style: whiteStyleTXT),
+                        Text("Gender", style: fontStyle),
                         Radio(
                           value: "Male",
                           groupValue: gender.text,
@@ -185,7 +192,11 @@ class _CreateNewUserState extends State<CreateNewUser> {
                             });
                           },
                         ),
-                        Text("Male", style: whiteStyleTXT),
+                        Text(
+                          "Male",
+                          style: whiteStyleTXT,
+                          textScaleFactor: 1.0,
+                        ),
                         Radio(
                           value: "Female",
                           groupValue: gender.text,
@@ -195,7 +206,8 @@ class _CreateNewUserState extends State<CreateNewUser> {
                             });
                           },
                         ),
-                        Text("Female", style: whiteStyleTXT),
+                        Text("Female",
+                            style: whiteStyleTXT, textScaleFactor: 1.0),
                       ],
                     ),
                   ),
@@ -208,6 +220,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   txtInputAction: TextInputAction.next,
                   type: TextInputType.text,
                   textEditingController: username,
+                  style: fontStyle,
                 ),
                 getDefaultTextFormField(
                   isReadable: false,
@@ -216,6 +229,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   iconData: FontAwesomeIcons.lock,
                   lblText: 'Password',
                   txtInputAction: TextInputAction.next,
+                  style: fontStyle,
                   iconData2: IconButton(
                     onPressed: () {
                       setState(() {
@@ -241,6 +255,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                   iconData: FontAwesomeIcons.unlock,
                   lblText: 'Confirm Password',
                   txtInputAction: TextInputAction.done,
+                  style: fontStyle,
                   iconData2: IconButton(
                     onPressed: () {
                       setState(() {
@@ -358,7 +373,9 @@ class _CreateNewUserState extends State<CreateNewUser> {
                                               borderRadius:
                                                   BorderRadius.circular(12)),
                                           content: Text(
-                                              "This phone number is already associated to an existing user"),
+                                            "This phone number is already associated to an existing user",
+                                            textScaleFactor: 1.0,
+                                          ),
                                           actions: [
                                             FlatButton(
                                                 onPressed: () {
@@ -388,7 +405,9 @@ class _CreateNewUserState extends State<CreateNewUser> {
                                         borderRadius:
                                             BorderRadius.circular(12)),
                                     content: Text(
-                                        "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length"),
+                                      "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length",
+                                      textScaleFactor: 1.0,
+                                    ),
                                     actions: [
                                       FlatButton(
                                           onPressed: () {
@@ -408,7 +427,9 @@ class _CreateNewUserState extends State<CreateNewUser> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)),
                                   content: Text(
-                                      "Password and confirm password aren't equal"),
+                                    "Password and confirm password aren't equal",
+                                    textScaleFactor: 1.0,
+                                  ),
                                   actions: [
                                     FlatButton(
                                         onPressed: () {
@@ -444,7 +465,11 @@ class _CreateNewUserState extends State<CreateNewUser> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Register', style: buttonStyleTXT),
+                        Text(
+                          'Register',
+                          style: buttonStyleTXT,
+                          textScaleFactor: 2.5,
+                        ),
                         SizedBox(
                           width: 10,
                         ),
@@ -463,6 +488,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
   }
 
   getOtpFormWidget(context) {
+    final double scaleFactor = MediaQuery.of(context).textScaleFactor;
     return Container(
       child: Form(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -472,6 +498,10 @@ class _CreateNewUserState extends State<CreateNewUser> {
               lblText: 'Enter Verification Code',
               txtInputAction: TextInputAction.done,
               textEditingController: otpController,
+              style: TextStyle(
+                  fontSize: 20 / scaleFactor,
+                  color: Colors.white,
+                  fontFamily: "Raleway-Regular"),
               iconData: FontAwesomeIcons.code),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -491,7 +521,11 @@ class _CreateNewUserState extends State<CreateNewUser> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Verify', style: buttonStyleTXT),
+                  Text(
+                    'Verify',
+                    style: buttonStyleTXT,
+                    textScaleFactor: 2.5,
+                  ),
                   SizedBox(
                     width: 10,
                   ),
@@ -523,6 +557,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
             title: Text(
               'Register New User',
               style: titleStyleTXT,
+              textScaleFactor: 1.2,
             ),
             leading: IconButton(
               onPressed: () {
@@ -540,7 +575,7 @@ class _CreateNewUserState extends State<CreateNewUser> {
                 : currentState == MobileVerificationState.SHOW_MOBILE_FORM_STATE
                     ? getMobileFormWidget(context)
                     : getOtpFormWidget(context),
-            padding: EdgeInsets.all(16),
+            //padding: EdgeInsets.all(16),
           ),
         )
       ],
