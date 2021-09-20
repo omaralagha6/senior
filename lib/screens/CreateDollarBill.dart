@@ -492,7 +492,8 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                           "Serial Number": db.serialNb,
                                           "Reserve Bank": db.reserveBank,
                                           "Amount": db.amount,
-                                          "Series Year": year
+                                          "Series Year": year,
+                                          "Date And Time":DateTime.now()
                                         }).whenComplete(
                                                 () => Navigator.pop(context));
                                       } else {
@@ -543,8 +544,9 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                             .add({
                                           "Serial Number": db.serialNb,
                                           "Reserve Bank": db.reserveBank,
+                                          "Amount": db.amount,
                                           "Series Year": db.seriesYear,
-                                          "Amount": db.amount
+                                          "Date And Time":DateTime.now()
                                         }).whenComplete(
                                                 () => Navigator.pop(context));
                                       } else {
@@ -575,19 +577,22 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                         barrierDismissible: false,
                                         context: context,
                                         builder: (context) {
-                                          return AlertDialog(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12)),
-                                            content: Text(
-                                                "This serial number already exist for another bill"),
-                                            actions: [
-                                              FlatButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text("OK")),
-                                            ],
+                                          return Container(
+                                            height: 100,
+                                            child: AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12)),
+                                              content: Text(
+                                                  "This serial number already exist for another user.\nTo add this serial number the owner of this bill should delete it."),
+                                              actions: [
+                                                FlatButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text("OK")),
+                                              ],
+                                            ),
                                           );
                                         });
                                   }
