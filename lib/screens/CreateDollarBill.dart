@@ -114,7 +114,6 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
                             title: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
                               child: Text("Functionalities & Features",
                                   textScaleFactor: 2.0),
                             ),
@@ -128,36 +127,15 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                               fontSize: 12,
                             ),
                             content: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const <Widget>[
                                   Text(
-                                    "Hello",
+                                    "Hello\n",
                                     textScaleFactor: 1.8,
                                   ),
                                   Text(
-                                    "If you have a photo on",
-                                    textScaleFactor: 1.8,
-                                  ),
-                                  Text(
-                                    "your phone, and you want to",
-                                    textScaleFactor: 1.8,
-                                  ),
-                                  Text(
-                                    "scan it, you can simply",
-                                    textScaleFactor: 1.8,
-                                  ),
-                                  Text(
-                                    "make a long press on the",
-                                    textScaleFactor: 1.8,
-                                  ),
-                                  Text(
-                                    "'Camera Icon' below and it",
-                                    textScaleFactor: 1.8,
-                                  ),
-                                  Text(
-                                    "will open the gallery for you.",
+                                    "If you have a photo on your phone, and you want to scan it, you can simply make a long press on the Camera Icon's below and it will open the gallery for you.",
                                     textScaleFactor: 1.8,
                                   ),
                                 ],
@@ -399,12 +377,19 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
+                                        contentTextStyle: TextStyle(
+                                          fontFamily: "Raleway-Regular",
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                        ),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12)),
-                                        content: Text(
-                                          "You need to specify the amount",
-                                          textScaleFactor: 1.0,
+                                        content: SingleChildScrollView(
+                                          child: Text(
+                                            "You need to specify the amount",
+                                            textScaleFactor: 1.4,
+                                          ),
                                         ),
                                         actions: [
                                           FlatButton(
@@ -421,12 +406,19 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
+                                        contentTextStyle: TextStyle(
+                                          fontFamily: "Raleway-Regular",
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                        ),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12)),
-                                        content: Text(
-                                            "You need to provide the serial number",
-                                            style: TextStyle(fontSize: 15)),
+                                        content: SingleChildScrollView(
+                                          child: Text(
+                                              "You need to provide the serial number",
+                                              textScaleFactor: 1.4,),
+                                        ),
                                         actions: [
                                           FlatButton(
                                               onPressed: () {
@@ -493,7 +485,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                           "Reserve Bank": db.reserveBank,
                                           "Amount": db.amount,
                                           "Series Year": year,
-                                          "Date And Time":DateTime.now()
+                                          "Date And Time":"${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
                                         }).whenComplete(
                                                 () => Navigator.pop(context));
                                       } else {
@@ -502,12 +494,19 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
+                                                contentTextStyle: TextStyle(
+                                                  fontFamily: "Raleway-Regular",
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                ),
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12)),
-                                                content: Text(
-                                                    "This Serial Number cannot be assigned to this amount "),
+                                                content: SingleChildScrollView(
+                                                  child: Text(
+                                                      "This Serial Number cannot be assigned to this amount ",textScaleFactor: 1.4,),
+                                                ),
                                                 actions: [
                                                   FlatButton(
                                                       onPressed: () {
@@ -546,7 +545,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                           "Reserve Bank": db.reserveBank,
                                           "Amount": db.amount,
                                           "Series Year": db.seriesYear,
-                                          "Date And Time":DateTime.now()
+                                          "Date And Time":"${DateTime.now()}"
                                         }).whenComplete(
                                                 () => Navigator.pop(context));
                                       } else {
@@ -555,12 +554,19 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                             context: context,
                                             builder: (context) {
                                               return AlertDialog(
+                                                contentTextStyle: TextStyle(
+                                                  fontFamily: "Raleway-Regular",
+                                                  color: Colors.black,
+                                                  fontSize: 12,
+                                                ),
                                                 shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12)),
-                                                content: Text(
-                                                    "This Serial Number cannot be assigned to this amount "),
+                                                content: SingleChildScrollView(
+                                                  child: Text(
+                                                      "This Serial Number cannot be assigned to this amount ",textScaleFactor: 1.4,),
+                                                ),
                                                 actions: [
                                                   FlatButton(
                                                       onPressed: () {
@@ -580,11 +586,23 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                           return Container(
                                             height: 100,
                                             child: AlertDialog(
+                                              contentTextStyle: TextStyle(
+                                                fontFamily: "Raleway-Regular",
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                              ),
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(12)),
-                                              content: Text(
-                                                  "This serial number already exist for another user.\nTo add this serial number the owner of this bill should delete it."),
+                                              content: SingleChildScrollView(
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                        "This serial number already exist for another user.",textScaleFactor: 1.4),
+                                                    Text("To add this serial number the owner of this bill should delete it.",textScaleFactor: 1.4)
+                                                  ],
+                                                ),
+                                              ),
                                               actions: [
                                                 FlatButton(
                                                     onPressed: () {

@@ -129,9 +129,14 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
+                              contentTextStyle: TextStyle(
+                                fontFamily: "Raleway-Regular",
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
-                              content: Text("Can't keep an empty field"),
+                              content: SingleChildScrollView(child: Text("Can't keep an empty field",textScaleFactor: 1.4,)),
                               actions: [
                                 FlatButton(
                                     onPressed: () {
@@ -148,10 +153,17 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
+                                contentTextStyle: TextStyle(
+                                  fontFamily: "Raleway-Regular",
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
-                                content: Text(
-                                    "Password and Confirm password do not match"),
+                                content: SingleChildScrollView(
+                                  child: Text(
+                                      "Password and Confirm password do not match",textScaleFactor: 1.4,),
+                                ),
                                 actions: [
                                   FlatButton(
                                       onPressed: () {
@@ -189,7 +201,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Register', style: buttonStyleTXT,textScaleFactor: 2.5,),
+                      Text('Update', style: buttonStyleTXT,textScaleFactor: 2.5,),
                       SizedBox(
                         width: 10,
                       ),

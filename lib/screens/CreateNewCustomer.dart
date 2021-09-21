@@ -224,6 +224,11 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                                   context: context,
                                                   builder: (context) {
                                                     return AlertDialog(
+                                                      contentTextStyle: TextStyle(
+                                                        fontFamily: "Raleway-Regular",
+                                                        color: Colors.black,
+                                                        fontSize: 12,
+                                                      ),
                                                       shape:
                                                           RoundedRectangleBorder(
                                                               borderRadius:
@@ -231,7 +236,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                                                       .circular(
                                                                           12)),
                                                       content: Text(
-                                                          "Can't create a customer and a user with the same phone number"),
+                                                          "Can't create a customer and a user with the same phone number",textScaleFactor: 1.4,),
                                                       actions: [
                                                         FlatButton(
                                                             onPressed: () {
@@ -269,6 +274,11 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                                 context: context,
                                                 builder: (context) {
                                                   return AlertDialog(
+                                                    contentTextStyle: TextStyle(
+                                                      fontFamily: "Raleway-Regular",
+                                                      color: Colors.black,
+                                                      fontSize: 12,
+                                                    ),
                                                     shape:
                                                         RoundedRectangleBorder(
                                                             borderRadius:
@@ -278,7 +288,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                                     title: Text(
                                                         "Existing Customer"),
                                                     content: Text(
-                                                        "This customer  already exist"),
+                                                        "This customer already exist",textScaleFactor: 1.4,),
                                                     actions: [
                                                       FlatButton(
                                                           onPressed: () {
@@ -306,12 +316,17 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
+                                              contentTextStyle: TextStyle(
+                                                fontFamily: "Raleway-Regular",
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                              ),
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12)),
                                               content: Text(
-                                                  "Can't keep an empty field"),
+                                                  "Can't keep an empty field",textScaleFactor: 1.4,),
                                               actions: [
                                                 FlatButton(
                                                     onPressed: () {

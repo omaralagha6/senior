@@ -169,16 +169,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
+                                      contentTextStyle: TextStyle(
+                                        fontFamily: "Raleway-Regular",
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                      ),
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12)),
                                       title: Text(
                                         "Empty Fields",
-                                        textScaleFactor: 1.1,
+                                        textScaleFactor: 1.6,
                                       ),
-                                      content: Text(
-                                        "Can't keep an empty field ",
-                                        textScaleFactor: 0.8,
+                                      content: SingleChildScrollView(
+                                        child: Text(
+                                          "Can't keep an empty field ",
+                                          textScaleFactor: 1.4,
+                                        ),
                                       ),
                                       actions: [
                                         FlatButton(
@@ -207,12 +214,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
+                                            contentTextStyle: TextStyle(
+                                              fontFamily: "Raleway-Regular",
+                                              color: Colors.black,
+                                              fontSize: 12,
+                                            ),
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(12)),
-                                            content: Text(
-                                              "This user does not exist",
-                                              textScaleFactor: 1.0,
+                                            content: SingleChildScrollView(
+                                              child: Text(
+                                                "This user does not exist",
+                                                textScaleFactor: 1.4,
+                                              ),
                                             ),
                                             actions: [
                                               FlatButton(
@@ -234,13 +248,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
+                                              contentTextStyle: TextStyle(
+                                                fontFamily: "Raleway-Regular",
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                              ),
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12)),
-                                              content: Text(
-                                                  "Password does not match",
-                                                  textScaleFactor: 1.0),
+                                              content: SingleChildScrollView(
+                                                child: Text(
+                                                    "Password does not match",
+                                                    textScaleFactor: 1.4),
+                                              ),
                                               actions: [
                                                 FlatButton(
                                                     onPressed: () {

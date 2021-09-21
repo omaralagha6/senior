@@ -252,12 +252,19 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
+                                              contentTextStyle: TextStyle(
+                                                fontFamily: "Raleway-Regular",
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                              ),
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12)),
-                                              content: Text(
-                                                  "Can't keep an empty field"),
+                                              content: SingleChildScrollView(
+                                                child: Text(
+                                                    "Can't keep an empty field",textScaleFactor: 1.4,),
+                                              ),
                                               actions: [
                                                 FlatButton(
                                                     onPressed: () {

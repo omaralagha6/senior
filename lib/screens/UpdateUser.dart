@@ -296,11 +296,18 @@ class _UpdateUserState extends State<UpdateUser> {
                                       context: context,
                                       builder: (context) {
                                         return AlertDialog(
+                                          contentTextStyle: TextStyle(
+                                            fontFamily: "Raleway-Regular",
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12)),
-                                          content: Text(
-                                              "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length"),
+                                          content: SingleChildScrollView(
+                                            child: Text(
+                                                "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length",textScaleFactor: 1.4,),
+                                          ),
                                           actions: [
                                             FlatButton(
                                                 onPressed: () {
@@ -317,12 +324,17 @@ class _UpdateUserState extends State<UpdateUser> {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
+                                        contentTextStyle: TextStyle(
+                                          fontFamily: "Raleway-Regular",
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                        ),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12)),
                                         title: Text("Empty Fields"),
                                         content:
-                                            Text("Can't keep any empty field"),
+                                            SingleChildScrollView(child: Text("Can't keep any empty field",textScaleFactor: 1.4,)),
                                         actions: [
                                           FlatButton(
                                               onPressed: () {

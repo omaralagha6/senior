@@ -346,12 +346,19 @@ class _CreateNewUserState extends State<CreateNewUser> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
+                                              contentTextStyle: TextStyle(
+                                                fontFamily: "Raleway-Regular",
+                                                color: Colors.black,
+                                                fontSize: 12,
+                                              ),
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           12)),
-                                              content: Text(
-                                                  "This Username is already taken"),
+                                              content: SingleChildScrollView(
+                                                child: Text(
+                                                    "This Username is already taken",textScaleFactor: 1.4,),
+                                              ),
                                               actions: [
                                                 FlatButton(
                                                     onPressed: () {
@@ -369,12 +376,18 @@ class _CreateNewUserState extends State<CreateNewUser> {
                                       context: context,
                                       builder: (context) {
                                         return AlertDialog(
+                                          contentTextStyle: TextStyle(
+                                            fontFamily: "Raleway-Regular",
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                          ),
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12)),
-                                          content: Text(
-                                            "This phone number is already associated to an existing user",
-                                            textScaleFactor: 1.0,
+                                          content: SingleChildScrollView(
+                                            child: Text(
+                                              "This phone number is already associated to an existing user",textScaleFactor: 1.4,
+                                            ),
                                           ),
                                           actions: [
                                             FlatButton(
@@ -401,12 +414,19 @@ class _CreateNewUserState extends State<CreateNewUser> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
+                                    contentTextStyle: TextStyle(
+                                      fontFamily: "Raleway-Regular",
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    content: Text(
-                                      "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length",
-                                      textScaleFactor: 1.0,
+                                    content: SingleChildScrollView(
+                                      child: Text(
+                                        "Password should contain\n ▪at least one upper case letter\n ▪at least one lower case letter\n ▪at least one digit\n ▪at least one special character\n ▪minimum 8 in length",
+textScaleFactor: 1.4,
+                                      ),
                                     ),
                                     actions: [
                                       FlatButton(
@@ -424,11 +444,18 @@ class _CreateNewUserState extends State<CreateNewUser> {
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
+                                  contentTextStyle: TextStyle(
+                                    fontFamily: "Raleway-Regular",
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)),
-                                  content: Text(
-                                    "Password and confirm password aren't equal",
-                                    textScaleFactor: 1.0,
+                                  content: SingleChildScrollView(
+                                    child: Text(
+                                      "Password and confirm password aren't equal",
+                                      textScaleFactor: 1.4,
+                                    ),
                                   ),
                                   actions: [
                                     FlatButton(
@@ -446,10 +473,15 @@ class _CreateNewUserState extends State<CreateNewUser> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
+                                contentTextStyle: TextStyle(
+                                  fontFamily: "Raleway-Regular",
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
                                 title: Text("Empty Fields"),
-                                content: Text("Can't keep any empty field"),
+                                content: SingleChildScrollView(child: Text("Can't keep any empty field",textScaleFactor: 1.4,)),
                                 actions: [
                                   FlatButton(
                                       onPressed: () {

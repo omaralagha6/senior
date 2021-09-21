@@ -79,32 +79,32 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
+                                    contentTextStyle: TextStyle(
+                                      fontFamily: "Raleway-Regular",
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    content: Container(
-                                      height: 120,
+                                    content: SingleChildScrollView(
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           Icon(
-                                            FontAwesomeIcons
-                                                .exclamationTriangle,
-                                            size: 45,
-                                            color: Colors.yellow,
+                                            Icons.warning,
+                                            size: 60,
+                                            color: Colors.red,
                                           ),
                                           SizedBox(
                                             height: 15,
                                           ),
                                           Text(
                                               "Are You Sure you want to delete this bill?",
-                                              textScaleFactor: 1.0,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontStyle: FontStyle.italic,
-                                                fontFamily: "serif",
-                                              )),
+                                              textScaleFactor: 1.4,
+
+                                              ),
                                         ],
                                       ),
                                     ),
@@ -207,8 +207,13 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                         snapshot.data!.docs[index]
                                             ["Series Year"],
                                     style: dollarDetailsTXT,
-                                    textScaleFactor: 2.0,
+                                    textScaleFactor: 1.5,
                                   ),
+                                  Text(
+                                    "Date : ${snapshot.data!.docs[index]["Date And Time"]}",
+                                    style: dollarDetailsTXT,
+                                    textScaleFactor: 1.5,
+                                  )
                                 ],
                               ),
                             ),

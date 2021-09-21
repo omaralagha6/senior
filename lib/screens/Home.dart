@@ -62,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
+
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
                             title: SingleChildScrollView(
@@ -84,78 +85,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    "Welcome",
-                                    textScaleFactor: 1.2,
+                                    "Welcome\n",
+                                    textScaleFactor: 1.8,
                                   ),
                                   Text(
-                                    "We're here to help you",
-                                    textScaleFactor: 1.2,
+                                    "We're here to help you in the functionalities & features of our application.\n",
+                                    textScaleFactor: 1.5,
                                   ),
                                   Text(
-                                    "in the functionalities",
-                                    textScaleFactor: 1.2,
+                                    "1.To see each customer's bills, you just need to click on any customer you have.\n",
+                                    textScaleFactor: 1.5,
                                   ),
                                   Text(
-                                    "& features of our application.",
-                                    textScaleFactor: 1.2,
+                                    "2.To see your customers information, double click on any one of them and it will appear.\n",
+                                    textScaleFactor: 1.5,
                                   ),
                                   Text(
-                                    "First of all, to see each",
-                                    textScaleFactor: 1.2,
+                                    "3.To delete one of your customers, a long press on him is enough to apply it.\n",
+                                    textScaleFactor: 1.5,
                                   ),
+
                                   Text(
-                                    "Customer's Bills, you",
-                                    textScaleFactor: 1.2,
+                                    "The long click functionality also work on each bill you have.\n",
+                                    textScaleFactor: 1.5,
                                   ),
-                                  Text(
-                                    "just need to click on",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "any Customer you have.",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "Second, to see your Customers'",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "Information, double click",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "on any one of them",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "and it will appear.",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "Finally, to delete one of",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "your Customers, a long press",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "on him is enough to apply.",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text("\n"),
-                                  Text(
-                                    "The long click functionality",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "also work on each Bill you have.",
-                                    textScaleFactor: 1.2,
-                                  ),
-                                  Text(
-                                    "Thank you for listening and Enjoy.",
-                                    textScaleFactor: 1.2,
-                                  ),
+
                                 ],
                               ),
                             ),
@@ -291,32 +245,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context: context,
                                 builder: (context) {
                                   return AlertDialog(
+                                    contentTextStyle: TextStyle(
+                                      fontFamily: "Raleway-Regular",
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    content: Container(
-                                      height: 120,
+                                    content: SingleChildScrollView(
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           Icon(
-                                            FontAwesomeIcons
-                                                .exclamationTriangle,
-                                            size: 45,
-                                            color: Colors.yellow,
+                                           Icons.warning,
+                                            size: 60,
+                                            color: Colors.red,
                                           ),
                                           SizedBox(
                                             height: 15,
                                           ),
                                           Text(
                                               "Are You Sure you want to delete this customer?",
-                                              textScaleFactor: 1.0,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontStyle: FontStyle.italic,
-                                                fontFamily: "serif",
-                                              )),
+                                              textScaleFactor: 1.4,
+                                          ),
                                         ],
                                       ),
                                     ),
