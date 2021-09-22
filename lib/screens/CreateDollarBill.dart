@@ -529,8 +529,11 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                                     serialNbController.text[1]]
                                                 : "Invalid Reserve Bank",
                                             amount: valueController.text,
-                                            seriesYear: serYear[
-                                                serialNbController.text[0]]);
+                                            seriesYear:serYear.containsKey(
+                                                serialNbController.text[0])
+                                                ? serYear[
+                                            serialNbController.text[0]]
+                                                : "Invalid Series Year");
                                         viewRef.add({
                                           "Serial Number":
                                               serialNbController.text,

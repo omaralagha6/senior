@@ -69,7 +69,7 @@ class _UpdateUserState extends State<UpdateUser> {
           title: Text(
             "Update User Info",
             style: infoStyleTXT,
-            textScaleFactor: 1.0,
+            textScaleFactor: 1.1,
           ),
           leading: IconButton(
             onPressed: () {

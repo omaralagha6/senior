@@ -2,7 +2,7 @@
     package="com.example.senior_project">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="senior_project"
+        android:label="Serial Code Extraction"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

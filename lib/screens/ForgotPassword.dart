@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,6 +32,21 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   String? verificationId;
   final GlobalKey<ScaffoldState> _scaffoldstate = GlobalKey();
   bool showLoading = false;
+  CollectionReference userRef = FirebaseFirestore.instance.collection("Users");
+
+  @override
+  void initState(){
+    super.initState();
+    showTopSnackBar(
+      context,
+
+      CustomSnackBar.info(
+        message: "You need to specify the country code",
+
+      ),
+    );
+  }
+
 
   void signnWithPhoneAuthCredential(
       PhoneAuthCredential phoneAuthCredential) async {
@@ -98,34 +114,48 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   final result = await Connectivity().checkConnectivity();
                   if (result == ConnectivityResult.wifi ||
                       result == ConnectivityResult.mobile) {
-                    setState(() {
-                      showLoading = true;
+                    userRef.where("Phone Number",isEqualTo:phoneController.text).get().then((value) async {
+                      if(value.docs.length==0)
+                        {
+                          showTopSnackBar(
+                            context,
+                            CustomSnackBar.error(
+                              message: "This phone number isn't registered for an existing user",
+                            ),
+                          );
+                        }
+                      else
+                        {
+                          setState(() {
+                            showLoading = true;
+                          });
+                          await _auth.verifyPhoneNumber(
+                              phoneNumber: phoneController.text,
+                              verificationCompleted: (phoneAuthCredentials) async {
+                                setState(() {
+                                  showLoading = false;
+                                });
+                                //signnWithPhoneAuthCredential(phoneAuthCredentials);
+                              },
+                              verificationFailed: (verificationFailed) {
+                                setState(() {
+                                  showLoading = false;
+                                });
+                                _scaffoldstate.currentState!.showSnackBar(SnackBar(
+                                    content: Text(verificationFailed.message!)));
+                                //the key is replacing the context
+                              },
+                              codeSent: (verificationId, resendingToken) async {
+                                setState(() {
+                                  showLoading = false;
+                                  currentState =
+                                      MobileVerificationState.SHOW_OTP_FORM_STATE;
+                                  this.verificationId = verificationId;
+                                });
+                              },
+                              codeAutoRetrievalTimeout: (verificationId) async {});
+                        }
                     });
-                    await _auth.verifyPhoneNumber(
-                        phoneNumber: phoneController.text,
-                        verificationCompleted: (phoneAuthCredentials) async {
-                          setState(() {
-                            showLoading = false;
-                          });
-                          //signnWithPhoneAuthCredential(phoneAuthCredentials);
-                        },
-                        verificationFailed: (verificationFailed) {
-                          setState(() {
-                            showLoading = false;
-                          });
-                          _scaffoldstate.currentState!.showSnackBar(SnackBar(
-                              content: Text(verificationFailed.message!)));
-                          //the key is replacing the context
-                        },
-                        codeSent: (verificationId, resendingToken) async {
-                          setState(() {
-                            showLoading = false;
-                            currentState =
-                                MobileVerificationState.SHOW_OTP_FORM_STATE;
-                            this.verificationId = verificationId;
-                          });
-                        },
-                        codeAutoRetrievalTimeout: (verificationId) async {});
                   } else {
                     showTopSnackBar(
                       context,
@@ -194,13 +224,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 children: [
                   Text(
                     'Verify',
-                    style: whiteStyleTXT,
+                    style: buttonStyleTXT,
                     textScaleFactor: 2.5,
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  Icon(Icons.send),
+                  Icon(Icons.send, size: 25, color: Colors.white),
                 ],
               ),
             ),

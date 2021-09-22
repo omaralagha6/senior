@@ -68,7 +68,7 @@ class _UpdateCustomerState extends State<UpdateCustomer> {
               child: Text(
                 "Update Customer Info",
                 style: infoStyleTXT,
-                textScaleFactor: 1.3,
+                textScaleFactor: 1.1,
               ),
             ),
             leading: IconButton(

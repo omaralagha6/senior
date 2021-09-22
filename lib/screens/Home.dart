@@ -62,7 +62,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
                             title: SingleChildScrollView(
@@ -93,23 +92,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     textScaleFactor: 1.5,
                                   ),
                                   Text(
-                                    "1.To see each customer's bills, you just need to click on any customer you have.\n",
+                                    "▪ To see each customer's bills, you just need to click on any customer you have.\n",
                                     textScaleFactor: 1.5,
                                   ),
                                   Text(
-                                    "2.To see your customers information, double click on any one of them and it will appear.\n",
+                                    "▪ To see your customers information, double click on any one of them and it will appear.\n",
                                     textScaleFactor: 1.5,
                                   ),
                                   Text(
-                                    "3.To delete one of your customers, a long press on him is enough to apply it.\n",
+                                    "▪ To delete one of your customers, a long press on him is enough to apply it.\n",
                                     textScaleFactor: 1.5,
                                   ),
-
                                   Text(
-                                    "The long click functionality also work on each bill you have.\n",
-                                    textScaleFactor: 1.5,
+                                    "Note: The long click functionality also work on each bill you have.\n",
+                                    textScaleFactor: 1.6,
                                   ),
-
                                 ],
                               ),
                             ),
@@ -259,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Icon(
-                                           Icons.warning,
+                                            Icons.warning,
                                             size: 60,
                                             color: Colors.red,
                                           ),
@@ -267,8 +264,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             height: 15,
                                           ),
                                           Text(
-                                              "Are You Sure you want to delete this customer?",
-                                              textScaleFactor: 1.4,
+                                            "Are You Sure you want to delete this customer?",
+                                            textScaleFactor: 1.4,
                                           ),
                                         ],
                                       ),
