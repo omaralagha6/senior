@@ -485,7 +485,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                           "Reserve Bank": db.reserveBank,
                                           "Amount": db.amount,
                                           "Series Year": year,
-                                          "Date And Time":"${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
+                                          "Date":"${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
                                         }).whenComplete(
                                                 () => Navigator.pop(context));
                                       } else {
@@ -548,7 +548,7 @@ class _CreateDollarBillState extends State<CreateDollarBill> {
                                           "Reserve Bank": db.reserveBank,
                                           "Amount": db.amount,
                                           "Series Year": db.seriesYear,
-                                          "Date And Time":"${DateTime.now()}"
+                                          "Date":"${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}",
                                         }).whenComplete(
                                                 () => Navigator.pop(context));
                                       } else {

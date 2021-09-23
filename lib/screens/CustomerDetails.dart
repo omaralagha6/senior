@@ -210,7 +210,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                                     textScaleFactor: 1.5,
                                   ),
                                   Text(
-                                    "Date : ${snapshot.data!.docs[index]["Date And Time"]}",
+                                    "Date : ${snapshot.data!.docs[index]["Date"]}",
                                     style: dollarDetailsTXT,
                                     textScaleFactor: 1.5,
                                   )
